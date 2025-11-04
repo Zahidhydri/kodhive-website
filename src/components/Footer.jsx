@@ -3,13 +3,19 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../assets/kodhive-logo.png';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
-import { HiOutlineMail, HiOutlineLocationMarker } from 'react-icons/hi';
+import { HiOutlineMail, HiOutlineLocationMarker, HiOutlineArrowRight } from 'react-icons/hi';
 
+// Main footer container, replaces the outer container and SVG
 const FooterContainer = styled.footer`
   background: ${({ theme }) => theme.card};
   border-top: 1px solid ${({ theme }) => theme.border};
   margin-top: 4rem;
-  padding: 4rem 1.5rem;
+  padding: 4rem 1.5rem 3rem 1.5rem;
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
+  
+  /* ADDED: Subtle curve on the top corners */
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 `;
 
 const ContentWrapper = styled.div`
@@ -41,13 +47,12 @@ const Column = styled.div`
   }
 
   p {
-    color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
     line-height: 1.6;
+    margin-bottom: 1.5rem;
   }
 `;
 
 const LogoSection = styled(Column)`
-  /* Make logo column span full width on small screens if needed, but grid handles it */
   @media (min-width: 640px) {
     grid-column: span 2; /* Logo takes half width on medium */
   }
@@ -78,7 +83,7 @@ const LogoDisplay = styled(Link)`
 const SocialLinks = styled.div`
   display: flex;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 `;
 
 const SocialIcon = styled.a`
@@ -113,8 +118,10 @@ const LinksList = styled.ul`
 
 const FooterLink = styled(Link)`
   text-decoration: none;
-  color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   transition: color 0.3s ease;
+  position: relative;
+  display: inline-block;
 
   &:hover {
     color: ${({ theme }) => theme.buttonBg};
@@ -126,17 +133,19 @@ const ContactInfo = styled.div`
   flex-direction: column;
   gap: 1rem;
 
-  a {
+  a, div {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.75rem;
     text-decoration: none;
-    color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
+    color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
     transition: color 0.3s ease;
 
     svg {
       font-size: 1.25rem;
       flex-shrink: 0;
+      margin-top: 4px;
+      color: ${({ theme }) => theme.buttonBg};
     }
     
     &:hover {
@@ -145,13 +154,54 @@ const ContactInfo = styled.div`
   }
 `;
 
+const NewsletterForm = styled.form`
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+
+  input {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid ${({ theme }) => theme.border};
+    border-radius: 8px;
+    background: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.text};
+    font-size: 0.9rem;
+    min-width: 0;
+
+    &:focus {
+      outline: none;
+      border-color: ${({ theme }) => theme.buttonBg};
+      box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
+    }
+  }
+
+  button {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 8px;
+    background: ${({ theme }) => theme.buttonBg};
+    color: ${({ theme }) => theme.buttonText};
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background: ${({ theme }) => theme.buttonHover};
+    }
+  }
+`;
 
 const Copyright = styled.div`
   margin-top: 4rem;
   padding-top: 2rem;
   border-top: 1px solid ${({ theme }) => theme.border};
   text-align: center;
-  color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
 `;
 
 export default function Footer() {
@@ -166,9 +216,15 @@ export default function Footer() {
             </LogoDisplay>
             <p>Connecting student talent with innovative real-world projects. Build your portfolio, gain experience, and launch your career.</p>
             <SocialLinks>
-              <SocialIcon href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></SocialIcon>
-              <SocialIcon href="https://github.com" target="_blank" rel="noopener noreferrer"><FaGithub /></SocialIcon>
-              <SocialIcon href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><FaLinkedin /></SocialIcon>
+              <SocialIcon href="https://twitter.com/kodhive" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                <FaTwitter />
+              </SocialIcon>
+              <SocialIcon href="https://github.com/kodhive" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <FaGithub />
+              </SocialIcon>
+              <SocialIcon href="https://linkedin.com/company/kodhive" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <FaLinkedin />
+              </SocialIcon>
             </SocialLinks>
           </LogoSection>
 
@@ -183,26 +239,28 @@ export default function Footer() {
           </Column>
 
           <Column>
-            <h3>Services</h3>
-            <LinksList>
-              <li><FooterLink to="/#services">Custom Websites</FooterLink></li>
-              <li><FooterLink to="/#services">Logo & Brand Design</FooterLink></li>
-              <li><FooterLink to="/internships">Student Opportunities</FooterLink></li> 
-            </LinksList>
-          </Column>
-
-          <Column>
             <h3>Get in Touch</h3>
             <ContactInfo>
               <a href="mailto:info@kodhive.com">
                 <HiOutlineMail />
-                info@kodhive.com
+                <span>info@kodhive.com</span>
               </a>
-              <a href="#">
+              <div>
                 <HiOutlineLocationMarker />
-                Nagpur, Maharashtra, India
-              </a>
+                <span>Nagpur, Maharashtra, India</span>
+              </div>
             </ContactInfo>
+          </Column>
+
+          <Column>
+            <h3>Stay Updated</h3>
+            <p>Subscribe to our newsletter for the latest opportunities and news.</p>
+            <NewsletterForm action="#" method="POST">
+              <input type="email" placeholder="Your email" required />
+              <button type="submit" aria-label="Subscribe">
+                <HiOutlineArrowRight />
+              </button>
+            </NewsletterForm>
           </Column>
         </Grid>
 
@@ -213,3 +271,4 @@ export default function Footer() {
     </FooterContainer>
   );
 }
+

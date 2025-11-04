@@ -113,10 +113,11 @@ function App() {
           setIsOpen={setIsSidebarOpen}
           toggleTheme={toggleTheme}
           darkMode={isDarkTheme}
-          openSignInModal={openModal} // <-- PASS THE PROP HERE
+          openSignInModal={openModal}
         />
         <main style={{ flexGrow: 1 }}>
           <Routes>
+            {/* UPDATED: Removed openModal prop */}
             <Route path="/" element={<Home />} />
             <Route path="/internships" element={<Internships />} />
             <Route path="/contact" element={<Contact />} />
@@ -125,7 +126,6 @@ function App() {
               path="/profile" 
               element={currentUser ? <Profile /> : <Navigate to="/" replace />} 
             />
-            {/* The /signin route is now gone */}
           </Routes>
         </main>
         <Footer />

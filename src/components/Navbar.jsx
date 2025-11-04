@@ -18,9 +18,14 @@ const Nav = styled.nav`
   background: ${({ theme }) => theme.nav};
   backdrop-filter: blur(5px);
   
+  /* These transitions and props are new */
   transition: box-shadow 0.3s ease, border-bottom 0.3s ease;
   box-shadow: ${({ $scrolled }) => $scrolled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none'};
   border-bottom: 1px solid ${({ theme, $scrolled }) => $scrolled ? theme.border : 'transparent'};
+
+  /* ADDED: Subtle curve on the bottom corners */
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 `;
 
 const LogoLink = styled(Link)`
@@ -202,3 +207,4 @@ export default function Navbar({ toggleSidebar, openSignInModal }) {
     </Nav>
   );
 }
+
