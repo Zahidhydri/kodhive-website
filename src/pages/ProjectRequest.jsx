@@ -195,7 +195,7 @@ export default function ProjectRequest() {
         setTimeout(() => setStatus("Submit Request"), 3000);
       }
     } catch (error) {
-      console.error("Form submission error:", error); // Fixed ESLint warning
+      console.error("Form submission error:", error);
       setStatus("Error. Try Again.");
       setTimeout(() => setStatus("Submit Request"), 3000);
     }

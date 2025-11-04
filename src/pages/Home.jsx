@@ -369,6 +369,7 @@ const Author = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit: cover;
   }
   
   span {
@@ -550,7 +551,7 @@ const heroSlides = [
     subtitle: "Connecting bright students with innovative real-world projects.", 
     buttonText: "Find Internships", 
     link: "/internships",
-    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto-format&fit=crop&q=80&w=2070" 
+    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070" 
   },
   { 
     title: "Have an Idea? Let's Build It.", 
@@ -593,9 +594,9 @@ const howItWorks = [
 ];
 
 const testimonials = [
-  { name: "Client A", quote: "Kodhive delivered our project on time and exceeded all our expectations. Highly recommend!", img: "https://via.placeholder.com/50/007BFF/FFFFFF?text=A" },
-  { name: "Student B", quote: "Working on a real project through Kodhive was an amazing experience. I learned so much.", img: "https://via.placeholder.com/50/6F42C1/FFFFFF?text=B" },
-  { name: "Client C", quote: "The student team was professional, creative, and incredibly responsive. We got a fantastic website.", img: "https://via.placeholder.com/50/198754/FFFFFF?text=C" }
+  { name: "Client A", quote: "Kodhive delivered our project on time and exceeded all our expectations. Highly recommend!", img: "https://placehold.co/100x100/007BFF/FFFFFF?text=A" },
+  { name: "Student B", quote: "Working on a real project through Kodhive was an amazing experience. I learned so much.", img: "https://placehold.co/100x100/6F42C1/FFFFFF?text=B" },
+  { name: "Client C", quote: "The student team was professional, creative, and incredibly responsive. We got a fantastic website.", img: "https://placehold.co/100x100/198754/FFFFFF?text=C" }
 ];
 
 const partners = [ "Partner1", "Partner2", "Partner3", "Partner4", "Partner5" ];
@@ -793,7 +794,7 @@ export default function Home() {
       </Section>
 
 
-      {/* --- 4. TESTIMONIALS CAROUSEL (Unchanged) --- */}
+      {/* --- 4. TESTIMONIALS CAROUSEL --- */}
       <Section
         $alt={true}
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
@@ -826,7 +827,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 5. OUR PARTNERS (Unchanged) --- */}
+      {/* --- 5. OUR PARTNERS (INFINITE SCROLL) --- */}
       <Section
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
       >
@@ -836,7 +837,8 @@ export default function Home() {
             <PartnersTrack>
               {[...partners, ...partners].map((logo, index) => (
                 <PartnerLogo key={index}>
-                  <img src={`https://via.placeholder.com/120x60/808080/FFFFFF?text=${logo}`} alt={`Partner ${index + 1}`} />
+                  {/* UPDATED: Better placeholder */}
+                  <img src={`https://placehold.co/120x60/fafafa/6c757d?text=${logo}&font=lato`} alt={`${logo} logo`} />
                 </PartnerLogo>
               ))}
             </PartnersTrack>

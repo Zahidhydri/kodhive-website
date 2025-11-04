@@ -1,12 +1,11 @@
 // src/pages/Contact.jsx
 import { useState } from 'react';
-import styled from 'styled-components'; // <-- ADDED
-import { motion } from 'framer-motion'; // <-- ADDED
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
 import { HiOutlineUser, HiOutlineMail, HiOutlinePencilAlt } from 'react-icons/hi';
 
 const Container = styled(motion.div)`
   max-width: 800px;
-// ... (rest of the file is correct) ...
   margin: 0 auto;
   padding: 4rem 1.5rem;
 `;
@@ -160,7 +159,7 @@ export default function Contact() {
         setTimeout(() => setStatus("Send Message"), 3000);
       }
     } catch (error) {
-      console.error("Form submission error:", error); // Fixed ESLint warning
+      console.error("Form submission error:", error);
       setStatus("Error. Try Again.");
       setTimeout(() => setStatus("Send Message"), 3000);
     }
