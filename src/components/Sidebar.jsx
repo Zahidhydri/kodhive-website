@@ -1,7 +1,7 @@
 // src/components/Sidebar.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { HiX, HiOutlineHome, HiOutlineUser, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout } from 'react-icons/hi';
+import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout } from 'react-icons/hi';
 import ThemeToggle from './ThemeToggle';
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
@@ -49,25 +49,6 @@ const Header = styled.div`
   }
 `;
 
-const ProfileSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid ${({ theme }) => theme.border};
-  
-  img {
-    height: 64px;
-    width: 64px;
-    border-radius: 50%;
-    margin-bottom: 0.5rem;
-  }
-  
-  span {
-    font-weight: 600;
-  }
-`;
-
 const Nav = styled.nav`
   display: flex;
   flex-direction: column;
@@ -105,7 +86,6 @@ const Footer = styled.div`
   gap: 1rem;
 `;
 
-// CHANGED: This is now a styled.button, not styled(Link)
 const SignInButton = styled.button`
   display: block;
   width: 100%;
@@ -116,10 +96,10 @@ const SignInButton = styled.button`
   border-radius: 6px;
   text-decoration: none;
   font-weight: 600;
-  border: none; // Added
-  font-size: 1rem; // Added
-  font-family: inherit; // Added
-  cursor: pointer; // Added
+  border: none; 
+  font-size: 1rem; 
+  font-family: inherit; 
+  cursor: pointer; 
 
   &:hover {
     background: ${({ theme }) => theme.buttonHover};
@@ -132,7 +112,7 @@ const LogoutButton = styled.button`
   justify-content: center;
   width: 100%;
   padding: 0.75rem 1rem;
-  background: #dc3545; // A distinct red color for logout
+  background: #dc3545; 
   color: white;
   border: none;
   border-radius: 6px;
@@ -150,7 +130,6 @@ const LogoutButton = styled.button`
   }
 `;
 
-// ACCEPT the new prop
 export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, openSignInModal }) {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
@@ -166,10 +145,15 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
     }
   };
 
-  // NEW: Handler for the sign-in button
   const handleSignInClick = () => {
     closeSidebar();
     openSignInModal();
+  };
+
+  // NEW: Combined function for Home link
+  const handleHomeClick = () => {
+    closeSidebar();
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -193,19 +177,10 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
               <button onClick={closeSidebar}><HiX /></button>
             </Header>
 
-            {currentUser && (
-              <ProfileSection>
-                <img src={currentUser.photoURL} alt={currentUser.displayName} />
-                <span>{currentUser.displayName}</span>
-              </ProfileSection>
-            )}
-
             <Nav>
-              <NavLink to="/" onClick={closeSidebar}>
+              {/* UPDATED: onClick handler */}
+              <NavLink to="/" onClick={handleHomeClick}>
                 <HiOutlineHome /> Home
-              </NavLink>
-              <NavLink to="/profile" onClick={closeSidebar}>
-                <HiOutlineUser /> Profile
               </NavLink>
               <NavLink to="/internships" onClick={closeSidebar}>
                 <HiOutlineBriefcase /> Internships
@@ -222,7 +197,6 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
               <ThemeToggle toggleTheme={toggleTheme} darkMode={darkMode} />
               
               {!currentUser ? (
-                // UPDATED: Now a button that calls handleSignInClick
                 <SignInButton onClick={handleSignInClick}>
                   Sign In / Sign Up
                 </SignInButton>

@@ -1,31 +1,29 @@
 // src/pages/Home.jsx
-import { useState } from 'react'; // <-- Removed unused 'useRef'
+import { useState } from 'react'; 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components'; // <-- Removed unused 'keyframes'
+import styled from 'styled-components'; 
 import { 
   HiOutlineChevronRight, 
   HiPlus,
   HiMinus,
-  // --- NEW ICONS ADDED ---
   HiOutlineAcademicCap,
   HiOutlineClock,
   HiOutlineUsers,
-  HiOutlineLightBulb, // <-- FIX: Changed 'b' to 'B'
+  HiOutlineLightBulb, 
   HiOutlinePaperAirplane,
   HiOutlineBriefcase
 } from 'react-icons/hi';
 
 // --- Import New Hero ---
-import InteractiveHero from '../components/InteractiveHero'; // <-- NEW IMPORT
+import InteractiveHero from '../components/InteractiveHero'; // <-- IMPORT
 
 // --- Import Swiper ---
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay, EffectCoverflow, Navigation } from 'swiper/modules'; // <-- Removed EffectFade
+import { Pagination, Autoplay, EffectCoverflow, Navigation } from 'swiper/modules'; 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
-// import 'swiper/css/effect-fade'; // <-- REMOVED
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 
@@ -37,8 +35,6 @@ const Container = styled.div`
   margin: 0 auto;
   padding: 0 1.5rem;
 `;
-
-// --- 1. HERO SLIDESHOW Section (REMOVED) ---
 
 // General Section components
 const Section = styled(motion.section)`
@@ -52,9 +48,8 @@ const SectionTitle = styled.h2`
   font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 1rem; /* Reduced margin */
+  margin-bottom: 1rem; 
 `;
-// --- NEW Subtitle component from demo ---
 const SectionSubtitle = styled.p`
   text-align: center;
   font-size: 1.1rem;
@@ -319,7 +314,6 @@ const InspirationGrid = styled.div`
   scroll-snap-type: x mandatory; 
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  /* Simple scrollbar for visibility */
   &::-webkit-scrollbar {
     height: 8px;
   }
@@ -501,7 +495,7 @@ const Author = styled.div`
   }
 `;
 
-// --- 9. PARTNERS (REMOVED FROM HERE) ---
+// --- 9. PARTNERS (REMOVED) ---
 
 // --- 10. FAQ Section (Existing) ---
 const FaqContainer = styled.div`
@@ -610,29 +604,7 @@ const timelineContentAnim = {
 
 
 // --- DUMMY DATA ---
-const heroSlides = [
-  { 
-    title: "Build Your Future at Kodhive", 
-    subtitle: "Connecting bright students with innovative real-world projects.", 
-    buttonText: "Find Internships", 
-    link: "/internships",
-    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto-format&fit=crop&q=80&w=2070" 
-  },
-  { 
-    title: "Have an Idea? Let's Build It.", 
-    subtitle: "Get your project built by our team of talented, vetted students and freshers.", 
-    buttonText: "Request a Project", 
-    link: "/request-project",
-    bg: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=2070" 
-  },
-  { 
-    title: "Logos, Websites, and More", 
-    subtitle: "From stunning brand identities to complex web applications, our talent pool has you covered.", 
-    buttonText: "Our Services", 
-    link: "#services",
-    bg: "https://images.unsplash.com/photo-1558692003-2b2f8e1d2c12?auto=format&fit=crop&q=80&w=1932" 
-  }
-];
+// REMOVED heroSlides (moved to InteractiveHero.jsx)
 
 const services = [
   { 
@@ -664,7 +636,7 @@ const testimonials = [
   { name: "Rohan Gupta", quote: "The student team was professional, creative, and incredibly responsive. We got a fantastic website.", img: "https://placehold.co/100x100/198754/FFFFFF?text=R" }
 ];
 
-const partners = [ "TechCorp", "InnovateU", "DevSolutions", "NextGen", "StartUpHub" ];
+// REMOVED partners
 
 const faqs = [
   { q: "How do I request a project?", a: "You can request a project by visiting our 'Request a Project' page and filling out the form. We'll get back to you within 24-48 hours to discuss the details." },
@@ -727,14 +699,14 @@ const inspirationData = [
 
 // --- REACT COMPONENT ---
 
-export default function Home() { // <-- Removed unused openSignInModal prop
+export default function Home() { 
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
   const [activeTimelineIndex, setActiveTimelineIndex] = useState(0);
 
   return (
     <div>
       {/* --- 1. NEW InteractiveHero --- */}
-      <InteractiveHero slides={heroSlides} partners={partners} />
+      <InteractiveHero />
       
       {/* --- 2. OUR SERVICES (Coverflow - Unchanged) --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant} id="services">
@@ -811,7 +783,7 @@ export default function Home() { // <-- Removed unused openSignInModal prop
                 <motion.div key={activeTimelineIndex} variants={timelineContentAnim} initial="hidden" animate="visible" exit="hidden">
                   <TimelineStep>{howItWorks[activeTimelineIndex].step}</TimelineStep>
                   <TimelineTitle>{howItWorks[activeTimelineIndex].title}</TimelineTitle>
-                  {/* FIX: Corrected typo from activeTIMELINE_INDEX to activeTimelineIndex */}
+                  {/* FIX: Corrected typo */}
                   <TimelineDescription>{howItWorks[activeTimelineIndex].description}</TimelineDescription>
                 </motion.div>
               </AnimatePresence>
@@ -830,7 +802,6 @@ export default function Home() { // <-- Removed unused openSignInModal prop
               <InnovationIconWrapper><HiOutlineLightBulb /></InnovationIconWrapper>
               <InnovationTitle>Idea Submission & Guidance</InnovationTitle>
               <InnovationDescription>Have a project idea but need expert mentorship to execute it? Submit your concept and we'll guide you through the process.</InnovationDescription>
-              {/* This button opens the Contact Modal */}
               <PrimaryButton as={Link} to="/contact">Get Expert Guidance</PrimaryButton>
             </InnovationCard>
             <InnovationCard variants={sectionVariant}>

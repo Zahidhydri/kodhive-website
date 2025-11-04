@@ -1,6 +1,6 @@
 // src/components/Navbar.jsx
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import styled, { keyframes } from 'styled-components';
@@ -18,12 +18,10 @@ const Nav = styled.nav`
   background: ${({ theme }) => theme.nav};
   backdrop-filter: blur(5px);
   
-  /* These transitions and props are new */
   transition: box-shadow 0.3s ease, border-bottom 0.3s ease;
   box-shadow: ${({ $scrolled }) => $scrolled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none'};
   border-bottom: 1px solid ${({ theme, $scrolled }) => $scrolled ? theme.border : 'transparent'};
 
-  /* ADDED: Subtle curve on the bottom corners */
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 `;
@@ -60,21 +58,6 @@ const RightMenu = styled.div`
   gap: 1rem;
 `;
 
-const ProfileButton = styled.button`
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-`;
-
-const ProfileImage = styled.img`
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  border: 2px solid #007bff;
-`;
-
-// This is now a <button> instead of a <Link>
 const SignInButton = styled.button`
   padding: 0.5rem 1rem;
   background-color: ${({ theme }) => theme.buttonBg};
@@ -100,51 +83,8 @@ const MenuButton = styled.button`
   cursor: pointer;
 `;
 
-const ProfileDropdown = styled.div`
-  position: absolute;
-  right: 0;
-  top: 50px;
-  width: 12rem;
-  background: ${({ theme }) => theme.card};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 50;
-  padding: 0.5rem 0;
-`;
-
-const DropdownItem = styled(Link)`
-  display: block;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  color: ${({ theme }) => theme.text};
-  text-decoration: none;
-  &:hover {
-    background: ${({ theme }) => theme.body};
-  }
-`;
-
-const DropdownButton = styled.button`
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  color: ${({ theme }) => theme.text};
-  background: none;
-  border: none;
-  cursor: pointer;
-  &:hover {
-    background: ${({ theme }) => theme.body};
-  }
-`;
-
-// Accept the new prop
 export default function Navbar({ toggleSidebar, openSignInModal }) {
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
-
+  const { currentUser } = useAuth();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -155,46 +95,16 @@ export default function Navbar({ toggleSidebar, openSignInModal }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      setIsProfileOpen(false);
-      navigate('/');
-    } catch (error) {
-      console.error('Failed to log out', error);
-    }
-  };
-
   return (
     <Nav $scrolled={scrolled}>
-      <LogoLink to="/">
+      {/* UPDATED: Added onClick to scroll to top */}
+      <LogoLink to="/" onClick={() => window.scrollTo(0, 0)}>
         <LogoImage src={logo} alt="Kodhive Logo" />
         <LogoText>Kodhive</LogoText>
       </LogoLink>
 
       <RightMenu>
-        {currentUser ? (
-          <div style={{ position: 'relative' }}>
-            <ProfileButton onClick={() => setIsProfileOpen(!isProfileOpen)}>
-              <ProfileImage src={currentUser.photoURL} alt="Profile" />
-            </ProfileButton>
-            
-            {isProfileOpen && (
-              <ProfileDropdown>
-                <DropdownItem 
-                  to="/profile" 
-                  onClick={() => setIsProfileOpen(false)}
-                >
-                  Profile
-                </DropdownItem>
-                <DropdownButton onClick={handleLogout}>
-                  Logout
-                </DropdownButton>
-              </ProfileDropdown>
-            )}
-          </div>
-        ) : (
-          // Updated to use onClick to open the modal
+        {!currentUser && (
           <SignInButton onClick={openSignInModal}>
             Sign In
           </SignInButton>
@@ -207,4 +117,3 @@ export default function Navbar({ toggleSidebar, openSignInModal }) {
     </Nav>
   );
 }
-

@@ -2,36 +2,60 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import styled, { keyframes, useTheme } from 'styled-components';
+import styled, { keyframes } from 'styled-components'; // Removed useTheme
 import { HiOutlineArrowRight, HiOutlinePause, HiOutlinePlay } from 'react-icons/hi';
+
+// --- Data ---
+const heroSlides = [
+  { 
+    title: "Innovate with Kodhive", 
+    subtitle: "We connect bright student talent with real-world projects, helping you build the future while they build their careers.", 
+    buttonText: "About Us", 
+    link: "/contact", // Changed to /contact, as there's no /about page
+    bg: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=2070" 
+  },
+  { 
+    title: "Find Your Next Opportunity", 
+    subtitle: "Gain hands-on experience by applying for internships and projects posted by our partner companies.", 
+    buttonText: "See Internships", 
+    link: "/internships", // Correct link to internships page
+    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070" 
+  },
+  { 
+    title: "Have an Idea? Let's Build It.", 
+    subtitle: "Submit your project requirements, and our curated team of talented students will bring your vision to life.", 
+    buttonText: "Request a Project", 
+    link: "/request-project", // Correct link to project request page
+    bg: "https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&q=80&w=2070"
+  },
+  { 
+    title: "Join Our Tech Community", 
+    subtitle: "Learn, grow, and network with fellow students, mentors, and industry professionals in our vibrant community.", 
+    buttonText: "Get in Touch", 
+    link: "/contact",
+    bg: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=2070" 
+  }
+];
+
 
 // --- Keyframes for Animations ---
 
-// Keyframe for the floating hexagons
 const float = keyframes`
   0% { transform: translateY(0px) rotate(0deg); opacity: 0.05; }
   50% { transform: translateY(-25px) rotate(10deg); opacity: 0.1; }
   100% { transform: translateY(0px) rotate(0deg); opacity: 0.05; }
 `;
 
-// Keyframe for the partner logo scroll
-const scroll = keyframes`
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
-`;
-
-
 // --- Styled Components ---
 
 const HeroOuterContainer = styled.section`
   background-color: ${({ theme }) => theme.body};
-  padding: 4rem 1.5rem 2rem 1.5rem;
+  padding: 4rem 1.5rem 0 1.5rem; 
   overflow: hidden;
   border-top: 1px solid ${({ theme }) => theme.border};
-  position: relative; /* Needed for the hexagon background */
+  position: relative; 
 `;
 
-// --- NEW: Hexagon Background ---
 const HexagonBackground = styled.div`
   position: absolute;
   top: 0;
@@ -47,66 +71,17 @@ const Hexagon = styled.div`
   width: 100px;
   height: 115px;
   background-color: ${({ theme }) => theme.buttonBg};
-  opacity: 0.05; /* Very subtle */
+  opacity: 0.05; 
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   animation: ${float} 8s ease-in-out infinite;
 
-  /* Different positions and animations for each hexagon */
-  &:nth-child(1) {
-    top: 10%;
-    left: 5%;
-    width: 80px;
-    height: 92px;
-    animation-duration: 9s;
-    animation-delay: -3s;
-  }
-  &:nth-child(2) {
-    top: 20%;
-    left: 80%;
-    width: 120px;
-    height: 138px;
-    animation-duration: 10s;
-    animation-delay: -5s;
-  }
-  &:nth-child(3) {
-    top: 65%;
-    left: 10%;
-    width: 60px;
-    height: 69px;
-    animation-duration: 11s;
-    animation-delay: -1s;
-  }
-  &:nth-child(4) {
-    top: 80%;
-    left: 60%;
-    width: 100px;
-    height: 115px;
-    animation-duration: 7s;
-  }
-  &:nth-child(5) {
-    top: 40%;
-    left: 45%;
-    width: 50px;
-    height: 57px;
-    animation-duration: 12s;
-    animation-delay: -2s;
-  }
-  &:nth-child(6) {
-    top: 5%;
-    left: 90%;
-    width: 70px;
-    height: 80px;
-    animation-duration: 8s;
-    animation-delay: -1s;
-  }
-  &:nth-child(7) {
-    top: 85%;
-    left: 95%;
-    width: 90px;
-    height: 104px;
-    animation-duration: 9s;
-    animation-delay: -4s;
-  }
+  &:nth-child(1) { top: 10%; left: 5%; width: 80px; height: 92px; animation-duration: 9s; animation-delay: -3s; }
+  &:nth-child(2) { top: 20%; left: 80%; width: 120px; height: 138px; animation-duration: 10s; animation-delay: -5s; }
+  &:nth-child(3) { top: 65%; left: 10%; width: 60px; height: 69px; animation-duration: 11s; animation-delay: -1s; }
+  &:nth-child(4) { top: 80%; left: 60%; width: 100px; height: 115px; animation-duration: 7s; }
+  &:nth-child(5) { top: 40%; left: 45%; width: 50px; height: 57px; animation-duration: 12s; animation-delay: -2s; }
+  &:nth-child(6) { top: 5%; left: 90%; width: 70px; height: 80px; animation-duration: 8s; animation-delay: -1s; }
+  &:nth-child(7) { top: 85%; left: 95%; width: 90px; height: 104px; animation-duration: 9s; animation-delay: -4s; }
 `;
 
 
@@ -117,13 +92,13 @@ const HeroContainer = styled.div`
   gap: 3rem;
   max-width: 1200px;
   margin: 0 auto;
-  min-height: 80vh;
-  position: relative; /* Ensure content is on top of bg */
+  min-height: 75vh; 
+  position: relative; 
   z-index: 2;
 
   @media (min-width: 1024px) {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    min-height: 75vh;
+    min-height: 70vh; 
   }
 `;
 
@@ -151,6 +126,7 @@ const HeroBadge = styled(motion.span)`
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 1rem;
+  box-shadow: 0 2px 10px ${({ theme }) => theme.buttonBg}44;
 `;
 
 const Title = styled(motion.h1)`
@@ -159,7 +135,7 @@ const Title = styled(motion.h1)`
   margin-bottom: 1.5rem;
   line-height: 1.1;
   color: ${({ theme }) => theme.text};
-  min-height: 110px; /* Reserve space for 2 lines of text */
+  min-height: 110px; 
 
   @media (min-width: 768px) {
     font-size: 4.5rem;
@@ -173,7 +149,7 @@ const Subtitle = styled(motion.p)`
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   max-width: 500px;
   line-height: 1.6;
-  min-height: 80px; /* Reserve space for text */
+  min-height: 80px; 
 `;
 
 const Button = styled(motion(Link))`
@@ -192,8 +168,8 @@ const Button = styled(motion(Link))`
 
   &:hover {
     background-color: ${({ theme }) => theme.buttonHover};
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px ${({ theme }) => theme.buttonBg}66;
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 25px ${({ theme }) => theme.buttonBg}77;
   }
 `;
 
@@ -202,6 +178,11 @@ const SliderControls = styled.div`
   align-items: center;
   gap: 0.5rem;
   margin-top: 2.5rem;
+  padding-bottom: 2rem; 
+
+  @media (min-width: 1024px) {
+    padding-bottom: 0; 
+  }
 `;
 
 const ProgressDot = styled.button`
@@ -239,14 +220,14 @@ const PlayPauseButton = styled.button`
 
 const VisualContent = styled.div`
   position: relative;
-  display: none; /* Hidden on mobile */
+  display: none; 
   align-items: center;
   justify-content: center;
   min-height: 450px;
-  perspective: 1500px; /* Set perspective for 3D */
+  perspective: 1500px; 
 
   @media (min-width: 1024px) {
-    display: flex; /* Visible on desktop */
+    display: flex; 
   }
 `;
 
@@ -259,59 +240,15 @@ const Card = styled(motion.div)`
   border: 1px solid ${({ theme }) => theme.border};
   background-size: cover;
   background-position: center;
-`;
-
-// --- Partners/Trusted By Section (MOVED TO TOP LEVEL) ---
-
-const PartnersSection = styled(motion.div)`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 4rem;
-  text-align: center;
-  position: relative; /* Keep on top of bg */
-  z-index: 2;
   
-  /* This moves the partners section up on desktop to be part of the hero */
-  @media (min-width: 1024px) {
-    grid-column: span 2;
-    padding-top: 2rem;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 70%, rgba(0,0,0,0.15) 100%);
   }
 `;
-
-const PartnersTitle = styled.h3`
-  font-size: 1rem;
-  font-weight: 600;
-  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
-  margin-bottom: 2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-`;
-
-const PartnersContainer = styled.div`
-  width: 100%;
-  overflow: hidden;
-  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-`;
-
-const PartnersTrack = styled.div`
-  display: flex;
-  width: fit-content;
-  animation: ${scroll} 25s linear infinite;
-`;
-
-const PartnerLogo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 150px;
-  margin: 0 2rem;
-  img {
-    max-width: 120px;
-    filter: ${({ theme }) => theme.text === '#e9ecef' ? 'invert(1) opacity(0.7)' : 'grayscale(1) opacity(0.5)'};
-    transition: filter 0.3s ease;
-  }
-`;
-
 
 // --- Animation Variants ---
 
@@ -324,38 +261,41 @@ const textContainerVariants = {
 };
 
 const textItemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } }
+  hidden: { opacity: 0, y: 25 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { type: 'spring', stiffness: 100, damping: 15 } 
+  }
 };
 
 // --- Component ---
 
-export default function InteractiveHero({ slides, partners }) {
+export default function InteractiveHero() { 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const intervalRef = useRef(null);
-  const activeSlide = slides[activeIndex];
-  const theme = useTheme(); // <-- FIX: Get theme from context
+  const activeSlide = heroSlides[activeIndex];
+  // REMOVED theme variable
 
   // Auto-sliding logic
   useEffect(() => {
     if (isPlaying) {
       intervalRef.current = setInterval(() => {
-        setActiveIndex((prev) => (prev + 1) % slides.length);
-      }, 5000); // Change slide every 5 seconds
+        setActiveIndex((prev) => (prev + 1) % heroSlides.length);
+      }, 5000); 
     } else {
       clearInterval(intervalRef.current);
     }
     return () => clearInterval(intervalRef.current);
-  }, [isPlaying, slides.length]);
+  }, [isPlaying]); // REMOVED heroSlides.length
 
   const goToSlide = (index) => {
     clearInterval(intervalRef.current);
     setActiveIndex(index);
     if (isPlaying) {
-      // Restart interval
       intervalRef.current = setInterval(() => {
-        setActiveIndex((prev) => (prev + 1) % slides.length);
+        setActiveIndex((prev) => (prev + 1) % heroSlides.length);
       }, 5000);
     }
   };
@@ -390,15 +330,8 @@ export default function InteractiveHero({ slides, partners }) {
 
   return (
     <HeroOuterContainer>
-      {/* NEW: Add Hexagon Background */}
       <HexagonBackground>
-        <Hexagon />
-        <Hexagon />
-        <Hexagon />
-        <Hexagon />
-        <Hexagon />
-        <Hexagon />
-        <Hexagon />
+        <Hexagon /> <Hexagon /> <Hexagon /> <Hexagon /> <Hexagon /> <Hexagon /> <Hexagon />
       </HexagonBackground>
 
       <HeroContainer>
@@ -417,14 +350,22 @@ export default function InteractiveHero({ slides, partners }) {
               </HeroBadge>
               <Title variants={textItemVariants}>{activeSlide.title}</Title>
               <Subtitle variants={textItemVariants}>{activeSlide.subtitle}</Subtitle>
-              <Button to={activeSlide.link} variants={textItemVariants}>
+              <Button 
+                to={activeSlide.link} 
+                variants={textItemVariants}
+                onClick={() => {
+                  if (activeSlide.link.startsWith('/')) {
+                    window.scrollTo(0, 0);
+                  }
+                }}
+              >
                 {activeSlide.buttonText} <HiOutlineArrowRight />
               </Button>
             </motion.div>
           </AnimatePresence>
 
           <SliderControls>
-            {slides.map((_, index) => (
+            {heroSlides.map((_, index) => (
               <ProgressDot
                 key={index}
                 $isActive={index === activeIndex}
@@ -448,62 +389,32 @@ export default function InteractiveHero({ slides, partners }) {
           {/* Back Card */}
           <Card
             style={{
-              backgroundImage: `url(${slides[(activeIndex + 2) % slides.length].bg})`, // Use modulo for safety
+              backgroundImage: `url(${heroSlides[(activeIndex + 2) % heroSlides.length].bg})`, 
               zIndex: 1,
             }}
-            animate={{
-              x: -100,
-              y: 50,
-              scale: 0.85,
-            }}
+            animate={{ x: -100, y: 50, scale: 0.85, }}
             transition={{ type: 'spring' }}
           />
           {/* Middle Card */}
           <Card
             style={{
-              backgroundImage: `url(${slides[(activeIndex + 1) % slides.length].bg})`, // Use modulo for safety
+              backgroundImage: `url(${heroSlides[(activeIndex + 1) % heroSlides.length].bg})`, 
               zIndex: 2,
             }}
-            animate={{
-              x: 50,
-              y: -50,
-              scale: 0.9,
-            }}
+            animate={{ x: 50, y: -50, scale: 0.9, }}
             transition={{ type: 'spring' }}
           />
           {/* Front Card (shows active slide) */}
           <Card
             style={{
-              backgroundImage: `url(${activeSlide.bg})`, // Use active slide bg
+              backgroundImage: `url(${activeSlide.bg})`, 
               zIndex: 3,
             }}
-            animate={{
-              x: 0,
-              y: 0,
-              scale: 1,
-            }}
+            animate={{ x: 0, y: 0, scale: 1, }}
             transition={{ type: 'spring' }}
           />
         </VisualContent>
         
-        {/* Partners section is now part of the hero */}
-        <PartnersSection
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <PartnersTitle>Trusted By Innovative Companies</PartnersTitle>
-          <PartnersContainer>
-              <PartnersTrack>
-                {[...partners, ...partners].map((logo, index) => (
-                  <PartnerLogo key={index}>
-                    <img src={`https://placehold.co/120x60/fafafa/6c757d?text=${logo}&font=lato`} alt={`${logo} logo`} />
-                  </PartnerLogo>
-                ))}
-              </PartnersTrack>
-            </PartnersContainer>
-        </PartnersSection>
-
       </HeroContainer>
     </HeroOuterContainer>
   );

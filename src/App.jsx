@@ -10,8 +10,7 @@ import SignInModal from './components/SignInModal';
 import Home from './pages/Home';
 import Internships from './pages/Internships';
 import Contact from './pages/Contact';
-import Profile from './pages/Profile';
-// SignIn component is no longer imported
+// Profile component is no longer imported
 import ProjectRequest from './pages/ProjectRequest';
 import { useAuth } from './contexts/AuthContext';
 
@@ -122,10 +121,7 @@ function App() {
             <Route path="/internships" element={<Internships />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/request-project" element={<ProjectRequest />} />
-            <Route 
-              path="/profile" 
-              element={currentUser ? <Profile /> : <Navigate to="/" replace />} 
-            />
+            {/* REMOVED Profile Route */}
           </Routes>
         </main>
         <Footer />
@@ -135,4 +131,3 @@ function App() {
 }
 
 export default App;
-

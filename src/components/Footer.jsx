@@ -5,7 +5,6 @@ import logo from '../assets/kodhive-logo.png';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { HiOutlineMail, HiOutlineLocationMarker, HiOutlineArrowRight } from 'react-icons/hi';
 
-// Main footer container, replaces the outer container and SVG
 const FooterContainer = styled.footer`
   background: ${({ theme }) => theme.card};
   border-top: 1px solid ${({ theme }) => theme.border};
@@ -13,7 +12,6 @@ const FooterContainer = styled.footer`
   padding: 4rem 1.5rem 3rem 1.5rem;
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   
-  /* ADDED: Subtle curve on the top corners */
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 `;
@@ -54,10 +52,10 @@ const Column = styled.div`
 
 const LogoSection = styled(Column)`
   @media (min-width: 640px) {
-    grid-column: span 2; /* Logo takes half width on medium */
+    grid-column: span 2; 
   }
   @media (min-width: 1024px) {
-    grid-column: span 1; /* Logo takes 1 col on large */
+    grid-column: span 1; 
   }
 `;
 
@@ -210,7 +208,8 @@ export default function Footer() {
       <ContentWrapper>
         <Grid>
           <LogoSection>
-            <LogoDisplay to="/">
+            {/* UPDATED: Added onClick to scroll to top */}
+            <LogoDisplay to="/" onClick={() => window.scrollTo(0, 0)}>
               <img src={logo} alt="Kodhive Logo" />
               <span>Kodhive</span>
             </LogoDisplay>
@@ -231,7 +230,8 @@ export default function Footer() {
           <Column>
             <h3>Quick Links</h3>
             <LinksList>
-              <li><FooterLink to="/">Home</FooterLink></li>
+              {/* UPDATED: Added onClick to scroll to top */}
+              <li><FooterLink to="/" onClick={() => window.scrollTo(0, 0)}>Home</FooterLink></li>
               <li><FooterLink to="/internships">Internships</FooterLink></li>
               <li><FooterLink to="/request-project">Request a Project</FooterLink></li> 
               <li><FooterLink to="/contact">Contact</FooterLink></li>
@@ -271,4 +271,3 @@ export default function Footer() {
     </FooterContainer>
   );
 }
-
