@@ -12,16 +12,19 @@ import {
   HiOutlineChevronDown,
   HiPlus,
   HiMinus
-  // All other icons removed as they are not used
 } from 'react-icons/hi';
+// All other icons removed as they are not used (Comment moved to a valid location)
 
 // --- Import Swiper ---
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay, EffectFade } from 'swiper/modules';
+// ADDED EffectCoverflow and Navigation
+import { Pagination, Autoplay, EffectFade, EffectCoverflow, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import 'swiper/css/effect-fade';
+import 'swiper/css/effect-coverflow'; // ADDED
+import 'swiper/css/navigation'; // ADDED
 
 
 // --- STYLED COMPONENT DEFINITIONS ---
@@ -33,7 +36,7 @@ const Container = styled.div`
   padding: 0 1.5rem;
 `;
 
-// --- 1. HERO SLIDESHOW Section ---
+// --- 1. HERO SLIDESHOW Section (Unchanged) ---
 const HeroSwiper = styled(Swiper)`
   width: 100%;
   height: 90vh;
@@ -177,37 +180,66 @@ const SectionTitle = styled.h2`
   margin-bottom: 3.5rem;
 `;
 
-// --- 2. OUR SERVICES (Expanding Accordion) ---
-const AccordionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  height: 500px;
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
-`;
+// --- 2. OUR SERVICES (NEW Coverflow Carousel) ---
+// The old Accordion components have been removed
+const CoverflowSwiper = styled(Swiper)`
+  width: 100%;
+  padding-top: 2rem;    /* Make space for slide content */
+  padding-bottom: 4rem; /* Make space for navigation */
+  overflow: visible;      /* IMPORTANT: Show side slides */
 
-const AccordionItem = styled(motion.div)`
-  position: relative;
-  flex: 1;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  background-size: cover;
-  background-position: center;
+  /* This is the main slide card */
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 320px;
+    height: 450px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    
+    /* Add the overlay for text */
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60%;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.8), transparent);
+      border-radius: 16px; /* Match slide border-radius */
+    }
+  }
+
+  /* Style the custom navigation arrows */
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 44px;
+    height: 44px;
+    background: ${({ theme }) => theme.card};
+    color: ${({ theme }) => theme.text};
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    
+    &:hover {
+      background: ${({ theme }) => theme.buttonBg};
+      color: ${({ theme }) => theme.buttonText};
+    }
+    
+    /* Style the arrow icon inside */
+    &::after {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+  }
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1));
-    z-index: 1;
-    opacity: 0.8;
+  .swiper-button-prev {
+    left: 20px;
+  }
+  .swiper-button-next {
+    right: 20px;
   }
 `;
 
-const AccordionContent = styled(motion.div)`
+const ServiceSlideContent = styled(motion.div)`
   position: absolute;
   bottom: 0;
   left: 0;
@@ -215,18 +247,22 @@ const AccordionContent = styled(motion.div)`
   padding: 1.5rem;
   color: white;
   z-index: 2;
+  text-align: left;
 `;
 
-const AccordionTitle = styled(motion.h3)`
-  font-size: 1.5rem;
+const ServiceTitle = styled(motion.h3)`
+  font-size: 1.75rem;
   font-weight: 600;
   margin: 0;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 `;
 
-const AccordionDescription = styled(motion.p)`
-  margin-top: 1rem;
+const ServiceDescription = styled(motion.p)`
   font-size: 1rem;
   line-height: 1.5;
+  opacity: 0.9;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 `;
 
 
@@ -502,11 +538,8 @@ const heroTextAnim = {
   animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
 
-
-const accordionContentAnim = {
-  collapsed: { opacity: 0, height: 0, marginTop: 0 },
-  expanded: { opacity: 1, height: 'auto', marginTop: '1rem' }
-};
+// REMOVED old accordionContentAnim
+// const accordionContentAnim = { ... };
 
 const faqAnswerAnim = {
   hidden: { opacity: 0, height: 0, y: -10 },
@@ -595,7 +628,7 @@ const faqs = [
   }
 ];
 
-// --- Reusable 3D Hero Content Component ---
+// --- Reusable 3D Hero Content Component (Unchanged) ---
 function HeroSlide3D({ children }) {
   const ref = useRef(null);
   const x = useMotionValue(0);
@@ -633,8 +666,7 @@ function HeroSlide3D({ children }) {
 // --- REACT COMPONENT ---
 
 export default function Home() {
-  // State for Accordions
-  const [expandedIndex, setExpandedIndex] = useState(0);
+  // REMOVED expandedIndex state
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
   
   // State for Interactive Timeline
@@ -642,7 +674,7 @@ export default function Home() {
 
   return (
     <div>
-      {/* --- 1. HERO SLIDESHOW --- */}
+      {/* --- 1. HERO SLIDESHOW (Unchanged) --- */}
       <HeroSwiper
         modules={[Autoplay, Pagination, EffectFade]}
         spaceBetween={0}
@@ -681,7 +713,7 @@ export default function Home() {
         </ScrollDownIndicator>
       </HeroSwiper>
       
-      {/* --- 2. OUR SERVICES (Expanding Accordion) --- */}
+      {/* --- 2. OUR SERVICES (REPLACED with Coverflow) --- */}
       <Section
         $alt={true}
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
@@ -689,44 +721,49 @@ export default function Home() {
       >
         <Container>
           <SectionTitle>Our Services</SectionTitle>
-          <AccordionContainer>
+          {/* NEW CAROUSEL ADDED HERE */}
+          <CoverflowSwiper
+            effect={'coverflow'}
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView={'auto'} // 'auto' is best for coverflow
+            loop={true}
+            autoplay={{
+              delay: 3500,
+              disableOnInteraction: false,
+            }}
+            coverflowEffect={{
+              rotate: 0,
+              stretch: 80, // Space between slides
+              depth: 200, // 3D depth
+              modifier: 1, // Effect multiplier
+              slideShadows: false, // Turned off shadows for a cleaner look
+            }}
+            navigation={true} // Use custom styled arrows
+            modules={[EffectCoverflow, Navigation, Autoplay]} // Added modules
+          >
             {services.map((service, index) => (
-              <AccordionItem
-                key={index}
+              <SwiperSlide 
+                key={index} 
                 style={{ backgroundImage: `url(${service.bg})` }}
-                animate={{ flex: expandedIndex === index ? 3 : 1 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                onClick={() => setExpandedIndex(index)}
               >
-                <AccordionContent>
-                  <AccordionTitle>{service.title}</AccordionTitle>
-                  <AnimatePresence>
-                    {expandedIndex === index && (
-                      <AccordionDescription
-                        variants={accordionContentAnim}
-                        initial="collapsed"
-                        animate="expanded"
-                        exit="collapsed"
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                      >
-                        {service.description}
-                      </AccordionDescription>
-                    )}
-                  </AnimatePresence>
-                </AccordionContent>
-              </AccordionItem>
+                <ServiceSlideContent
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <ServiceTitle>{service.title}</ServiceTitle>
+                  <ServiceDescription>{service.description}</ServiceDescription>
+                </ServiceSlideContent>
+              </SwiperSlide>
             ))}
-          </AccordionContainer>
+          </CoverflowSwiper>
         </Container>
       </Section>
       
-      {/* --- 3. WHY CHOOSE US SECTION ---
-        This section has been completely removed as requested.
-      */}
-
-      {/* --- 4. HOW IT WORKS (Interactive Timeline) --- */}
+      {/* --- 3. HOW IT WORKS (Unchanged) --- */}
       <Section
-        $alt={false} // This is no longer alternating from the deleted section
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
       >
         <Container>
@@ -765,7 +802,7 @@ export default function Home() {
       </Section>
 
 
-      {/* --- 5. TESTIMONIALS CAROUSEL --- */}
+      {/* --- 4. TESTIMONIALS CAROUSEL (Unchanged) --- */}
       <Section
         $alt={true}
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
@@ -798,7 +835,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 6. OUR PARTNERS (INFINITE SCROLL) --- */}
+      {/* --- 5. OUR PARTNERS (Unchanged) --- */}
       <Section
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
       >
@@ -816,7 +853,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 7. FAQ Section --- */}
+      {/* --- 6. FAQ Section (Unchanged) --- */}
       <Section
         $alt={true}
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
@@ -851,7 +888,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 8. FINAL CTA --- */}
+      {/* --- 7. FINAL CTA (Unchanged) --- */}
       <Container>
         <CTASection
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
@@ -868,3 +905,4 @@ export default function Home() {
     </div>
   );
 }
+

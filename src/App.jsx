@@ -1,6 +1,6 @@
 // src/App.jsx
 import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom'; // Import Navigate
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
@@ -11,11 +11,11 @@ import Home from './pages/Home';
 import Internships from './pages/Internships';
 import Contact from './pages/Contact';
 import Profile from './pages/Profile';
-// import SignIn from './pages/SignIn'; // No longer needed
+// SignIn component is no longer imported
 import ProjectRequest from './pages/ProjectRequest';
 import { useAuth } from './contexts/AuthContext';
 
-// 1. Define our themes
+// 1. Define our themes (unchanged)
 const lightTheme = {
   body: '#f8f9fa',
   text: '#212529',
@@ -38,7 +38,7 @@ const darkTheme = {
   buttonHover: '#3555f0',
 };
 
-// 2. Create a GlobalStyle component
+// 2. Create a GlobalStyle component (unchanged)
 const GlobalStyle = createGlobalStyle`
   html {
     scroll-behavior: smooth;
@@ -56,7 +56,7 @@ function App() {
   const { currentUser, loading } = useAuth();
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
-  // 3. Set up theme state
+  // 3. Set up theme state (unchanged)
   const [theme, setTheme] = useState('light');
   const isDarkTheme = theme === 'dark';
 
@@ -73,7 +73,7 @@ function App() {
     }
   }, []);
 
-  // Effect to show the modal on load
+  // Effect to show the modal on load (unchanged)
   useEffect(() => {
     if (!loading) {
       const modalClosed = sessionStorage.getItem('kodhive-signin-modal-closed');
@@ -91,7 +91,6 @@ function App() {
     sessionStorage.setItem('kodhive-signin-modal-closed', 'true');
   };
 
-  // Function to *open* the modal (will be passed to Navbar)
   const openModal = () => {
     setIsSignInModalOpen(true);
   };
@@ -107,13 +106,14 @@ function App() {
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar 
           toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          openSignInModal={openModal} // <-- Pass the open function
+          openSignInModal={openModal} 
         />
         <Sidebar 
           isOpen={isSidebarOpen}
           setIsOpen={setIsSidebarOpen}
           toggleTheme={toggleTheme}
           darkMode={isDarkTheme}
+          openSignInModal={openModal} // <-- PASS THE PROP HERE
         />
         <main style={{ flexGrow: 1 }}>
           <Routes>
@@ -121,14 +121,11 @@ function App() {
             <Route path="/internships" element={<Internships />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/request-project" element={<ProjectRequest />} />
-            {/* - If user exists, show profile.
-              - If not, redirect to home page. The modal logic will take over.
-            */}
             <Route 
               path="/profile" 
               element={currentUser ? <Profile /> : <Navigate to="/" replace />} 
             />
-            {/* <Route path="/signin" element={<SignIn />} />  <-- REMOVED */}
+            {/* The /signin route is now gone */}
           </Routes>
         </main>
         <Footer />

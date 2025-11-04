@@ -19,12 +19,18 @@ const ModalBackdrop = styled(motion.div)`
 `;
 
 // This wrapper centers the modal card
+// UPDATED: Changed to flexbox for perfect centering
 const ModalWrapper = styled(motion.div)`
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 101;
+  padding: 1rem; /* Ensures a small gap from screen edges on mobile */
 `;
 
 const SignInCard = styled.div`
@@ -35,7 +41,7 @@ const SignInCard = styled.div`
   padding: 2.5rem;
   text-align: center;
   max-width: 400px;
-  width: 90vw;
+  width: 100%; /* Changed from 90vw to 100% to respect wrapper padding */
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   
   h1 {
@@ -153,3 +159,4 @@ export default function SignInModal({ closeModal }) {
     </>
   );
 }
+

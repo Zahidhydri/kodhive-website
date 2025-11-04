@@ -105,7 +105,8 @@ const Footer = styled.div`
   gap: 1rem;
 `;
 
-const SignInButton = styled(Link)`
+// CHANGED: This is now a styled.button, not styled(Link)
+const SignInButton = styled.button`
   display: block;
   width: 100%;
   padding: 0.75rem 1rem;
@@ -115,6 +116,10 @@ const SignInButton = styled(Link)`
   border-radius: 6px;
   text-decoration: none;
   font-weight: 600;
+  border: none; // Added
+  font-size: 1rem; // Added
+  font-family: inherit; // Added
+  cursor: pointer; // Added
 
   &:hover {
     background: ${({ theme }) => theme.buttonHover};
@@ -145,19 +150,26 @@ const LogoutButton = styled.button`
   }
 `;
 
-export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode }) {
+// ACCEPT the new prop
+export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, openSignInModal }) {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const closeSidebar = () => setIsOpen(false);
 
   const handleLogout = async () => {
-    closeSidebar(); // Close sidebar first
+    closeSidebar();
     try {
       await logout();
-      navigate('/'); // Redirect to home after logout
+      navigate('/');
     } catch (error) {
       console.error('Failed to log out', error);
     }
+  };
+
+  // NEW: Handler for the sign-in button
+  const handleSignInClick = () => {
+    closeSidebar();
+    openSignInModal();
   };
 
   return (
@@ -210,7 +222,8 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode }) {
               <ThemeToggle toggleTheme={toggleTheme} darkMode={darkMode} />
               
               {!currentUser ? (
-                <SignInButton to="/signin" onClick={closeSidebar}>
+                // UPDATED: Now a button that calls handleSignInClick
+                <SignInButton onClick={handleSignInClick}>
                   Sign In / Sign Up
                 </SignInButton>
               ) : (
