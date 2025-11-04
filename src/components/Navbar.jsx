@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import styled, { keyframes } from 'styled-components';
-import logo from '../assets/kodhive-logo.png'; // Make sure this logo exists
+import logo from '../assets/kodhive-logo.png';
 
 const Nav = styled.nav`
   position: sticky;
@@ -18,7 +18,6 @@ const Nav = styled.nav`
   background: ${({ theme }) => theme.nav};
   backdrop-filter: blur(5px);
   
-  /* These transitions and props are new */
   transition: box-shadow 0.3s ease, border-bottom 0.3s ease;
   box-shadow: ${({ $scrolled }) => $scrolled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none'};
   border-bottom: 1px solid ${({ theme, $scrolled }) => $scrolled ? theme.border : 'transparent'};
@@ -70,13 +69,19 @@ const ProfileImage = styled.img`
   border: 2px solid #007bff;
 `;
 
-const SignInButton = styled(Link)`
+// This is now a <button> instead of a <Link>
+const SignInButton = styled.button`
   padding: 0.5rem 1rem;
   background-color: ${({ theme }) => theme.buttonBg};
   color: ${({ theme }) => theme.buttonText};
   border-radius: 6px;
   text-decoration: none;
   font-weight: 600;
+  border: none;
+  font-size: 0.9rem; // Match font
+  font-family: inherit; // Match font
+  cursor: pointer;
+  
   &:hover {
     background-color: ${({ theme }) => theme.buttonHover};
   }
@@ -129,20 +134,19 @@ const DropdownButton = styled.button`
   }
 `;
 
-export default function Navbar({ toggleSidebar }) {
+// Accept the new prop
+export default function Navbar({ toggleSidebar, openSignInModal }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
-  // ADDED THIS STATE AND EFFECT
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10); // Set true if scrolled more than 10px
+      setScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
-    // Cleanup
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -157,7 +161,7 @@ export default function Navbar({ toggleSidebar }) {
   };
 
   return (
-    <Nav $scrolled={scrolled}> {/* <-- Pass prop here */}
+    <Nav $scrolled={scrolled}>
       <LogoLink to="/">
         <LogoImage src={logo} alt="Kodhive Logo" />
         <LogoText>Kodhive</LogoText>
@@ -185,7 +189,10 @@ export default function Navbar({ toggleSidebar }) {
             )}
           </div>
         ) : (
-          <SignInButton to="/signin">Sign In</SignInButton>
+          // Updated to use onClick to open the modal
+          <SignInButton onClick={openSignInModal}>
+            Sign In
+          </SignInButton>
         )}
         
         <MenuButton onClick={toggleSidebar}>

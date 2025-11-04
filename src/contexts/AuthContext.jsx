@@ -32,12 +32,14 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     googleSignIn,
-    logout
+    logout,
+    loading // <-- EXPORT THE LOADING STATE
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {/* We no longer need !loading here, App.jsx will handle it */}
+      {children} 
     </AuthContext.Provider>
   );
 }

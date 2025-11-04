@@ -12,7 +12,7 @@ import {
   HiOutlineChevronDown,
   HiPlus,
   HiMinus
-  // Removed HiOutlineEye, HiOutlineThumbUp, HiOutlineSparkles
+  // All other icons removed as they are not used
 } from 'react-icons/hi';
 
 // --- Import Swiper ---
@@ -22,6 +22,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import 'swiper/css/effect-fade';
+
 
 // --- STYLED COMPONENT DEFINITIONS ---
 
@@ -227,6 +228,7 @@ const AccordionDescription = styled(motion.p)`
   font-size: 1rem;
   line-height: 1.5;
 `;
+
 
 // --- 3. HOW IT WORKS (Interactive Timeline) ---
 const TimelineContainer = styled.div`
@@ -718,8 +720,13 @@ export default function Home() {
         </Container>
       </Section>
       
-      {/* --- 3. HOW IT WORKS (Interactive Timeline) --- */}
+      {/* --- 3. WHY CHOOSE US SECTION ---
+        This section has been completely removed as requested.
+      */}
+
+      {/* --- 4. HOW IT WORKS (Interactive Timeline) --- */}
       <Section
+        $alt={false} // This is no longer alternating from the deleted section
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
       >
         <Container>
@@ -758,7 +765,7 @@ export default function Home() {
       </Section>
 
 
-      {/* --- 4. TESTIMONIALS CAROUSEL --- */}
+      {/* --- 5. TESTIMONIALS CAROUSEL --- */}
       <Section
         $alt={true}
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
@@ -791,7 +798,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 5. OUR PARTNERS (INFINITE SCROLL) --- */}
+      {/* --- 6. OUR PARTNERS (INFINITE SCROLL) --- */}
       <Section
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
       >
@@ -809,7 +816,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 6. FAQ Section --- */}
+      {/* --- 7. FAQ Section --- */}
       <Section
         $alt={true}
         initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
@@ -844,7 +851,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 7. FINAL CTA --- */}
+      {/* --- 8. FINAL CTA --- */}
       <Container>
         <CTASection
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}
