@@ -1,17 +1,17 @@
 // src/pages/Contact.jsx
 import { useState } from 'react';
-// ... existing code ...
+import styled from 'styled-components'; // <-- ADDED
+import { motion } from 'framer-motion'; // <-- ADDED
 import { HiOutlineUser, HiOutlineMail, HiOutlinePencilAlt } from 'react-icons/hi';
 
 const Container = styled(motion.div)`
-// ... existing code ...
   max-width: 800px;
+// ... (rest of the file is correct) ...
   margin: 0 auto;
   padding: 4rem 1.5rem;
 `;
 
 const Title = styled(motion.h1)`
-// ... existing code ...
   font-size: 2.75rem;
   font-weight: 700;
   text-align: center;
@@ -19,7 +19,6 @@ const Title = styled(motion.h1)`
 `;
 
 const Subtitle = styled(motion.p)`
-// ... existing code ...
   font-size: 1.15rem;
   text-align: center;
   color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
@@ -27,29 +26,28 @@ const Subtitle = styled(motion.p)`
 `;
 
 const Form = styled(motion.form)`
-// ... existing code ...
   background: ${({ theme }) => theme.card};
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 12px;
-// ... existing code ...
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
   gap: 1.75rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 `;
 
 const InputGroup = styled.div`
-// ... existing code ...
   position: relative;
   display: flex;
-// ... existing code ...
+  flex-direction: column;
   
   label {
     font-weight: 600;
-// ... existing code ...
+    margin-bottom: 0.5rem;
     font-size: 0.9rem;
   }
   
   svg {
-// ... existing code ...
     position: absolute;
     left: 1rem;
     top: 3.1rem;
@@ -60,15 +58,15 @@ const InputGroup = styled.div`
 `;
 
 const Input = styled(motion.input)`
-// ... existing code ...
   padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
   border: 1px solid ${({ theme }) => theme.border};
-// ... existing code ...
+  border-radius: 8px;
+  background: ${({ theme }) => theme.body};
+  color: ${({ theme }) => theme.text};
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   
   &:focus {
-// ... existing code ...
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
     box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
@@ -80,15 +78,18 @@ const Input = styled(motion.input)`
 `;
 
 const TextArea = styled(motion.textarea)`
-// ... existing code ...
   padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
   border: 1px solid ${({ theme }) => theme.border};
-// ... existing code ...
+  border-radius: 8px;
+  background: ${({ theme }) => theme.body};
+  color: ${({ theme }) => theme.text};
+  font-size: 1rem;
+  min-height: 160px;
+  resize: vertical;
   font-family: inherit;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   
   &:focus {
-// ... existing code ...
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
     box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
@@ -100,20 +101,21 @@ const TextArea = styled(motion.textarea)`
 `;
 
 const SubmitButton = styled(motion.button)`
-// ... existing code ...
   padding: 0.85rem 1.5rem;
   background-color: ${({ theme }) => theme.buttonBg};
-// ... existing code ...
+  color: ${({ theme }) => theme.buttonText};
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
   
   &:hover {
-// ... existing code ...
     background-color: ${({ theme }) => theme.buttonHover};
   }
   
   &:disabled {
-// ... existing code ...
     background-color: ${({ theme }) => theme.border};
     cursor: not-allowed;
   }
@@ -121,31 +123,27 @@ const SubmitButton = styled(motion.button)`
 
 // Animation Variants
 const pageVariants = {
-// ... existing code ...
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } }
 };
 
 const itemVariants = {
-// ... existing code ...
   hidden: { opacity: 0, y: 15 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
 };
 
 export default function Contact() {
-// ... existing code ...
   const [status, setStatus] = useState("Send Message");
   const contactFormUrl = `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_CONTACT_ID}`;
 
   const handleSubmit = async (e) => {
-// ... existing code ...
+    e.preventDefault();
     setStatus("Sending...");
     const form = e.target;
-// ... existing code ...
+    const data = new FormData(form);
 
     try {
       const response = await fetch(contactFormUrl, {
-// ... existing code ...
         method: "POST",
         body: data,
         headers: {
@@ -154,7 +152,6 @@ export default function Contact() {
       });
 
       if (response.ok) {
-// ... existing code ...
         setStatus("Message Sent!");
         form.reset();
         setTimeout(() => setStatus("Send Message"), 3000);
@@ -163,7 +160,7 @@ export default function Contact() {
         setTimeout(() => setStatus("Send Message"), 3000);
       }
     } catch (error) {
-      console.error("Form submission error:", error); // <-- FIX HERE
+      console.error("Form submission error:", error); // Fixed ESLint warning
       setStatus("Error. Try Again.");
       setTimeout(() => setStatus("Send Message"), 3000);
     }
@@ -171,29 +168,29 @@ export default function Contact() {
 
   return (
     <Container
-// ... existing code ...
       variants={pageVariants}
       initial="hidden"
       animate="visible"
       exit="hidden"
     >
       <Title variants={itemVariants}>Get in Touch</Title>
-// ... existing code ...
       <Subtitle variants={itemVariants}>
         Have a question or a project idea? Send us a message!
       </Subtitle>
       <Form 
         variants={itemVariants}
         action={contactFormUrl} 
-// ... existing code ...
+        method="POST"
         onSubmit={handleSubmit}
       >
         <InputGroup>
-// ... existing code ...
           <label htmlFor="name">Name</label>
           <Input 
             type="text" 
-// ... existing code ...
+            name="name" 
+            id="name" 
+            required 
+            variants={itemVariants}
             whileFocus={{ scale: 1.02 }}
           />
           <HiOutlineUser />
@@ -202,29 +199,33 @@ export default function Contact() {
         <InputGroup>
           <label htmlFor="email">Email</label>
           <Input 
-// ... existing code ...
+            type="email" 
+            name="email" 
+            id="email" 
+            required 
+            variants={itemVariants}
             whileFocus={{ scale: 1.02 }}
           />
           <HiOutlineMail />
         </InputGroup>
 
         <InputGroup>
-// ... existing code ...
           <label htmlFor="message">Message</label>
           <TextArea 
             name="message" 
-// ... existing code ...
+            id="message" 
+            required 
+            variants={itemVariants}
             whileFocus={{ scale: 1.02 }}
           />
           <HiOutlinePencilAlt style={{ top: '3.1rem' }} />
         </InputGroup>
 
         <SubmitButton 
-// ... existing code ...
           type="submit"
           variants={itemVariants}
           whileHover={{ scale: 1.03 }}
-// ... existing code ...
+          whileTap={{ scale: 0.98 }}
           disabled={status === "Sending..." || status === "Message Sent!"}
         >
           {status}
@@ -233,3 +234,4 @@ export default function Contact() {
     </Container>
   );
 }
+

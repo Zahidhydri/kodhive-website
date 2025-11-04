@@ -4,27 +4,22 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-mo
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { 
-  HiOutlineCode, 
-  HiOutlineColorSwatch, 
-  HiOutlineAcademicCap, 
   HiOutlineChevronRight, 
   HiOutlineArrowRight,
   HiOutlineChevronDown,
   HiPlus,
   HiMinus
 } from 'react-icons/hi';
-// All other icons removed as they are not used (Comment moved to a valid location)
 
 // --- Import Swiper ---
 import { Swiper, SwiperSlide } from 'swiper/react';
-// ADDED EffectCoverflow and Navigation
 import { Pagination, Autoplay, EffectFade, EffectCoverflow, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import 'swiper/css/effect-fade';
-import 'swiper/css/effect-coverflow'; // ADDED
-import 'swiper/css/navigation'; // ADDED
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/navigation';
 
 
 // --- STYLED COMPONENT DEFINITIONS ---
@@ -36,7 +31,7 @@ const Container = styled.div`
   padding: 0 1.5rem;
 `;
 
-// --- 1. HERO SLIDESHOW Section (Unchanged) ---
+// --- 1. HERO SLIDESHOW Section ---
 const HeroSwiper = styled(Swiper)`
   width: 100%;
   height: 90vh;
@@ -181,7 +176,6 @@ const SectionTitle = styled.h2`
 `;
 
 // --- 2. OUR SERVICES (NEW Coverflow Carousel) ---
-// The old Accordion components have been removed
 const CoverflowSwiper = styled(Swiper)`
   width: 100%;
   padding-top: 2rem;    /* Make space for slide content */
@@ -538,9 +532,6 @@ const heroTextAnim = {
   animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
 
-// REMOVED old accordionContentAnim
-// const accordionContentAnim = { ... };
-
 const faqAnswerAnim = {
   hidden: { opacity: 0, height: 0, y: -10 },
   visible: { opacity: 1, height: 'auto', y: 0, transition: { duration: 0.3, ease: "easeOut" } }
@@ -559,7 +550,7 @@ const heroSlides = [
     subtitle: "Connecting bright students with innovative real-world projects.", 
     buttonText: "Find Internships", 
     link: "/internships",
-    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070" 
+    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto-format&fit=crop&q=80&w=2070" 
   },
   { 
     title: "Have an Idea? Let's Build It.", 

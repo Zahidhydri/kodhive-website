@@ -1,18 +1,17 @@
 // src/pages/ProjectRequest.jsx
 import { useState } from 'react';
-// ... existing code ...
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
 import { HiOutlineUser, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLightBulb, HiOutlineChevronDown } from 'react-icons/hi';
 
 
 const Container = styled(motion.div)`
-// ... existing code ...
   max-width: 800px;
   margin: 0 auto;
   padding: 4rem 1.5rem;
 `;
 
 const Title = styled(motion.h1)`
-// ... existing code ...
   font-size: 2.75rem;
   font-weight: 700;
   text-align: center;
@@ -20,7 +19,6 @@ const Title = styled(motion.h1)`
 `;
 
 const Subtitle = styled(motion.p)`
-// ... existing code ...
   font-size: 1.15rem;
   text-align: center;
   color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
@@ -28,44 +26,44 @@ const Subtitle = styled(motion.p)`
 `;
 
 const Form = styled(motion.form)`
-// ... existing code ...
   background: ${({ theme }) => theme.card};
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 12px;
-// ... existing code ...
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
   gap: 1.75rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 `;
 
 const InputGroup = styled.div`
-// ... existing code ...
   position: relative;
   display: flex;
-// ... existing code ...
+  flex-direction: column;
   
   label {
     font-weight: 600;
-// ... existing code ...
+    margin-bottom: 0.5rem;
     font-size: 0.9rem;
   }
   
   /* Icon for Input */
-// ... existing code ...
   svg.input-icon {
     position: absolute;
     left: 1rem;
-// ... existing code ...
+    top: 3.1rem;
+    font-size: 1.25rem;
     color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
     transition: color 0.3s ease;
     pointer-events: none; /* Make icon unclickable */
   }
 
   /* Icon for Select */
-// ... existing code ...
   svg.select-arrow {
     position: absolute;
     right: 1rem;
-// ... existing code ...
+    top: 3.1rem;
+    font-size: 1.25rem;
     color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
     transition: color 0.3s ease;
     pointer-events: none; /* Make icon unclickable */
@@ -73,15 +71,15 @@ const InputGroup = styled.div`
 `;
 
 const Input = styled(motion.input)`
-// ... existing code ...
   padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
   border: 1px solid ${({ theme }) => theme.border};
-// ... existing code ...
+  border-radius: 8px;
+  background: ${({ theme }) => theme.body};
+  color: ${({ theme }) => theme.text};
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   
   &:focus {
-// ... existing code ...
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
     box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
@@ -93,36 +91,40 @@ const Input = styled(motion.input)`
 `;
 
 const Select = styled(motion.select)`
-// ... existing code ...
   padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
   border: 1px solid ${({ theme }) => theme.border};
-// ... existing code ...
+  border-radius: 8px;
+  background: ${({ theme }) => theme.body};
+  color: ${({ theme }) => theme.text};
+  font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   appearance: none; /* Remove default browser arrow */
   
   &:focus {
-// ... existing code ...
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
     box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
     
     + svg.input-icon,
-// ... existing code ...
+    + svg.input-icon + svg.select-arrow {
       color: ${({ theme }) => theme.buttonBg};
     }
   }
 `;
 
 const TextArea = styled(motion.textarea)`
-// ... existing code ...
   padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
   border: 1px solid ${({ theme }) => theme.border};
-// ... existing code ...
+  border-radius: 8px;
+  background: ${({ theme }) => theme.body};
+  color: ${({ theme }) => theme.text};
+  font-size: 1rem;
+  min-height: 160px;
+  resize: vertical;
   font-family: inherit;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   
   &:focus {
-// ... existing code ...
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
     box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
@@ -134,20 +136,21 @@ const TextArea = styled(motion.textarea)`
 `;
 
 const SubmitButton = styled(motion.button)`
-// ... existing code ...
   padding: 0.85rem 1.5rem;
   background-color: ${({ theme }) => theme.buttonBg};
-// ... existing code ...
+  color: ${({ theme }) => theme.buttonText};
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
   
   &:hover {
-// ... existing code ...
     background-color: ${({ theme }) => theme.buttonHover};
   }
 
   &:disabled {
-// ... existing code ...
     background-color: ${({ theme }) => theme.border};
     cursor: not-allowed;
   }
@@ -155,31 +158,27 @@ const SubmitButton = styled(motion.button)`
 
 // Animation Variants
 const pageVariants = {
-// ... existing code ...
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } }
 };
 
 const itemVariants = {
-// ... existing code ...
   hidden: { opacity: 0, y: 15 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
 };
 
 export default function ProjectRequest() {
-// ... existing code ...
   const [status, setStatus] = useState("Submit Request");
   const projectFormUrl = `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_PROJECT_ID}`;
 
   const handleSubmit = async (e) => {
-// ... existing code ...
+    e.preventDefault();
     setStatus("Submitting...");
     const form = e.target;
-// ... existing code ...
+    const data = new FormData(form);
 
     try {
       const response = await fetch(projectFormUrl, {
-// ... existing code ...
         method: "POST",
         body: data,
         headers: {
@@ -188,7 +187,6 @@ export default function ProjectRequest() {
       });
 
       if (response.ok) {
-// ... existing code ...
         setStatus("Request Sent!");
         form.reset();
         setTimeout(() => setStatus("Submit Request"), 3000);
@@ -197,7 +195,7 @@ export default function ProjectRequest() {
         setTimeout(() => setStatus("Submit Request"), 3000);
       }
     } catch (error) {
-      console.error("Form submission error:", error); // <-- FIX HERE
+      console.error("Form submission error:", error); // Fixed ESLint warning
       setStatus("Error. Try Again.");
       setTimeout(() => setStatus("Submit Request"), 3000);
     }
@@ -205,55 +203,58 @@ export default function ProjectRequest() {
 
   return (
     <Container
-// ... existing code ...
       variants={pageVariants}
       initial="hidden"
       animate="visible"
       exit="hidden"
     >
       <Title variants={itemVariants}>Request a Project</Title>
-// ... existing code ...
       <Subtitle variants={itemVariants}>
         Let our talented students build your idea. Fill out the form below.
       </Subtitle>
       <Form 
-// ... existing code ...
+        variants={itemVariants}
         action={projectFormUrl} 
         method="POST"
         onSubmit={handleSubmit}
       >
         <InputGroup>
-// ... existing code ...
           <label htmlFor="name">Your Name</label>
           <Input 
             type="text" 
-// ... existing code ...
+            name="name" 
+            id="name" 
+            required 
+            variants={itemVariants}
             whileFocus={{ scale: 1.02 }}
           />
           <HiOutlineUser className="input-icon" />
         </InputGroup>
         
         <InputGroup>
-// ... existing code ...
           <label htmlFor="email">Your Email</label>
           <Input 
             type="email" 
-// ... existing code ...
+            name="email" 
+            id="email" 
+            required 
+            variants={itemVariants}
             whileFocus={{ scale: 1.02 }}
           />
           <HiOutlineMail className="input-icon" />
         </InputGroup>
 
         <InputGroup>
-// ... existing code ...
           <label htmlFor="projectType">Project Type</label>
           <Select 
             name="projectType" 
-// ... existing code ...
+            id="projectType"
+            variants={itemVariants}
             whileFocus={{ scale: 1.02 }}
           >
             <option value="website">Website</option>
-// ... existing code ...
+            <option value="logo">Logo / Graphic Design</option>
+            <option value="mobile-app">Mobile App</option>
             <option value="other">Other</option>
           </Select>
           <HiOutlineLightBulb className="input-icon" />
@@ -261,22 +262,23 @@ export default function ProjectRequest() {
         </InputGroup>
 
         <InputGroup>
-// ... existing code ...
           <label htmlFor="requirements">Project Requirements</label>
           <TextArea 
             name="requirements" 
-// ... existing code ...
+            id="requirements" 
+            placeholder="Describe your project, key features, and what you need..." 
+            required 
+            variants={itemVariants}
             whileFocus={{ scale: 1.02 }}
           />
           <HiOutlinePencilAlt className="input-icon" style={{ top: '3.1rem' }} />
         </InputGroup>
 
         <SubmitButton 
-// ... existing code ...
           type="submit"
           variants={itemVariants}
           whileHover={{ scale: 1.03 }}
-// ... existing code ...
+          whileTap={{ scale: 0.98 }}
           disabled={status === "Submitting..." || status === "Request Sent!"}
         >
           {status}
@@ -285,3 +287,4 @@ export default function ProjectRequest() {
     </Container>
   );
 }
+

@@ -5,6 +5,7 @@ import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   return useContext(AuthContext);
 }
@@ -33,13 +34,13 @@ export function AuthProvider({ children }) {
     currentUser,
     googleSignIn,
     logout,
-    loading // <-- EXPORT THE LOADING STATE
+    loading 
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {/* We no longer need !loading here, App.jsx will handle it */}
       {children} 
     </AuthContext.Provider>
   );
 }
+
