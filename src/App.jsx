@@ -15,7 +15,7 @@ import Profile from './pages/Profile';
 import ProjectRequest from './pages/ProjectRequest';
 import { useAuth } from './contexts/AuthContext';
 
-// 1. Define our themes (unchanged)
+// 1. Define our themes
 const lightTheme = {
   body: '#f8f9fa',
   text: '#212529',
@@ -27,18 +27,19 @@ const lightTheme = {
   buttonHover: '#0056b3',
 };
 
+// UPDATED Dark Theme
 const darkTheme = {
-  body: '#1a2035',
-  text: '#e9ecef',
-  nav: 'rgba(26, 32, 53, 0.8)',
-  card: '#2a314e',
-  border: '#40486a',
-  buttonBg: '#4a69ff',
+  body: '#1a2035', // Dark indigo base
+  text: '#e9ecef', // Light text for contrast
+  nav: 'rgba(26, 32, 53, 0.8)', // Darker nav with blur
+  card: '#2a314e', // Slightly lighter indigo for cards/modals
+  border: '#40486a', // Muted blue for borders
+  buttonBg: '#4a69ff', // A brighter blue for primary buttons
   buttonText: '#ffffff',
-  buttonHover: '#3555f0',
+  buttonHover: '#3555f0', // Slightly darker hover for the button
 };
 
-// 2. Create a GlobalStyle component (unchanged)
+// 2. Create a GlobalStyle component
 const GlobalStyle = createGlobalStyle`
   html {
     scroll-behavior: smooth;
@@ -56,7 +57,7 @@ function App() {
   const { currentUser, loading } = useAuth();
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
-  // 3. Set up theme state (unchanged)
+  // 3. Set up theme state
   const [theme, setTheme] = useState('light');
   const isDarkTheme = theme === 'dark';
 
@@ -68,9 +69,8 @@ function App() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+    // Set default to light if no theme is saved
+    setTheme(savedTheme || 'light');
   }, []);
 
   // Effect to show the modal on load (unchanged)

@@ -616,7 +616,7 @@ const heroSlides = [
     subtitle: "Connecting bright students with innovative real-world projects.", 
     buttonText: "Find Internships", 
     link: "/internships",
-    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070" 
+    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto-format&fit=crop&q=80&w=2070" 
   },
   { 
     title: "Have an Idea? Let's Build It.", 
