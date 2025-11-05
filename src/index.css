@@ -1,10 +1,17 @@
 /* src/index.css */
 
 /* --- Custom Cursors --- */
+/*
+  NOTE: Your cursor images in /public/ are 64x64 pixels.
+  This might make them appear very large on some screens.
+  For best results, I still recommend replacing them with 32x32 pixel versions.
+
+  I have updated the hotspot coordinates below to match your 64x64 images.
+*/
 html {
   /* This sets the default arrow cursor for the whole page */
-  /* Replaced PNG with high-quality inline SVG */
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewport="0 0 100 100" style="fill:black;"><path d="M10.4,22.3l2.4-2.4,8.3,8.3v-17H25V30.5l8.3-8.3,2.4,2.4L20.4,32.3Z"/></svg>') 16 16, auto;
+  /* The '0 0' sets the click-point to the top-left tip. 'auto' is the fallback. */
+  cursor: url('/cursor-default.png') 0 0, auto;
 }
 
 /* This sets the hand cursor for clickable items */
@@ -16,12 +23,21 @@ a,
 .swiper-pagination-bullet,
 select,
 input[type="submit"],
-[data-clickable="true"],
-[onClick] {
-  /* Replaced PNG with high-quality inline SVG */
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewport="0 0 100 100" style="fill:black;"><path d="M23.1,36.5l-6.8-6.8a2.5,2.5,0,0,1,0-3.5l0,0a2.5,2.5,0,0,1,3.5,0l6.8,6.8a2.5,2.5,0,0,1,0,3.5l0,0A2.5,2.5,0,0,1,23.1,36.5Z M33.6,33.1l-6.8-6.8a2.5,2.5,0,0,1,0-3.5l0,0a2.5,2.5,0,0,1,3.5,0l6.8,6.8a2.5,2.5,0,0,1,0,3.5l0,0A2.5,2.5,0,0,1,33.6,33.1Z M28.4,26l-6.8-6.8a2.5,2.5,0,0,1,0-3.5l0,0a2.5,2.5,0,0,1,3.5,0l6.8,6.8a2.5,2.5,0,0,1,0,3.5l0,0A2.5,2.5,0,0,1,28.4,26Z M23.1,18.8l-6.8-6.8a2.5,2.5,0,0,1,0-3.5l0,0a2.5,2.5,0,0,1,3.5,0l6.8,6.8a2.5,2.5,0,0,1,0,3.5l0,0A2.5,2.5,0,0,1,23.1,18.8Z M19.6,38.2l-6.1-6.1a2.5,2.5,0,0,1,0-3.5l0,0a2.5,2.5,0,0,1,3.5,0l6.1,6.1a2.5,2.5,0,0,1,0,3.5l0,0A2.5,2.5,0,0,1,19.6,38.2Z M16,30.9l-6.1-6.1a2.5,2.5,0,0,1,0-3.5l0,0a2.5,2.5,0,0,1,3.5,0l6.1,6.1a2.5,2.5,0,0,1,0,3.5l0,0A2.5,2.5,0,0,1,16,30.9Z"/></svg>') 16 16, pointer;
+[data-clickable="true"] {
+  /*
+    The '16 4' hotspot is calculated for your 64x64 image.
+    It sets the click-point to the tip of the pointer finger.
+    'pointer' is the fallback.
+  */
+  cursor: url('/cursor-pointer.png') 16 4, pointer;
 }
 
+/* This forces the custom pointer even when dragging a slider */
+.swiper-grabbing {
+  /* '16 4' is the hotspot, 'grabbing' is the fallback */
+  cursor: url('/cursor-pointer.png') 16 4, grabbing;
+}
+/* --- End Custom Cursors --- */
 
 body {
   margin: 0;
