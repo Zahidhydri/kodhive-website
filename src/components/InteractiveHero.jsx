@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { HiOutlineArrowRight, HiOutlinePause, HiOutlinePlay } from 'react-icons/hi';
 
-// --- Data ---
+// --- Data with NEW Vibrant Color Palettes ---
 const heroSlides = [
   { 
     title: "Innovate with Kodhive", 
@@ -13,8 +13,8 @@ const heroSlides = [
     buttonText: "About Us", 
     link: "/contact",
     bg: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=2070",
-    // bgColor removed
-    badgeColor: "#00796b" // Teal
+    badgeColor: "#00796b", // Teal
+    colorPalette: ['#00796b', '#4db6ac', '#80cbc4'] // Teal, Light Teal, Lighter Teal
   },
   { 
     title: "Find Your Next Opportunity", 
@@ -22,8 +22,8 @@ const heroSlides = [
     buttonText: "See Internships", 
     link: "/internships",
     bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070",
-    // bgColor removed
-    badgeColor: "#3f51b5" // Indigo
+    badgeColor: "#3f51b5", // Indigo
+    colorPalette: ['#3f51b5', '#4a69ff', '#7986cb'] // Indigo, Bright Blue, Light Indigo
   },
   { 
     title: "Have an Idea? Let's Build It.", 
@@ -31,8 +31,8 @@ const heroSlides = [
     buttonText: "Request a Project", 
     link: "/request-project",
     bg: "https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&q=80&w=2070",
-    // bgColor removed
-    badgeColor: "#d81b60" // Pink
+    badgeColor: "#d81b60", // Pink
+    colorPalette: ['#d81b60', '#f06292', '#f48fb1'] // Pink, Light Pink, Lighter Pink
   },
   { 
     title: "Join Our Tech Community", 
@@ -40,30 +40,28 @@ const heroSlides = [
     buttonText: "Get in Touch", 
     link: "/contact",
     bg: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=2070",
-    // bgColor removed
-    badgeColor: "#f57c00" // Orange
+    badgeColor: "#f57c00", // Orange
+    colorPalette: ['#f57c00', '#ffb74d', '#ff9800'] // Orange, Light Orange, Amber
   }
 ];
 
 
 // --- Keyframes for Animations ---
-
+// UPDATED: Increased opacity for more vibrance
 const float = keyframes`
-  0% { transform: translateY(0px) rotate(0deg); opacity: 0.05; }
-  50% { transform: translateY(-25px) rotate(10deg); opacity: 0.1; }
-  100% { transform: translateY(0px) rotate(0deg); opacity: 0.05; }
+  0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+  50% { transform: translateY(-25px) rotate(10deg); opacity: 0.2; }
+  100% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
 `;
 
 // --- Styled Components ---
 
-// REVERTED: No longer a motion component, background is from theme
 const HeroOuterContainer = styled.section`
   background: ${({ theme }) => theme.body}; 
   padding: 4rem 1.5rem 0 1.5rem; 
   overflow: hidden;
   border-top: 1px solid ${({ theme }) => theme.border};
   position: relative; 
-  /* Removed background transition */
 `;
 
 const HexagonBackground = styled.div`
@@ -76,17 +74,26 @@ const HexagonBackground = styled.div`
   z-index: 0;
 `;
 
+// UPDATED: Hexagons now use the color palette
 const Hexagon = styled.div`
   position: absolute;
   width: 100px;
   height: 115px;
-  background-color: ${({ $color }) => $color || '#007bff'};
-  opacity: 0.05; 
+  background-color: ${({ $colors }) => $colors[0] || '#007bff'};
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   animation: ${float} 8s ease-in-out infinite;
-  /* ENHANCED: Faster color transition */
   transition: background-color 0.8s ease-in-out;
+  opacity: 0.1; // Base opacity set by keyframe
 
+  // Use different colors from the palette
+  &:nth-child(odd) {
+    background-color: ${({ $colors }) => $colors[1]};
+  }
+  &:nth-child(3n) {
+    background-color: ${({ $colors }) => $colors[2]};
+  }
+  
+  // Positioning and animation delays (unchanged)
   &:nth-child(1) { top: 10%; left: 5%; width: 80px; height: 92px; animation-duration: 9s; animation-delay: -3s; }
   &:nth-child(2) { top: 20%; left: 80%; width: 120px; height: 138px; animation-duration: 10s; animation-delay: -5s; }
   &:nth-child(3) { top: 65%; left: 10%; width: 60px; height: 69px; animation-duration: 11s; animation-delay: -1s; }
@@ -116,12 +123,15 @@ const HeroContainer = styled.div`
 
 // --- Left Side: Text Content ---
 
+// UPDATED: Added min-height and justify-content to prevent collapse
 const TextContent = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   z-index: 5;
+  min-height: 450px; // Prevents collapse during animation
+  justify-content: center; // Vertically centers content
 
   @media (min-width: 1024px) {
     align-items: flex-start;
@@ -149,11 +159,11 @@ const Title = styled(motion.h1)`
   margin-bottom: 1.5rem;
   line-height: 1.1;
   color: ${({ theme }) => theme.text};
-  min-height: 110px; 
+  // REMOVED min-height
 
   @media (min-width: 768px) {
     font-size: 4.5rem;
-    min-height: 150px;
+    // REMOVED min-height
   }
 `;
 
@@ -163,7 +173,7 @@ const Subtitle = styled(motion.p)`
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   max-width: 500px;
   line-height: 1.6;
-  min-height: 80px; 
+  // REMOVED min-height
 `;
 
 const Button = styled(motion(Link))`
@@ -266,26 +276,31 @@ const Card = styled(motion.div)`
 
 // --- Animation Variants ---
 
+// UPDATED: Simplified variants for a smoother fade
 const textContainerVariants = {
   hidden: { opacity: 0 },
   visible: { 
     opacity: 1,
-    // ENHANCED: Slightly longer delay for text
-    transition: { staggerChildren: 0.08, delayChildren: 0.3 }
+    transition: { 
+      staggerChildren: 0.08, 
+      delayChildren: 0.2 // Delay children staggering
+    }
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.2 } // Faster exit
   }
 };
 
 const textItemVariants = {
-  hidden: { opacity: 0, y: 25 },
+  hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
     y: 0, 
-    // ENHANCED: Softer spring
-    transition: { type: 'spring', stiffness: 80, damping: 15 } 
+    transition: { type: 'spring', stiffness: 100, damping: 18 } // Slightly bouncier
   }
 };
 
-// ENHANCEMENT: Smoother card transitions
 const cardVariants = {
   // Start from the back
   initial: { 
@@ -353,28 +368,29 @@ export default function InteractiveHero() {
   };
 
   return (
-    // REVERTED: Removed animated background
     <HeroOuterContainer>
+      {/* UPDATED: Pass colors to background */}
       <HexagonBackground>
-        <Hexagon $color={activeBadgeColor} /> 
-        <Hexagon $color={activeBadgeColor} /> 
-        <Hexagon $color={activeBadgeColor} /> 
-        <Hexagon $color={activeBadgeColor} /> 
-        <Hexagon $color={activeBadgeColor} /> 
-        <Hexagon $color={activeBadgeColor} /> 
-        <Hexagon $color={activeBadgeColor} />
+        <Hexagon $colors={activeSlide.colorPalette} /> 
+        <Hexagon $colors={activeSlide.colorPalette} /> 
+        <Hexagon $colors={activeSlide.colorPalette} /> 
+        <Hexagon $colors={activeSlide.colorPalette} /> 
+        <Hexagon $colors={activeSlide.colorPalette} /> 
+        <Hexagon $colors={activeSlide.colorPalette} /> 
+        <Hexagon $colors={activeSlide.colorPalette} />
       </HexagonBackground>
 
       <HeroContainer>
         {/* --- Left Text Content --- */}
         <TextContent>
+          {/* UPDATED: AnimatePresence wraps a motion.div to control text fades */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
               variants={textContainerVariants}
               initial="hidden"
               animate="visible"
-              exit="hidden"
+              exit="exit" // Use the exit variant
             >
               <HeroBadge 
                 variants={textItemVariants} 
@@ -413,7 +429,7 @@ export default function InteractiveHero() {
           </SliderControls>
         </TextContent>
 
-        {/* --- Right Visual Content --- */}
+        {/* --- Right Visual Content (Unchanged) --- */}
         <VisualContent>
           <AnimatePresence>
             {[...heroSlides].reverse().map((slide, i) => {
@@ -437,8 +453,8 @@ export default function InteractiveHero() {
                 return null;
               }
 
-              return (
-                <Card
+              // UPDATED: Removed parentheses from return
+              return <Card
                   key={originalIndex} 
                   style={{
                     backgroundImage: `url(${slide.bg})`, 
@@ -448,8 +464,7 @@ export default function InteractiveHero() {
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                />
-              )
+                />;
             })}
           </AnimatePresence>
         </VisualContent>

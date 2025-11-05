@@ -1,8 +1,8 @@
 // src/components/Sidebar.jsx
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout } from 'react-icons/hi';
-import ThemeToggle from './ThemeToggle';
+import { useAuth } from '../contexts/AuthContext'; // Corrected path
+import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout, HiOutlineUser } from 'react-icons/hi';
+import ThemeToggle from './ThemeToggle'; // Corrected path
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
 
@@ -49,6 +49,59 @@ const Header = styled.div`
   }
 `;
 
+// NEW: Component for user profile display at the top
+const UserProfileDisplay = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 1rem; /* More padding */
+  border-bottom: 1px solid ${({ theme }) => theme.border};
+`;
+
+const ProfileImage = styled.img`
+  width: 50px; /* Increased size */
+  height: 50px; /* Increased size */
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid ${({ theme }) => theme.buttonBg}; /* Added border */
+`;
+
+// NEW: Fallback icon for profile
+const ProfileIconFallback = styled.div`
+  width: 50px; /* Increased size */
+  height: 50px; /* Increased size */
+  border-radius: 50%;
+  background: ${({ theme }) => theme.border};
+  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem; /* Increased size */
+`;
+
+// NEW: Wrapper for text
+const ProfileInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* To handle text overflow */
+`;
+
+const WelcomeText = styled.span`
+  font-size: 0.85rem;
+  color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
+  margin-bottom: 0.125rem;
+`;
+
+const ProfileName = styled.span`
+  font-weight: 700; /* Bolder */
+  color: ${({ theme }) => theme.text};
+  font-size: 1.1rem; /* Larger */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+
 const Nav = styled.nav`
   display: flex;
   flex-direction: column;
@@ -85,6 +138,9 @@ const Footer = styled.div`
   flex-direction: column;
   gap: 1rem;
 `;
+
+// REMOVED: UserProfile, ProfileImage, ProfileIconFallback, ProfileName
+// (They are now defined at the top as UserProfileDisplay and its children)
 
 const SignInButton = styled.button`
   display: block;
@@ -177,6 +233,23 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
               <button onClick={closeSidebar}><HiX /></button>
             </Header>
 
+            {/* MOVED: User profile display is now at the top */}
+            {currentUser && (
+              <UserProfileDisplay>
+                {currentUser.photoURL ? (
+                  <ProfileImage src={currentUser.photoURL} alt={currentUser.displayName || 'Profile'} />
+                ) : (
+                  <ProfileIconFallback>
+                    <HiOutlineUser />
+                  </ProfileIconFallback>
+                )}
+                <ProfileInfo>
+                  <WelcomeText>Welcome back,</WelcomeText>
+                  <ProfileName>{currentUser.displayName || 'User'}</ProfileName>
+                </ProfileInfo>
+              </UserProfileDisplay>
+            )}
+
             <Nav>
               {/* UPDATED: onClick handler */}
               <NavLink to="/" onClick={handleHomeClick}>
@@ -201,9 +274,12 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
                   Sign In / Sign Up
                 </SignInButton>
               ) : (
-                <LogoutButton onClick={handleLogout}>
-                  <HiOutlineLogout /> Logout
-                </LogoutButton>
+                <>
+                  {/* REMOVED: UserProfile block was here */}
+                  <LogoutButton onClick={handleLogout}>
+                    <HiOutlineLogout /> Logout
+                  </LogoutButton>
+                </>
               )}
             </Footer>
           </SidebarContainer>

@@ -1,4 +1,30 @@
 /* src/index.css */
+
+/* src/index.css */
+
+/* --- Custom Cursors --- */
+/* This will use your new cursors once you add them to the /public/ folder */
+html {
+  /* This sets the default arrow cursor for the whole page */
+  /* The '16 16' numbers center the click point. 'auto' is the fallback. */
+  cursor: url('/cursor-default.png') 16 16, auto;
+}
+
+/* This sets the hand cursor for clickable items */
+button,
+a,
+[role="button"],
+.swiper-button-next,
+.swiper-button-prev,
+.swiper-pagination-bullet,
+select,
+input[type="submit"],
+[data-clickable="true"],
+[onClick] {
+  /* 'pointer' is the fallback in case the image fails to load */
+  cursor: url('/cursor-pointer.png') 16 16, pointer;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

@@ -17,6 +17,7 @@ import {
 
 // --- Import New Hero ---
 import InteractiveHero from '../components/InteractiveHero'; // <-- IMPORT
+import LogoShowcase from '../components/LogoShowcase'; // <-- IMPORT NEW COMPONENT
 
 // --- Import Swiper ---
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -708,6 +709,9 @@ export default function Home() {
       {/* --- 1. NEW InteractiveHero --- */}
       <InteractiveHero />
       
+      {/* --- NEW Logo Showcase Section --- */}
+      <LogoShowcase />
+
       {/* --- 2. OUR SERVICES (Coverflow - Unchanged) --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant} id="services">
         <Container>
@@ -933,4 +937,3 @@ export default function Home() {
     </div>
   );
 }
-

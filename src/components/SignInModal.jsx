@@ -1,5 +1,5 @@
 // src/components/SignInModal.jsx
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext.jsx'; // Corrected path
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { HiX } from 'react-icons/hi';
@@ -117,7 +117,7 @@ export default function SignInModal({ closeModal }) {
     try {
       await googleSignIn();
       closeModal(); // Close the modal on success
-      navigate('/profile'); // Redirect to profile
+      navigate('/'); // UPDATED: Redirect to home page instead of profile
     } catch (error) {
       console.error('Failed to sign in with Google', error);
     }
@@ -159,4 +159,3 @@ export default function SignInModal({ closeModal }) {
     </>
   );
 }
-
