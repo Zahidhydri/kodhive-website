@@ -1,8 +1,8 @@
 // src/components/InteractiveHero.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components'; // Removed useTheme
+import styled, { keyframes } from 'styled-components';
 import { HiOutlineArrowRight, HiOutlinePause, HiOutlinePlay } from 'react-icons/hi';
 
 // --- Data ---
@@ -11,29 +11,37 @@ const heroSlides = [
     title: "Innovate with Kodhive", 
     subtitle: "We connect bright student talent with real-world projects, helping you build the future while they build their careers.", 
     buttonText: "About Us", 
-    link: "/contact", // Changed to /contact, as there's no /about page
-    bg: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=2070" 
+    link: "/contact",
+    bg: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=2070",
+    // bgColor removed
+    badgeColor: "#00796b" // Teal
   },
   { 
     title: "Find Your Next Opportunity", 
     subtitle: "Gain hands-on experience by applying for internships and projects posted by our partner companies.", 
     buttonText: "See Internships", 
-    link: "/internships", // Correct link to internships page
-    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070" 
+    link: "/internships",
+    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070",
+    // bgColor removed
+    badgeColor: "#3f51b5" // Indigo
   },
   { 
     title: "Have an Idea? Let's Build It.", 
     subtitle: "Submit your project requirements, and our curated team of talented students will bring your vision to life.", 
     buttonText: "Request a Project", 
-    link: "/request-project", // Correct link to project request page
-    bg: "https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&q=80&w=2070"
+    link: "/request-project",
+    bg: "https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&q=80&w=2070",
+    // bgColor removed
+    badgeColor: "#d81b60" // Pink
   },
   { 
     title: "Join Our Tech Community", 
     subtitle: "Learn, grow, and network with fellow students, mentors, and industry professionals in our vibrant community.", 
     buttonText: "Get in Touch", 
     link: "/contact",
-    bg: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=2070" 
+    bg: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=2070",
+    // bgColor removed
+    badgeColor: "#f57c00" // Orange
   }
 ];
 
@@ -48,12 +56,14 @@ const float = keyframes`
 
 // --- Styled Components ---
 
+// REVERTED: No longer a motion component, background is from theme
 const HeroOuterContainer = styled.section`
-  background-color: ${({ theme }) => theme.body};
+  background: ${({ theme }) => theme.body}; 
   padding: 4rem 1.5rem 0 1.5rem; 
   overflow: hidden;
   border-top: 1px solid ${({ theme }) => theme.border};
   position: relative; 
+  /* Removed background transition */
 `;
 
 const HexagonBackground = styled.div`
@@ -70,10 +80,12 @@ const Hexagon = styled.div`
   position: absolute;
   width: 100px;
   height: 115px;
-  background-color: ${({ theme }) => theme.buttonBg};
+  background-color: ${({ $color }) => $color || '#007bff'};
   opacity: 0.05; 
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   animation: ${float} 8s ease-in-out infinite;
+  /* ENHANCED: Faster color transition */
+  transition: background-color 0.8s ease-in-out;
 
   &:nth-child(1) { top: 10%; left: 5%; width: 80px; height: 92px; animation-duration: 9s; animation-delay: -3s; }
   &:nth-child(2) { top: 20%; left: 80%; width: 120px; height: 138px; animation-duration: 10s; animation-delay: -5s; }
@@ -120,13 +132,15 @@ const TextContent = styled(motion.div)`
 const HeroBadge = styled(motion.span)`
   display: inline-block;
   padding: 0.5rem 1rem;
-  background: ${({ theme }) => theme.buttonBg}22;
-  color: ${({ theme }) => theme.buttonBg};
+  background: ${({ $color }) => $color ? `${$color}22` : 'rgba(0,123,255,0.15)'};
+  color: ${({ $color }) => $color || '#007bff'};
   border-radius: 999px;
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  box-shadow: 0 2px 10px ${({ theme }) => theme.buttonBg}44;
+  box-shadow: 0 2px 10px ${({ $color }) => $color ? `${$color}44` : 'rgba(0,123,255,0.3)'};
+  /* ENHANCED: Faster color transition */
+  transition: all 0.8s ease-in-out;
 `;
 
 const Title = styled(motion.h1)`
@@ -224,7 +238,7 @@ const VisualContent = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 450px;
-  perspective: 1500px; 
+  perspective: 1000px; 
 
   @media (min-width: 1024px) {
     display: flex; 
@@ -256,7 +270,8 @@ const textContainerVariants = {
   hidden: { opacity: 0 },
   visible: { 
     opacity: 1,
-    transition: { staggerChildren: 0.08 }
+    // ENHANCED: Slightly longer delay for text
+    transition: { staggerChildren: 0.08, delayChildren: 0.3 }
   }
 };
 
@@ -265,9 +280,45 @@ const textItemVariants = {
   visible: { 
     opacity: 1, 
     y: 0, 
-    transition: { type: 'spring', stiffness: 100, damping: 15 } 
+    // ENHANCED: Softer spring
+    transition: { type: 'spring', stiffness: 80, damping: 15 } 
   }
 };
+
+// ENHANCEMENT: Smoother card transitions
+const cardVariants = {
+  // Start from the back
+  initial: { 
+    x: 40, 
+    y: -40, 
+    scale: 0.8, 
+    opacity: 0,
+    zIndex: 1
+  }, 
+  // Animate to stacked position
+  animate: (i) => ({
+    x: i.x,
+    y: i.y,
+    scale: i.scale,
+    opacity: i.opacity,
+    zIndex: i.zIndex,
+    transition: {
+      type: 'spring',
+      stiffness: 90, // Softer spring
+      damping: 20,
+      delay: i.zIndex === 3 ? 0.15 : 0 // Main card animates slightly later
+    }
+  }),
+  // Animate out
+  exit: {
+    y: -60, // Move up
+    scale: 0.9, // Scale down
+    opacity: 0,
+    zIndex: 0,
+    transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } // Smooth ease-out
+  }
+};
+
 
 // --- Component ---
 
@@ -275,8 +326,9 @@ export default function InteractiveHero() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const intervalRef = useRef(null);
+  
   const activeSlide = heroSlides[activeIndex];
-  // REMOVED theme variable
+  const activeBadgeColor = activeSlide.badgeColor;
 
   // Auto-sliding logic
   useEffect(() => {
@@ -288,7 +340,7 @@ export default function InteractiveHero() {
       clearInterval(intervalRef.current);
     }
     return () => clearInterval(intervalRef.current);
-  }, [isPlaying]); // REMOVED heroSlides.length
+  }, [isPlaying]);
 
   const goToSlide = (index) => {
     clearInterval(intervalRef.current);
@@ -300,38 +352,17 @@ export default function InteractiveHero() {
     }
   };
 
-  // --- 3D Card Interaction Logic ---
-  const containerRef = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 100, damping: 20 });
-  const springY = useSpring(y, { stiffness: 100, damping: 20 });
-
-  const rotateX = useTransform(springY, [-0.5, 0.5], ['15deg', '-15deg']);
-  const rotateY = useTransform(springX, [-0.5, 0.5], ['-15deg', '15deg']);
-
-  const handleMouseMove = (e) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = (mouseX / width) - 0.5;
-    const yPct = (mouseY / height) - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
   return (
+    // REVERTED: Removed animated background
     <HeroOuterContainer>
       <HexagonBackground>
-        <Hexagon /> <Hexagon /> <Hexagon /> <Hexagon /> <Hexagon /> <Hexagon /> <Hexagon />
+        <Hexagon $color={activeBadgeColor} /> 
+        <Hexagon $color={activeBadgeColor} /> 
+        <Hexagon $color={activeBadgeColor} /> 
+        <Hexagon $color={activeBadgeColor} /> 
+        <Hexagon $color={activeBadgeColor} /> 
+        <Hexagon $color={activeBadgeColor} /> 
+        <Hexagon $color={activeBadgeColor} />
       </HexagonBackground>
 
       <HeroContainer>
@@ -345,7 +376,10 @@ export default function InteractiveHero() {
               animate="visible"
               exit="hidden"
             >
-              <HeroBadge variants={textItemVariants}>
+              <HeroBadge 
+                variants={textItemVariants} 
+                $color={activeBadgeColor}
+              >
                 {activeSlide.buttonText}
               </HeroBadge>
               <Title variants={textItemVariants}>{activeSlide.title}</Title>
@@ -380,43 +414,47 @@ export default function InteractiveHero() {
         </TextContent>
 
         {/* --- Right Visual Content --- */}
-        <VisualContent
-          ref={containerRef}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          style={{ rotateX, rotateY }}
-        >
-          {/* Back Card */}
-          <Card
-            style={{
-              backgroundImage: `url(${heroSlides[(activeIndex + 2) % heroSlides.length].bg})`, 
-              zIndex: 1,
-            }}
-            animate={{ x: -100, y: 50, scale: 0.85, }}
-            transition={{ type: 'spring' }}
-          />
-          {/* Middle Card */}
-          <Card
-            style={{
-              backgroundImage: `url(${heroSlides[(activeIndex + 1) % heroSlides.length].bg})`, 
-              zIndex: 2,
-            }}
-            animate={{ x: 50, y: -50, scale: 0.9, }}
-            transition={{ type: 'spring' }}
-          />
-          {/* Front Card (shows active slide) */}
-          <Card
-            style={{
-              backgroundImage: `url(${activeSlide.bg})`, 
-              zIndex: 3,
-            }}
-            animate={{ x: 0, y: 0, scale: 1, }}
-            transition={{ type: 'spring' }}
-          />
+        <VisualContent>
+          <AnimatePresence>
+            {[...heroSlides].reverse().map((slide, i) => {
+              const originalIndex = heroSlides.length - 1 - i;
+              
+              if (originalIndex < activeIndex || originalIndex > activeIndex + 2) {
+                return null;
+              }
+
+              const stackPosition = originalIndex - activeIndex; 
+              
+              // ENHANCED: Tighter, cleaner stack
+              const stackProps = [
+                { zIndex: 3, x: 0, y: 0, scale: 1, opacity: 1 },       // Front
+                { zIndex: 2, x: 25, y: -15, scale: 0.9, opacity: 0.7 }, // Middle
+                { zIndex: 1, x: 50, y: -30, scale: 0.8, opacity: 0.4 }  // Back
+              ];
+
+              // Render only the 3 relevant cards
+              if (stackPosition < 0 || stackPosition > 2) {
+                return null;
+              }
+
+              return (
+                <Card
+                  key={originalIndex} 
+                  style={{
+                    backgroundImage: `url(${slide.bg})`, 
+                  }}
+                  custom={stackProps[stackPosition]}
+                  variants={cardVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                />
+              )
+            })}
+          </AnimatePresence>
         </VisualContent>
         
       </HeroContainer>
     </HeroOuterContainer>
   );
 }
-
