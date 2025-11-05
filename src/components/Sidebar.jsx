@@ -1,6 +1,6 @@
 // src/components/Sidebar.jsx
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext'; // Corrected path
+import { useAuth } from '../contexts/AuthContext.jsx'; // Corrected path
 import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout, HiOutlineUser } from 'react-icons/hi';
 import ThemeToggle from './ThemeToggle'; // Corrected path
 import { motion, AnimatePresence } from 'framer-motion';
@@ -138,9 +138,6 @@ const Footer = styled.div`
   flex-direction: column;
   gap: 1rem;
 `;
-
-// REMOVED: UserProfile, ProfileImage, ProfileIconFallback, ProfileName
-// (They are now defined at the top as UserProfileDisplay and its children)
 
 const SignInButton = styled.button`
   display: block;

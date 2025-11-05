@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { HiMenuAlt3 } from 'react-icons/hi';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components'; // <-- REMOVED keyframes
 import logo from '../assets/kodhive-logo.png';
 
 const Nav = styled.nav`
@@ -38,10 +38,7 @@ const LogoImage = styled.img`
   width: 40px;
 `;
 
-const pulse = keyframes`
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-`;
+// REMOVED pulse keyframes
 
 const LogoText = styled.span`
   font-size: 1.5rem;
@@ -49,7 +46,7 @@ const LogoText = styled.span`
   background: linear-gradient(to right, #007bff, #6f42c1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: ${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* REMOVED animation */
 `;
 
 const RightMenu = styled.div`
