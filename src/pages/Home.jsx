@@ -1,35 +1,32 @@
 // src/pages/Home.jsx
-import { useState } from 'react'; // <-- Removed unused 'useRef'
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components'; // <-- Removed unused 'keyframes'
-import { 
-  HiOutlineChevronRight, 
+import styled from 'styled-components';
+import {
+  HiOutlineChevronRight,
   HiPlus,
   HiMinus,
-  // --- NEW ICONS ADDED ---
   HiOutlineAcademicCap,
   HiOutlineClock,
   HiOutlineUsers,
-  HiOutlineLightBulb, // <-- FIX: Changed 'b' to 'B'
+  HiOutlineLightBulb,
   HiOutlinePaperAirplane,
-  HiOutlineBriefcase
+  HiOutlineBriefcase,
 } from 'react-icons/hi';
 
-// --- Import New Hero ---
-import InteractiveHero from '../components/InteractiveHero'; // <-- NEW IMPORT
-import LogoShowcase from '../components/LogoShowcase'; // <-- IMPORT NEW COMPONENT
+// --- Import Components ---
+import InteractiveHero from '../components/InteractiveHero';
+import LogoShowcase from '../components/LogoShowcase';
+import ServicesSection from '../components/ServicesSection'; // <-- IMPORTED NEW COMPONENT
 
 // --- Import Swiper ---
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay, EffectCoverflow, Navigation } from 'swiper/modules'; // <-- Removed EffectFade
+import { Pagination, Autoplay } from 'swiper/modules'; // <-- Removed Coverflow & Nav
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
-// import 'swiper/css/effect-fade'; // <-- REMOVED
-import 'swiper/css/effect-coverflow';
-import 'swiper/css/navigation';
-
+// <-- Removed coverflow & nav CSS
 
 // --- STYLED COMPONENT DEFINITIONS ---
 
@@ -39,99 +36,32 @@ const Container = styled.div`
   padding: 0 1.5rem;
 `;
 
-// --- 1. HERO SLIDESHOW Section (REMOVED) ---
-
 // General Section components
 const Section = styled(motion.section)`
   padding: 6rem 0;
-  background: ${({ theme, $alt }) => $alt ? theme.card : 'transparent'};
-  border-top: ${({ theme, $alt }) => $alt ? `1px solid ${theme.border}` : 'none'};
-  border-bottom: ${({ theme, $alt }) => $alt ? `1px solid ${theme.border}` : 'none'};
+  background: ${({ theme, $alt }) => ($alt ? theme.card : 'transparent')};
+  border-top: ${({ theme, $alt }) => ($alt ? `1px solid ${theme.border}` : 'none')};
+  border-bottom: ${({ theme, $alt }) => ($alt ? `1px solid ${theme.border}` : 'none')};
   overflow-x: hidden;
 `;
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 1rem; /* Reduced margin */
+  margin-bottom: 1rem;
 `;
-// --- NEW Subtitle component from demo ---
 const SectionSubtitle = styled.p`
   text-align: center;
   font-size: 1.1rem;
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   max-width: 600px;
   margin: 0 auto 3rem;
 `;
 
-// --- 2. OUR SERVICES (Coverflow - Unchanged) ---
-const CoverflowSwiper = styled(Swiper)`
-  width: 100%;
-  padding-top: 2rem;
-  padding-bottom: 4rem;
-  overflow: visible;
-  .swiper-slide {
-    background-position: center;
-    background-size: cover;
-    width: 320px;
-    height: 450px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    &::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 60%;
-      background: linear-gradient(0deg, rgba(0, 0, 0, 0.8), transparent);
-      border-radius: 16px;
-    }
-  }
-  .swiper-button-next,
-  .swiper-button-prev {
-    width: 44px;
-    height: 44px;
-    background: ${({ theme }) => theme.card};
-    color: ${({ theme }) => theme.text};
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: background-color 0.3s ease, color 0.3s ease;
-    &:hover {
-      background: ${({ theme }) => theme.buttonBg};
-      color: ${({ theme }) => theme.buttonText};
-    }
-    &::after {
-      font-size: 1.25rem;
-      font-weight: bold;
-    }
-  }
-  .swiper-button-prev { left: 20px; }
-  .swiper-button-next { right: 20px; }
-`;
-const ServiceSlideContent = styled(motion.div)`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 1.5rem;
-  color: white;
-  z-index: 2;
-  text-align: left;
-`;
-const ServiceTitle = styled(motion.h3)`
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin: 0;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-`;
-const ServiceDescription = styled(motion.p)`
-  font-size: 1rem;
-  line-height: 1.5;
-  opacity: 0.9;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-`;
+// --- 2. OUR SERVICES (Coverflow - REMOVED) ---
+// Old CoverflowSwiper, ServiceSlideContent, etc., are now removed.
 
-// --- 3. NEW: Features Section ---
+// --- 3. Features Section ---
 const FeaturesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -146,7 +76,7 @@ const FeatureCard = styled(motion.div)`
   transition: all 0.3s ease;
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   }
 `;
 const FeatureIcon = styled.div`
@@ -167,11 +97,11 @@ const FeatureTitle = styled.h3`
   color: ${({ theme }) => theme.text};
 `;
 const FeatureDescription = styled.p`
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   font-size: 0.95rem;
 `;
 
-// --- 4. HOW IT WORKS (Timeline - Unchanged) ---
+// --- 4. HOW IT WORKS (Timeline) ---
 const TimelineContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -232,11 +162,11 @@ const TimelineTitle = styled.h3`
   margin-bottom: 1rem;
 `;
 const TimelineDescription = styled.p`
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   line-height: 1.6;
 `;
 
-// --- 5. NEW: Student Innovation Section ---
+// --- 5. Student Innovation Section ---
 const InnovationGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -278,7 +208,7 @@ const InnovationTitle = styled.h3`
   color: ${({ theme }) => theme.text};
 `;
 const InnovationDescription = styled.p`
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   margin-bottom: 1.5rem;
 `;
 const PrimaryButton = styled(motion.button)`
@@ -311,16 +241,15 @@ const SecondaryButton = styled(PrimaryButton)`
   }
 `;
 
-// --- 6. NEW: Inspiration Section ---
+// --- 6. Inspiration Section ---
 const InspirationGrid = styled.div`
-  display: flex; 
-  overflow-x: auto; 
-  gap: 2rem; 
-  padding: 1rem 0; 
-  scroll-snap-type: x mandatory; 
+  display: flex;
+  overflow-x: auto;
+  gap: 2rem;
+  padding: 1rem 0;
+  scroll-snap-type: x mandatory;
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  /* Simple scrollbar for visibility */
   &::-webkit-scrollbar {
     height: 8px;
   }
@@ -330,116 +259,116 @@ const InspirationGrid = styled.div`
   }
 `;
 const InspirationCard = styled(motion.div)`
-  min-width: 320px; 
-  max-width: 320px; 
+  min-width: 320px;
+  max-width: 320px;
   scroll-snap-align: start;
-  background: ${({ theme }) => theme.card}; 
-  border-radius: 12px; 
-  overflow: hidden; 
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+  background: ${({ theme }) => theme.card};
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   border: 1px solid ${({ theme }) => theme.border};
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
-  &:hover { 
+  &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   }
 `;
 const QuoteContent = styled.div`
-  padding: 1.5rem; 
-  flex-grow: 1; 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: space-between; 
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 const QuoteText = styled.p`
-  font-style: italic; 
-  font-size: 1.1rem; 
-  color: ${({ theme }) => theme.text}; 
-  margin-bottom: 1.5rem; 
+  font-style: italic;
+  font-size: 1.1rem;
+  color: ${({ theme }) => theme.text};
+  margin-bottom: 1.5rem;
 `;
 const QuoteAuthor = styled.div`
-  display: flex; 
-  align-items: center; 
-  gap: 1rem; 
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 const QuoteAuthorImage = styled.img`
-  width: 50px; 
-  height: 50px; 
-  border-radius: 50%; 
-  object-fit: cover; 
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
   border: 3px solid ${({ theme }) => theme.buttonBg};
 `;
 const AuthorDetails = styled.div`
-  .name { 
-    font-weight: 700; 
-    font-size: 1.1rem; 
+  .name {
+    font-weight: 700;
+    font-size: 1.1rem;
     color: ${({ theme }) => theme.text};
   }
-  .role { 
-    font-size: 0.85rem; 
-    color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  .role {
+    font-size: 0.85rem;
+    color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   }
 `;
 
-// --- 7. NEW: Featured Courses Section ---
+// --- 7. Featured Courses Section ---
 const CoursesGrid = styled.div`
-  display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-  gap: 2rem; 
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
 `;
 const CourseCard = styled(motion.div)`
-  background: ${({ theme }) => theme.card}; 
-  border-radius: 12px; 
-  overflow: hidden; 
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-  display: flex; 
-  flex-direction: column; 
-  transition: all 0.3s ease; 
+  background: ${({ theme }) => theme.card};
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
   border: 1px solid ${({ theme }) => theme.border};
-  &:hover { 
-    transform: translateY(-8px); 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   }
 `;
 const CourseImage = styled.img`
-  width: 100%; 
-  height: 200px; 
-  object-fit: cover; 
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 `;
 const CourseContent = styled.div`
-  padding: 1.5rem; 
-  flex-grow: 1; 
-  display: flex; 
-  flex-direction: column; 
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 `;
 const CourseTitle = styled.h3`
-  font-size: 1.35rem; 
-  margin-bottom: 0.5rem; 
-  font-weight: 700; 
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
   color: ${({ theme }) => theme.text};
 `;
 const CourseDescription = styled.p`
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'}; 
-  margin-bottom: 1rem; 
-  flex-grow: 1; 
-  font-size: 0.95rem; 
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
+  margin-bottom: 1rem;
+  flex-grow: 1;
+  font-size: 0.95rem;
 `;
 const PriceContainer = styled.div`
-  display: flex; 
-  align-items: baseline; 
-  gap: 0.75rem; 
-  margin-bottom: 1.5rem; 
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 `;
 const Price = styled.span`
-  font-size: 1.75rem; 
-  font-weight: 700; 
-  color: ${({ theme }) => theme.buttonBg}; 
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.buttonBg};
 `;
 const CutPrice = styled.span`
-  text-decoration: line-through; 
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  text-decoration: line-through;
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
 `;
 const LearnMoreButton = styled(Link)`
   padding: 0.75rem 1.5rem;
@@ -463,7 +392,7 @@ const LearnMoreButton = styled(Link)`
   }
 `;
 
-// --- 8. TESTIMONIALS (Existing) ---
+// --- 8. TESTIMONIALS ---
 const TestimonialCard = styled.div`
   background: ${({ theme }) => theme.body};
   border: 1px solid ${({ theme }) => theme.border};
@@ -474,7 +403,7 @@ const TestimonialCard = styled.div`
 const Quote = styled.p`
   font-size: 1.1rem;
   font-style: italic;
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   margin-bottom: 1.5rem;
   position: relative;
   &::before {
@@ -502,9 +431,7 @@ const Author = styled.div`
   }
 `;
 
-// --- 9. PARTNERS (REMOVED FROM HERE) ---
-
-// --- 10. FAQ Section (Existing) ---
+// --- 9. FAQ Section ---
 const FaqContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
@@ -538,18 +465,18 @@ const FaqQuestion = styled.button`
     color: ${({ theme }) => theme.buttonBg};
     transition: transform 0.3s ease;
   }
-  &[aria-expanded="true"] svg {
+  &[aria-expanded='true'] svg {
     transform: rotate(45deg);
   }
 `;
 const FaqAnswer = styled(motion.div)`
   padding: 0 1.5rem 1.5rem 1.5rem;
   font-size: 1rem;
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   line-height: 1.6;
 `;
 
-// --- 11. FINAL CTA (Existing) ---
+// --- 10. FINAL CTA ---
 const CTASection = styled(motion.section)`
   background: linear-gradient(135deg, ${({ theme }) => theme.buttonBg}, #6f42c1);
   padding: 6rem 1.5rem;
@@ -590,91 +517,51 @@ const CTAButton = styled(Link)`
   }
 `;
 
-
-// --- ANIMATION VARIANTS (Unchanged) ---
+// --- ANIMATION VARIANTS ---
 const sectionVariant = {
   hidden: { opacity: 0, y: 50 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" } 
-  }
+    transition: { duration: 0.6, ease: 'easeOut' },
+  },
 };
 const faqAnswerAnim = {
   hidden: { opacity: 0, height: 0, y: -10 },
-  visible: { opacity: 1, height: 'auto', y: 0, transition: { duration: 0.3, ease: "easeOut" } }
+  visible: { opacity: 1, height: 'auto', y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
 };
 const timelineContentAnim = {
   hidden: { opacity: 0, x: -20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } }
+  visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeOut' } },
 };
-
 
 // --- DUMMY DATA ---
 const heroSlides = [
-  { 
-    title: "Build Your Future at Kodhive", 
-    subtitle: "Connecting bright students with innovative real-world projects.", 
-    buttonText: "Find Internships", 
-    link: "/internships",
-    bg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070" 
-  },
-  { 
-    title: "Have an Idea? Let's Build It.", 
-    subtitle: "Get your project built by our team of talented, vetted students and freshers.", 
-    buttonText: "Request a Project", 
-    link: "/request-project",
-    bg: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=2070" 
-  },
-  { 
-    title: "Logos, Websites, and More", 
-    subtitle: "From stunning brand identities to complex web applications, our talent pool has you covered.", 
-    buttonText: "Our Services", 
-    link: "#services",
-    bg: "https://images.unsplash.com/photo-1558692003-2b2f8e1d2c12?auto=format&fit=crop&q=80&w=1932" 
-  }
+  // This data is now inside InteractiveHero.jsx
 ];
-
-const services = [
-  { 
-    title: "Custom Websites", 
-    description: "Complex web applications built with modern tech.",
-    bg: "https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&q=80&w=2070"
-  },
-  { 
-    title: "Logo & Brand Design", 
-    description: "Crafting the perfect visual identity for your brand.",
-    bg: "https://images.unsplash.com/photo-1600132806307-83b4b5952329?auto=format&fit=crop&q=80&w=1974"
-  },
-  { 
-    title: "Student Opportunities", 
-    description: "Connecting students with real-world projects.",
-    bg: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=2070"
-  }
+const partners = [
+  // This data is now inside InteractiveHero.jsx
 ];
 
 const howItWorks = [
-  { step: "Step 01", title: "Request a Project", description: "Clients submit their project ideas, from logos to full-stack applications." },
-  { step: "Step 02", title: "We Hire Students", description: "We match your project with talented college students and freshers." },
-  { step: "Step 03", title: "Get it Done", description: "Our students gain experience, and you get your project built, managed by us." }
+  { step: 'Step 01', title: 'Request a Project', description: "Clients submit their project ideas, from logos to full-stack applications." },
+  { step: 'Step 02', title: 'We Hire Students', description: 'We match your project with talented college students and freshers.' },
+  { step: 'Step 03', title: 'Get it Done', description: 'Our students gain experience, and you get your project built, managed by us.' },
 ];
 
 const testimonials = [
-  { name: "Aarav Sharma", quote: "Kodhive delivered our project on time and exceeded all our expectations. Highly recommend!", img: "https://placehold.co/100x100/4a69ff/FFFFFF?text=A" },
-  { name: "Priya Singh", quote: "Working on a real project through Kodhive was an amazing experience. I learned so much.", img: "https://placehold.co/100x100/f9c74f/1a2035?text=P" },
-  { name: "Rohan Gupta", quote: "The student team was professional, creative, and incredibly responsive. We got a fantastic website.", img: "https://placehold.co/100x100/198754/FFFFFF?text=R" }
+  { name: 'Aarav Sharma', quote: 'Kodhive delivered our project on time and exceeded all our expectations. Highly recommend!', img: 'https://placehold.co/100x100/4a69ff/FFFFFF?text=A' },
+  { name: 'Priya Singh', quote: 'Working on a real project through Kodhive was an amazing experience. I learned so much.', img: 'https://placehold.co/100x100/f9c74f/1a2035?text=P' },
+  { name: 'Rohan Gupta', quote: 'The student team was professional, creative, and incredibly responsive. We got a fantastic website.', img: 'https://placehold.co/100x100/198754/FFFFFF?text=R' },
 ];
-
-const partners = [ "TechCorp", "InnovateU", "DevSolutions", "NextGen", "StartUpHub" ];
 
 const faqs = [
-  { q: "How do I request a project?", a: "You can request a project by visiting our 'Request a Project' page and filling out the form. We'll get back to you within 24-48 hours to discuss the details." },
-  { q: "What kind of projects can I request?", a: "We accept a wide range of projects, including website development, logo design, mobile app prototypes, and more. If you have an idea, we'd love to hear it." },
-  { q: "How are students selected for projects?", a: "Students are selected based on their skills, experience, and interest in the project. All students are vetted by our senior mentors to ensure quality." },
-  { q: "What does it cost to get a project built?", a: "Costs vary. We provide a detailed quote after our initial consultation. Our goal is to provide high-value work while being budget-friendly." }
+  { q: 'How do I request a project?', a: "You can request a project by visiting our 'Request a Project' page and filling out the form. We'll get back to you within 24-48 hours to discuss the details." },
+  { q: 'What kind of projects can I request?', a: 'We accept a wide range of projects, including website development, logo design, mobile app prototypes, and more. If you have an idea, we\'d love to hear it.' },
+  { q: 'How are students selected for projects?', a: 'Students are selected based on their skills, experience, and interest in the project. All students are vetted by our senior mentors to ensure quality.' },
+  { q: 'What does it cost to get a project built?', a: "Costs vary. We provide a detailed quote after our initial consultation. Our goal is to provide high-value work while being budget-friendly." },
 ];
 
-// --- NEW DATA FROM DEMOFILE ---
 const coursesData = [
   {
     title: 'React for Beginners',
@@ -700,35 +587,35 @@ const coursesData = [
 ];
 
 const inspirationData = [
-    {
-        quote: "Failure is just a resting place. It is an opportunity to begin again more intelligently.",
-        person: "Henry Ford",
-        role: "Founder, Ford Motor Company",
-        image: "https://images.unsplash.com/photo-1516259771120-d31e53b4787d?q=80&w=1887&auto=format&fit=crop&h=60&w=60&fit=facearea", 
-    },
-    {
-        quote: "The biggest risk is not taking any risk. In a world that's changing really quickly, the only strategy that is guaranteed to fail is not taking risks.",
-        person: "Jeff Bezos",
-        role: "Founder, Amazon",
-        image: "https://images.unsplash.com/photo-1549490349-f9f38f121d4d?q=80&w=1974&auto=format&fit=crop&h=60&w=60&fit=facearea",
-    },
-    {
-        quote: "It's fine to celebrate success but it is more important to heed the lessons of failure.",
-        person: "Bill Gates",
-        role: "Co-founder, Microsoft",
-        image: "https://images.unsplash.com/photo-1543269664-7e79328229b4?q=80&w=2070&auto=format&fit=crop&h=60&w=60&fit=facearea", 
-    },
-    {
-        quote: "Innovation distinguishes between a leader and a follower.",
-        person: "Steve Jobs",
-        role: "Co-founder, Apple",
-        image: "https://images.unsplash.com/photo-1594950269002-39046c8230b4?q=80&w=2070&auto=format&fit=crop&h=60&w=60&fit=facearea", 
-    },
+  {
+    quote: 'Failure is just a resting place. It is an opportunity to begin again more intelligently.',
+    person: 'Henry Ford',
+    role: 'Founder, Ford Motor Company',
+    image: 'https://images.unsplash.com/photo-1516259771120-d31e53b4787d?q=80&w=1887&auto=format&fit=crop&h=60&w=60&fit=facearea',
+  },
+  {
+    quote: "The biggest risk is not taking any risk. In a world that's changing really quickly, the only strategy that is guaranteed to fail is not taking risks.",
+    person: 'Jeff Bezos',
+    role: 'Founder, Amazon',
+    image: 'https://images.unsplash.com/photo-1549490349-f9f38f121d4d?q=80&w=1974&auto=format&fit=crop&h=60&w=60&fit=facearea',
+  },
+  {
+    quote: 'It\'s fine to celebrate success but it is more important to heed the lessons of failure.',
+    person: 'Bill Gates',
+    role: 'Co-founder, Microsoft',
+    image: 'https://images.unsplash.com/photo-1543269664-7e79328229b4?q=80&w=2070&auto=format&fit=crop&h=60&w=60&fit=facearea',
+  },
+  {
+    quote: 'Innovation distinguishes between a leader and a follower.',
+    person: 'Steve Jobs',
+    role: 'Co-founder, Apple',
+    image: 'https://images.unsplash.com/photo-1594950269002-39046c8230b4?q=80&w=2070&auto=format&fit=crop&h=60&w=60&fit=facearea',
+  },
 ];
 
 // --- REACT COMPONENT ---
 
-export default function Home() { // <-- Removed unused openSignInModal prop
+export default function Home() {
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
   const [activeTimelineIndex, setActiveTimelineIndex] = useState(0);
 
@@ -736,61 +623,37 @@ export default function Home() { // <-- Removed unused openSignInModal prop
     <div>
       {/* --- 1. NEW InteractiveHero --- */}
       <InteractiveHero slides={heroSlides} partners={partners} />
-      
-      {/* --- NEW: Added LogoShowcase --- */}
+
+      {/* --- NEW: LogoShowcase --- */}
       <LogoShowcase />
 
-      {/* --- 2. OUR SERVICES (Coverflow - Unchanged) --- */}
-      <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant} id="services">
-        <Container>
-          <SectionTitle>Our Services</SectionTitle>
-          <CoverflowSwiper
-            effect={'coverflow'}
-            grabCursor={true}
-            centeredSlides={true}
-            slidesPerView={'auto'}
-            loop={true}
-            autoplay={{ delay: 3500, disableOnInteraction: false }}
-            coverflowEffect={{
-              rotate: 0,
-              stretch: 80,
-              depth: 200,
-              modifier: 1,
-              slideShadows: false,
-            }}
-            navigation={true}
-            modules={[EffectCoverflow, Navigation, Autoplay]}
-          >
-            {services.map((service, index) => (
-              <SwiperSlide key={index} style={{ backgroundImage: `url(${service.bg})` }}>
-                <ServiceSlideContent initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}>
-                  <ServiceTitle>{service.title}</ServiceTitle>
-                  <ServiceDescription>{service.description}</ServiceDescription>
-                </ServiceSlideContent>
-              </SwiperSlide>
-            ))}
-          </CoverflowSwiper>
-        </Container>
-      </Section>
-      
-      {/* --- 3. NEW: Features Section --- */}
+      {/* --- 2. NEW: Services Section --- */}
+      <ServicesSection />
+
+      {/* --- 3. Features Section --- */}
       <Section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Why Choose Kodhive?</SectionTitle>
           <SectionSubtitle>We provide a learning experience that is flexible, practical, and supported by a community of experts.</SectionSubtitle>
           <FeaturesGrid>
             <FeatureCard variants={sectionVariant}>
-              <FeatureIcon><HiOutlineAcademicCap /></FeatureIcon>
+              <FeatureIcon>
+                <HiOutlineAcademicCap />
+              </FeatureIcon>
               <FeatureTitle>Expert Instructors</FeatureTitle>
               <FeatureDescription>Learn from industry professionals with years of real-world experience.</FeatureDescription>
             </FeatureCard>
             <FeatureCard variants={sectionVariant}>
-              <FeatureIcon><HiOutlineClock /></FeatureIcon>
+              <FeatureIcon>
+                <HiOutlineClock />
+              </FeatureIcon>
               <FeatureTitle>Flexible Learning</FeatureTitle>
               <FeatureDescription>Access course materials anytime, anywhere, and learn at your own pace.</FeatureDescription>
             </FeatureCard>
             <FeatureCard variants={sectionVariant}>
-              <FeatureIcon><HiOutlineUsers /></FeatureIcon>
+              <FeatureIcon>
+                <HiOutlineUsers />
+              </FeatureIcon>
               <FeatureTitle>Community Support</FeatureTitle>
               <FeatureDescription>Join a vibrant community of learners and get help when you need it.</FeatureDescription>
             </FeatureCard>
@@ -798,14 +661,20 @@ export default function Home() { // <-- Removed unused openSignInModal prop
         </Container>
       </Section>
 
-      {/* --- 4. HOW IT WORKS (Timeline - Unchanged) --- */}
+      {/* --- 4. HOW IT WORKS (Timeline) --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>How It Works</SectionTitle>
           <TimelineContainer>
             <TimelineNav>
               {howItWorks.map((item, index) => (
-                <TimelineButton key={index} onClick={() => setActiveTimelineIndex(index)} className={activeTimelineIndex === index ? 'active' : ''} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <TimelineButton
+                  key={index}
+                  onClick={() => setActiveTimelineIndex(index)}
+                  className={activeTimelineIndex === index ? 'active' : ''}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   {item.step}
                 </TimelineButton>
               ))}
@@ -815,7 +684,6 @@ export default function Home() { // <-- Removed unused openSignInModal prop
                 <motion.div key={activeTimelineIndex} variants={timelineContentAnim} initial="hidden" animate="visible" exit="hidden">
                   <TimelineStep>{howItWorks[activeTimelineIndex].step}</TimelineStep>
                   <TimelineTitle>{howItWorks[activeTimelineIndex].title}</TimelineTitle>
-                  {/* FIX: Corrected typo from activeTIMELINE_INDEX to activeTimelineIndex */}
                   <TimelineDescription>{howItWorks[activeTimelineIndex].description}</TimelineDescription>
                 </motion.div>
               </AnimatePresence>
@@ -824,30 +692,37 @@ export default function Home() { // <-- Removed unused openSignInModal prop
         </Container>
       </Section>
 
-      {/* --- 5. NEW: Student Innovation Section --- */}
+      {/* --- 5. Student Innovation Section --- */}
       <Section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Turn Your Ideas into Reality</SectionTitle>
           <SectionSubtitle>Have an idea you want to build or need our team's expertise? We've got a path for your innovation.</SectionSubtitle>
           <InnovationGrid>
             <InnovationCard variants={sectionVariant}>
-              <InnovationIconWrapper><HiOutlineLightBulb /></InnovationIconWrapper>
+              <InnovationIconWrapper>
+                <HiOutlineLightBulb />
+              </InnovationIconWrapper>
               <InnovationTitle>Idea Submission & Guidance</InnovationTitle>
               <InnovationDescription>Have a project idea but need expert mentorship to execute it? Submit your concept and we'll guide you through the process.</InnovationDescription>
-              {/* This button opens the Contact Modal */}
-              <PrimaryButton as={Link} to="/contact">Get Expert Guidance</PrimaryButton>
+              <PrimaryButton as={Link} to="/contact">
+                Get Expert Guidance
+              </PrimaryButton>
             </InnovationCard>
             <InnovationCard variants={sectionVariant}>
-              <InnovationIconWrapper><HiOutlinePaperAirplane /></InnovationIconWrapper>
+              <InnovationIconWrapper>
+                <HiOutlinePaperAirplane />
+              </InnovationIconWrapper>
               <InnovationTitle>Custom Project Request</InnovationTitle>
               <InnovationDescription>Submit your requirements, and we can assign it to our talented students for development, giving them real-world experience.</InnovationDescription>
-              <SecondaryButton as={Link} to="/request-project">Request Project Build</SecondaryButton>
+              <SecondaryButton as={Link} to="/request-project">
+                Request Project Build
+              </SecondaryButton>
             </InnovationCard>
           </InnovationGrid>
         </Container>
       </Section>
 
-      {/* --- 6. NEW: Inspiration Section --- */}
+      {/* --- 6. Inspiration Section --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Get Inspired</SectionTitle>
@@ -856,14 +731,14 @@ export default function Home() { // <-- Removed unused openSignInModal prop
             {inspirationData.map((item, index) => (
               <InspirationCard key={index} variants={sectionVariant}>
                 <QuoteContent>
-                    <QuoteText>“{item.quote}”</QuoteText>
-                    <QuoteAuthor>
-                        <QuoteAuthorImage src={item.image} alt={item.person} />
-                        <AuthorDetails>
-                            <p className="name">{item.person}</p>
-                            <p className="role">{item.role}</p>
-                        </AuthorDetails>
-                    </QuoteAuthor>
+                  <QuoteText>“{item.quote}”</QuoteText>
+                  <QuoteAuthor>
+                    <QuoteAuthorImage src={item.image} alt={item.person} />
+                    <AuthorDetails>
+                      <p className="name">{item.person}</p>
+                      <p className="role">{item.role}</p>
+                    </AuthorDetails>
+                  </QuoteAuthor>
                 </QuoteContent>
               </InspirationCard>
             ))}
@@ -871,7 +746,7 @@ export default function Home() { // <-- Removed unused openSignInModal prop
         </Container>
       </Section>
 
-      {/* --- 7. NEW: Featured Courses Section --- */}
+      {/* --- 7. Featured Courses Section --- */}
       <Section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Featured Opportunities</SectionTitle>
@@ -897,7 +772,7 @@ export default function Home() { // <-- Removed unused openSignInModal prop
         </Container>
       </Section>
 
-      {/* --- 8. TESTIMONIALS (Existing) --- */}
+      {/* --- 8. TESTIMONIALS --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>What People Are Saying</SectionTitle>
@@ -908,7 +783,7 @@ export default function Home() { // <-- Removed unused openSignInModal prop
             pagination={{ clickable: true }}
             autoplay={{ delay: 5000, disableOnInteraction: false }}
             breakpoints={{ 768: { slidesPerView: 2 } }}
-            style={{paddingBottom: '3rem'}}
+            style={{ paddingBottom: '3rem' }}
           >
             {testimonials.map((t, index) => (
               <SwiperSlide key={index}>
@@ -925,9 +800,7 @@ export default function Home() { // <-- Removed unused openSignInModal prop
         </Container>
       </Section>
 
-      {/* --- 9. PARTNERS (REMOVED) --- */}
-
-      {/* --- 10. FAQ Section (Existing) --- */}
+      {/* --- 9. FAQ Section --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Frequently Asked Questions</SectionTitle>
@@ -951,13 +824,11 @@ export default function Home() { // <-- Removed unused openSignInModal prop
         </Container>
       </Section>
 
-      {/* --- 11. FINAL CTA (Existing) --- */}
+      {/* --- 10. FINAL CTA --- */}
       <Container>
         <CTASection initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
           <CTATitle>Ready to Start Your Project?</CTATitle>
-          <CTASubtitle>
-            Let's build something amazing together. Request a project today or join our team of talented students.
-          </CTASubtitle>
+          <CTASubtitle>Let's build something amazing together. Request a project today or join our team of talented students.</CTASubtitle>
           <CTAButton to="/request-project">
             Request a Project <HiOutlineChevronRight />
           </CTAButton>

@@ -2,16 +2,13 @@
 
 /* --- Custom Cursors --- */
 /*
-  NOTE: Your cursor images in /public/ are 64x64 pixels.
-  This might make them appear very large on some screens.
-  For best results, I still recommend replacing them with 32x32 pixel versions.
-
-  I have updated the hotspot coordinates below to match your 64x64 images.
+  NOTE: This update assumes your images in /public/
+  are now 32x32 pixels.
 */
 html {
   /* This sets the default arrow cursor for the whole page */
-  /* The '0 0' sets the click-point to the top-left tip. 'auto' is the fallback. */
-  cursor: url('/cursor-default.png') 0 0, auto;
+  /* The '0 0' hotspot is the top-left tip. */
+  cursor: url('/cursor-default.png') 0 0, auto !important;
 }
 
 /* This sets the hand cursor for clickable items */
@@ -25,17 +22,16 @@ select,
 input[type="submit"],
 [data-clickable="true"] {
   /*
-    The '16 4' hotspot is calculated for your 64x64 image.
+    The '8 2' hotspot is for a 32x32 image.
     It sets the click-point to the tip of the pointer finger.
-    'pointer' is the fallback.
   */
-  cursor: url('/cursor-pointer.png') 16 4, pointer;
+  cursor: url('/cursor-pointer.png') 8 2, pointer !important;
 }
 
 /* This forces the custom pointer even when dragging a slider */
 .swiper-grabbing {
-  /* '16 4' is the hotspot, 'grabbing' is the fallback */
-  cursor: url('/cursor-pointer.png') 16 4, grabbing;
+  /* '8 2' is the 32x32 hotspot, 'grabbing' is the fallback */
+  cursor: url('/cursor-pointer.png') 8 2, grabbing !important;
 }
 /* --- End Custom Cursors --- */
 
