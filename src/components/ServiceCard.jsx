@@ -8,8 +8,8 @@ import { motion } from 'framer-motion';
 const ServiceCardStyled = styled(motion.div)`
   background: ${({ theme }) => theme.card};
   border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 16px; /* Increased border radius */
-  padding: 2.5rem; /* Increased padding */
+  border-radius: 16px;
+  padding: 2.5rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.07);
   display: flex;
   flex-direction: column;
@@ -17,21 +17,15 @@ const ServiceCardStyled = styled(motion.div)`
   opacity: 1;
   border-top: 4px solid ${({ $color }) => $color};
   
-  /* --- FIX: MOBILE FIRST STYLES --- */
-  /* These styles apply to the SwiperSlide on mobile */
+  /* --- SIMPLIFIED STYLES --- */
+  /* These styles work for all screen sizes inside Swiper */
   width: 100%;
-  max-width: 550px; /* Constrain width on tablets */
-  margin: 0 auto;   /* Center the card within the SwiperSlide */
+  margin: 0 auto; 
   box-sizing: border-box;
   flex-shrink: 0;
-
-  /* --- DESKTOP STYLES --- */
-  /* These styles apply to the horizontal scroll track */
-  @media (min-width: 1024px) {
-    width: ${100 / 5}%; /* 5 cards */
-    margin: 0 1.5rem;  /* Add spacing between cards */
-    max-width: none;   /* Remove the mobile max-width */
-  }
+  /* Ensure the card has a minimum height if content is short */
+  min-height: 250px; 
+  /* The desktop-specific media query has been removed */
 `;
 
 const HeaderIcon = styled.div`
@@ -63,13 +57,11 @@ const ServiceDescription = styled.p`
 
 // --- COMPONENT ---
 
-export const ServiceCard = ({ service, style = {} }) => {
+export const ServiceCard = ({ service }) => {
   const Icon = service.icon;
   return (
-    <ServiceCardStyled
-      style={style} // Apply animation styles
-      $color={service.bgColor}
-    >
+    // The 'style' prop is removed as it's no longer needed
+    <ServiceCardStyled $color={service.bgColor}>
       <HeaderIcon $color={service.bgColor}>
         <Icon />
       </HeaderIcon>

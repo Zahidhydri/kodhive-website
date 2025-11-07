@@ -18,6 +18,11 @@ import {
 import InteractiveHero from '../components/InteractiveHero';
 import LogoShowcase from '../components/LogoShowcase';
 import ServicesSection from '../components/ServicesSection'; 
+// --- NEW IMPORTS ---
+import FeaturedProjects from '../components/FeaturedProjects';
+import TechStack from '../components/TechStack';
+// --- END NEW IMPORTS ---
+
 
 // --- Import Swiper ---
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -425,8 +430,11 @@ export default function Home() {
 
       {/* --- 3. Services Section --- */}
       <ServicesSection />
+
+      {/* --- 4. NEW: Featured Projects Section --- */}
+      <FeaturedProjects />
       
-      {/* --- 4. "Why Choose Kodhive?" Section (ENHANCED) --- */}
+      {/* --- 5. "Why Choose Kodhive?" Section (ENHANCED) --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Why Choose Kodhive?</SectionTitle>
@@ -457,9 +465,10 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 5. HOW IT WORKS (REMOVED) --- */}
+      {/* --- 6. NEW: Tech Stack Section --- */}
+      <TechStack />
 
-      {/* --- 6. Student Innovation Section --- */}
+      {/* --- 7. Student Innovation Section --- */}
       <Section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Turn Your Ideas into Reality</SectionTitle>
@@ -481,7 +490,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 7. Inspiration Section --- */}
+      {/* --- 8. Inspiration Section --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Get Inspired</SectionTitle>
@@ -504,8 +513,6 @@ export default function Home() {
           </InspirationGrid>
         </Container>
       </Section>
-
-      {/* --- 8. Featured Opportunities Section (REMOVED) --- */}
 
       {/* --- 9. TESTIMONIALS --- */}
       <Section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
