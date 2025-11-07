@@ -3,6 +3,16 @@ import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
+// NEW: Import Swiper for mobile
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+// NEW: Import the ServiceCard component
+import { ServiceCard } from './ServiceCard'; 
+
 import {
   HiOutlinePencilAlt,
   HiOutlineBriefcase,
@@ -94,16 +104,22 @@ const SectionSubtitle = styled.p`
 // This container controls the "hijacked" scroll.
 const StickyScrollContainer = styled.div`
   position: relative;
-  height: ${servicesData.length * 100}vh; // 100vh per card
+  /* Only enable the sticky scroll 'hijack' on desktop */
+  @media (min-width: 1024px) {
+    height: ${servicesData.length * 100}vh; // 100vh per card
+  }
 `;
 
 // This holds the 2-column layout and sticks to the top
 const StickyContentWrapper = styled(motion.div)`
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden; // Clips the content
+  /* Only apply stickiness on desktop */
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden; // Clips the content
+  }
 `;
 
 const GridContainer = styled.div`
@@ -120,13 +136,16 @@ const GridContainer = styled.div`
 
 // --- LEFT (VISUALS) COLUMN ---
 const VisualColumn = styled.div`
-  position: relative;
   width: 100%;
-  height: 100%;
-  display: none; 
+  position: sticky;
+  top: 8rem; // Sits below the navbar
+  align-self: start;
+  height: 500px; // Fixed height for the visual
+  
+  display: none; // Hidden on mobile
 
   @media (min-width: 1024px) {
-    display: flex;
+    display: flex; // Visible on desktop
     align-items: center;
     justify-content: center;
   }
@@ -157,80 +176,55 @@ const FallbackIcon = styled(motion.div)`
 const CardsColumn = styled.div`
   position: relative;
   display: flex;
-  align-items: center;
-  /* This is key: it hides the cards that are off-screen */
-  overflow: hidden;
   height: 100%;
 
+  /* On desktop, align center for the sticky effect */
+  @media (min-width: 1024px) {
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* On mobile, stack them vertically */
   @media (max-width: 1023px) {
-    /* On mobile, just stack them vertically */
     flex-direction: column;
-    overflow: visible;
     height: auto;
-    gap: 2rem;
   }
 `;
 
-// This container moves horizontally based on scroll
+// This container moves horizontally based on scroll (DESKTOP ONLY)
 const HorizontalCardTrack = styled(motion.div)`
-  display: flex;
-  width: ${servicesData.length * 100}%; // 100% width per card
+  display: none; // Hidden by default
   
-  @media (max-width: 1023px) {
-    display: contents; // Disable horizontal track on mobile
+  @media (min-width: 1024px) {
+    display: flex;
+    /* Each card is 100% width, so track is 500% wide */
+    width: ${servicesData.length * 100}%; 
   }
 `;
 
-// ENHANCED: Card is larger
-const ServiceCardStyled = styled(motion.div)`
-  background: ${({ theme }) => theme.card};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 12px;
-  padding: 2.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.07);
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  opacity: 1;
-  border-top: 4px solid ${({ $color }) => $color};
+// NEW: Mobile Swiper Wrapper
+const MobileSwiperWrapper = styled.div`
+  display: block;
+  width: 100%;
   
-  /* Each card takes up its portion of the track */
-  width: ${100 / servicesData.length}%;
-  flex-shrink: 0;
-  margin: 0 1.5rem; // Add spacing between cards
+  /* Style Swiper pagination dots */
+  .swiper-pagination-bullet {
+    background: ${({ theme }) => theme.border};
+    opacity: 0.8;
+  }
+  .swiper-pagination-bullet-active {
+    background: ${({ theme }) => theme.buttonBg} !important;
+    opacity: 1;
+  }
+  .swiper-slide {
+    padding-bottom: 3rem; // Space for pagination
+  }
 
-  @media (max-width: 1023px) {
-    width: 100%; // Full width on mobile
-    margin: 0;
+  @media (min-width: 1024px) {
+    display: none; // Hide on desktop
   }
 `;
 
-const HeaderIcon = styled.div`
-  font-size: 1.5rem;
-  color: ${({ $color }) => $color};
-  background: ${({ $color }) => $color}22;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-`;
-
-const HeaderTitle = styled.h3`
-  font-size: 1.35rem;
-  font-weight: 600;
-  margin: 0;
-  color: ${({ theme }) => theme.text};
-`;
-
-const ServiceDescription = styled.p`
-  font-size: 1rem;
-  color: ${({ theme }) => (theme.text === '#212529' ? '#6c757d' : '#adb5bd')};
-  line-height: 1.6;
-  margin: 0;
-`;
 
 // --- 4. ANIMATION & COMPONENTS ---
 const sectionVariant = {
@@ -260,13 +254,12 @@ export default function ServicesSection() {
   
   const cardCount = servicesData.length;
 
-  // NEW: Map scroll progress (0 to 1) to a horizontal X position
-  // We want to move (cardCount - 1) cards.
-  // Each card is 100% of the *column*, but the track is 500% wide.
-  // So each card is 20% of the *track*.
+  // Map scroll progress (0 to 1) to a horizontal X position
+  // We move (cardCount - 1) cards.
   // We move (5-1) * 20% = 80%.
   const x = useTransform(scrollYProgress, [0, 1], ['0%', `-${100 - (100 / cardCount)}%`]);
 
+  // Update activeIndex based on scroll for desktop
   useEffect(() => {
     return scrollYProgress.on("change", (latest) => {
       const newIndex = Math.min(Math.floor(latest * cardCount), cardCount - 1);
@@ -293,10 +286,10 @@ export default function ServicesSection() {
         </SectionSubtitle>
       </Container>
 
-      {/* This container has a large height to "hijack" the scroll */}
+      {/* This container has a large height to "hijack" the scroll on DESKTOP ONLY */}
       <StickyScrollContainer ref={scrollRef}>
         
-        {/* This content sticks to the top of the viewport */}
+        {/* This content sticks to the top of the viewport on DESKTOP ONLY */}
         <StickyContentWrapper>
           <GridContainer>
             
@@ -323,26 +316,34 @@ export default function ServicesSection() {
 
             {/* --- RIGHT (CARDS) COLUMN --- */}
             <CardsColumn>
-              {/* This track moves horizontally */}
+              {/* --- DESKTOP: Horizontal Track --- */}
               <HorizontalCardTrack style={{ x }}>
-                {servicesData.map((service) => { // <-- FIX: Removed unused 'i'
-                  const Icon = service.icon;
-                  return (
-                    <ServiceCardStyled
-                      key={service.title}
-                      $color={service.bgColor}
-                    >
-                      <HeaderIcon $color={service.bgColor}>
-                        <Icon />
-                      </HeaderIcon>
-                      <HeaderTitle>{service.title}</HeaderTitle>
-                      <ServiceDescription>
-                        {service.description}
-                      </ServiceDescription>
-                    </ServiceCardStyled>
-                  );
-                })}
+                {servicesData.map((service) => ( 
+                  <ServiceCard
+                    key={service.title}
+                    service={service}
+                  />
+                ))}
               </HorizontalCardTrack>
+
+              {/* --- MOBILE: Swiper Carousel --- */}
+              <MobileSwiperWrapper>
+                <Swiper
+                  modules={[Pagination, Autoplay]}
+                  spaceBetween={30}
+                  slidesPerView={1}
+                  pagination={{ clickable: true }}
+                  autoplay={{ delay: 5000, disableOnInteraction: false }}
+                  onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+                >
+                  {servicesData.map((service) => (
+                    <SwiperSlide key={service.title}>
+                      <ServiceCard service={service} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </MobileSwiperWrapper>
+              
             </CardsColumn>
 
           </GridContainer>

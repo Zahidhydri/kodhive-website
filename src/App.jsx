@@ -1,6 +1,6 @@
 // src/App.jsx
 import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
@@ -10,7 +10,6 @@ import SignInModal from './components/SignInModal';
 import Home from './pages/Home';
 import Internships from './pages/Internships';
 import Contact from './pages/Contact';
-// Profile component is no longer imported
 import ProjectRequest from './pages/ProjectRequest';
 import { useAuth } from './contexts/AuthContext';
 
@@ -102,21 +101,26 @@ function App() {
         {isSignInModalOpen && <SignInModal closeModal={closeModal} />}
       </AnimatePresence>
       
+      {/* FIX: The Sidebar is moved here, outside the main 'div'.
+        This fixes the z-index/stacking bug on mobile, ensuring
+        it always renders on top of the <main> content.
+      */}
+      <Sidebar 
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+        toggleTheme={toggleTheme}
+        darkMode={isDarkTheme}
+        openSignInModal={openModal}
+      />
+
+      {/* FIX: Removed placeholder comments and ensured all tags are correctly closed. */}
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar 
           toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           openSignInModal={openModal} 
         />
-        <Sidebar 
-          isOpen={isSidebarOpen}
-          setIsOpen={setIsSidebarOpen}
-          toggleTheme={toggleTheme}
-          darkMode={isDarkTheme}
-          openSignInModal={openModal}
-        />
         <main style={{ flexGrow: 1 }}>
           <Routes>
-            {/* UPDATED: Removed openModal prop */}
             <Route path="/" element={<Home />} />
             <Route path="/internships" element={<Internships />} />
             <Route path="/contact" element={<Contact />} />
