@@ -41,6 +41,7 @@ const darkTheme = {
 const GlobalStyle = createGlobalStyle`
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden; /* <-- FIX 1: Add overflow-x here */
   }
 
   body {
@@ -56,6 +57,7 @@ const GlobalStyle = createGlobalStyle`
   /* FIX: Ensure root takes up full height */
   #root {
     height: 100vh;
+    overflow-x: hidden; /* <-- FIX 2: Add overflow-x here */
   }
 `;
 
@@ -118,21 +120,17 @@ function App() {
         openSignInModal={openModal}
       />
 
-      {/* FIX: This div is modified to fix both bugs.
-        1. height: '100vh' & overflowY: 'auto' creates a reliable scrolling
-           container. This makes the child Navbar's `position: sticky`
-           work correctly on mobile.
-        2. position: 'relative' & zIndex: 1 creates a stacking context for
-           the *entire* main content area, ensuring it renders *below*
-           the Sidebar's fixed elements (which have z-index 45 and 50).
+      {/* This div is the main scrolling container.
+        We add overflowX: 'hidden' here as well.
       */}
       <div style={{ 
         display: 'flex', 
         flexDirection: 'column', 
-        height: '100vh',      // CHANGED from minHeight
-        overflowY: 'auto',    // ADDED
-        position: 'relative', // ADDED
-        zIndex: 1             // ADDED
+        height: '100vh',      
+        overflowY: 'auto',    
+        overflowX: 'hidden',  /* <-- FIX 3: Add this line */
+        position: 'relative', 
+        zIndex: 1             
       }}>
         <Navbar 
           toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}

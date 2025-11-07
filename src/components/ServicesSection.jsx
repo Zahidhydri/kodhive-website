@@ -126,11 +126,12 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 3rem;
-  height: 100%;
+  height: auto; /* <-- FIX: Set height to auto for mobile */
 
   @media (min-width: 1024px) {
     /* ENHANCED: 40% / 60% split */
     grid-template-columns: 2fr 3fr; 
+    height: 100%; /* <-- FIX: Set height to 100% only for desktop */
   }
 `;
 
