@@ -17,16 +17,20 @@ const ServiceCardStyled = styled(motion.div)`
   opacity: 1;
   border-top: 4px solid ${({ $color }) => $color};
   
-  /* Each card takes up its portion of the track */
-  width: ${100 / 5}%; /* 5 cards */
+  /* --- FIX: MOBILE FIRST STYLES --- */
+  /* These styles apply to the SwiperSlide on mobile */
+  width: 100%;
+  max-width: 550px; /* Constrain width on tablets */
+  margin: 0 auto;   /* Center the card within the SwiperSlide */
+  box-sizing: border-box;
   flex-shrink: 0;
-  margin: 0 1.5rem; // Add spacing between cards
 
-  @media (max-width: 1023px) {
-    width: 100%; // Full width on mobile
-    margin: 0;
-    max-width: 550px; // Set a max-width for mobile slides
-    box-sizing: border-box; // Ensure padding doesn't break layout
+  /* --- DESKTOP STYLES --- */
+  /* These styles apply to the horizontal scroll track */
+  @media (min-width: 1024px) {
+    width: ${100 / 5}%; /* 5 cards */
+    margin: 0 1.5rem;  /* Add spacing between cards */
+    max-width: none;   /* Remove the mobile max-width */
   }
 `;
 

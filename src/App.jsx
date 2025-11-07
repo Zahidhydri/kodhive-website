@@ -47,6 +47,15 @@ const GlobalStyle = createGlobalStyle`
     background: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
     transition: all 0.3s linear;
+    
+    /* FIX: Ensure body doesn't overflow, 
+       which can break viewport-based layouts */
+    overflow-x: hidden; 
+  }
+  
+  /* FIX: Ensure root takes up full height */
+  #root {
+    height: 100vh;
   }
 `;
 
@@ -101,10 +110,6 @@ function App() {
         {isSignInModalOpen && <SignInModal closeModal={closeModal} />}
       </AnimatePresence>
       
-      {/* FIX: The Sidebar is moved here, outside the main 'div'.
-        This fixes the z-index/stacking bug on mobile, ensuring
-        it always renders on top of the <main> content.
-      */}
       <Sidebar 
         isOpen={isSidebarOpen}
         setIsOpen={setIsSidebarOpen}
@@ -113,8 +118,22 @@ function App() {
         openSignInModal={openModal}
       />
 
-      {/* FIX: Removed placeholder comments and ensured all tags are correctly closed. */}
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {/* FIX: This div is modified to fix both bugs.
+        1. height: '100vh' & overflowY: 'auto' creates a reliable scrolling
+           container. This makes the child Navbar's `position: sticky`
+           work correctly on mobile.
+        2. position: 'relative' & zIndex: 1 creates a stacking context for
+           the *entire* main content area, ensuring it renders *below*
+           the Sidebar's fixed elements (which have z-index 45 and 50).
+      */}
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        height: '100vh',      // CHANGED from minHeight
+        overflowY: 'auto',    // ADDED
+        position: 'relative', // ADDED
+        zIndex: 1             // ADDED
+      }}>
         <Navbar 
           toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           openSignInModal={openModal} 
