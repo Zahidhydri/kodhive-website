@@ -21,7 +21,8 @@ import ServicesSection from '../components/ServicesSection';
 // --- NEW IMPORTS ---
 import FeaturedProjects from '../components/FeaturedProjects';
 import TechStack from '../components/TechStack';
-// --- END NEW IMPORTS ---
+import PixelGame from '../components/PixelGame'; // <--- 1. IMPORT THE NEW GAME
+// // --- END NEW IMPORTS ---
 
 
 // --- Import Swiper ---
@@ -567,7 +568,8 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* --- 11. FINAL CTA (REMOVED) --- */}
+      {/* --- 11. ADD THE GAME HERE --- */}
+      <PixelGame />
       
     </div>
   );

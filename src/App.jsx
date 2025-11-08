@@ -14,6 +14,7 @@ import ProjectRequest from './pages/ProjectRequest';
 import { useAuth } from './contexts/AuthContext';
 
 // 1. Define our themes
+// ... (rest of your lightTheme and darkTheme code)
 const lightTheme = {
   body: '#f8f9fa',
   text: '#212529',
@@ -25,41 +26,39 @@ const lightTheme = {
   buttonHover: '#0056b3',
 };
 
-// UPDATED Dark Theme
 const darkTheme = {
-  body: '#1a2035', // Dark indigo base
-  text: '#e9ecef', // Light text for contrast
-  nav: 'rgba(26, 32, 53, 0.8)', // Darker nav with blur
-  card: '#2a314e', // Slightly lighter indigo for cards/modals
-  border: '#40486a', // Muted blue for borders
-  buttonBg: '#4a69ff', // A brighter blue for primary buttons
+  body: '#1a2035', 
+  text: '#e9ecef', 
+  nav: 'rgba(26, 32, 53, 0.8)', 
+  card: '#2a314e', 
+  border: '#40486a', 
+  buttonBg: '#4a69ff', 
   buttonText: '#ffffff',
-  buttonHover: '#3555f0', // Slightly darker hover for the button
+  buttonHover: '#3555f0', 
 };
 
+
 // 2. Create a GlobalStyle component
+// ... (rest of your GlobalStyle code)
 const GlobalStyle = createGlobalStyle`
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden; /* <-- FIX 1: Add overflow-x here */
+    overflow-x: hidden; 
   }
 
   body {
     background: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
     transition: all 0.3s linear;
-    
-    /* FIX: Ensure body doesn't overflow, 
-       which can break viewport-based layouts */
     overflow-x: hidden; 
   }
   
-  /* FIX: Ensure root takes up full height */
   #root {
     height: 100vh;
-    overflow-x: hidden; /* <-- FIX 2: Add overflow-x here */
+    overflow-x: hidden; 
   }
 `;
+
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -67,6 +66,7 @@ function App() {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
   // 3. Set up theme state
+  // ... (rest of your theme logic)
   const [theme, setTheme] = useState('light');
   const isDarkTheme = theme === 'dark';
 
@@ -78,11 +78,10 @@ function App() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
-    // Set default to light if no theme is saved
     setTheme(savedTheme || 'light');
   }, []);
 
-  // Effect to show the modal on load (unchanged)
+  // ... (rest of your modal logic)
   useEffect(() => {
     if (!loading) {
       const modalClosed = sessionStorage.getItem('kodhive-signin-modal-closed');
@@ -104,6 +103,7 @@ function App() {
     setIsSignInModalOpen(true);
   };
 
+
   return (
     <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
       <GlobalStyle />
@@ -120,15 +120,12 @@ function App() {
         openSignInModal={openModal}
       />
 
-      {/* This div is the main scrolling container.
-        We add overflowX: 'hidden' here as well.
-      */}
       <div style={{ 
         display: 'flex', 
         flexDirection: 'column', 
         height: '100vh',      
         overflowY: 'auto',    
-        overflowX: 'hidden',  /* <-- FIX 3: Add this line */
+        overflowX: 'hidden',  
         position: 'relative', 
         zIndex: 1             
       }}>
@@ -142,9 +139,9 @@ function App() {
             <Route path="/internships" element={<Internships />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/request-project" element={<ProjectRequest />} />
-            {/* REMOVED Profile Route */}
           </Routes>
         </main>
+        
         <Footer />
       </div>
     </ThemeProvider>

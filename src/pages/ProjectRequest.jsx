@@ -2,38 +2,42 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { HiOutlineUser, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLightBulb, HiOutlineChevronDown } from 'react-icons/hi';
+import { 
+  HiOutlinePaperAirplane, 
+  HiOutlineLightBulb, 
+  HiOutlineChevronDown 
+} from 'react-icons/hi';
 
+// --- STYLED COMPONENTS ---
 
+// Container is wider, cleaner
 const Container = styled(motion.div)`
-  max-width: 800px;
+  max-width: 900px; /* Wider for a more "tool" feel */
   margin: 0 auto;
-  padding: 4rem 1.5rem;
+  padding: 4rem 1.5rem 6rem 1.5rem;
 `;
 
+// Title is larger
 const Title = styled(motion.h1)`
-  font-size: 2.75rem;
+  font-size: 3.25rem;
   font-weight: 700;
   text-align: center;
   margin-bottom: 1rem;
 `;
 
+// Subtitle is more direct, like Jules
 const Subtitle = styled(motion.p)`
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   text-align: center;
   color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
   margin-bottom: 3.5rem;
 `;
 
+// Form no longer has a card background, it's part of the page
 const Form = styled(motion.form)`
-  background: ${({ theme }) => theme.card};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 12px;
-  padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  gap: 2rem;
 `;
 
 const InputGroup = styled.div`
@@ -43,38 +47,55 @@ const InputGroup = styled.div`
   
   label {
     font-weight: 600;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-  }
-  
-  /* Icon for Input */
-  svg.input-icon {
-    position: absolute;
-    left: 1rem;
-    top: 3.1rem;
-    font-size: 1.25rem;
-    color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
-    transition: color 0.3s ease;
-    pointer-events: none; /* Make icon unclickable */
-  }
-
-  /* Icon for Select */
-  svg.select-arrow {
-    position: absolute;
-    right: 1rem;
-    top: 3.1rem;
-    font-size: 1.25rem;
-    color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
-    transition: color 0.3s ease;
-    pointer-events: none; /* Make icon unclickable */
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    color: ${({ theme }) => theme.text};
   }
 `;
 
+// NEW: This is the main "Jules-style" prompt box
+const PromptArea = styled(motion.textarea)`
+  background: ${({ theme }) => theme.card};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: ${({ theme }) => theme.text};
+  font-size: 1.1rem;
+  min-height: 300px; /* Much larger */
+  resize: vertical;
+  font-family: 'monospace', 'Courier New', Courier; /* "Code" font */
+  line-height: 1.7;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.buttonBg};
+    box-shadow: 0 0 0 4px ${({ theme }) => theme.buttonBg}33;
+  }
+  
+  &::placeholder {
+    color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#868e96'};
+  }
+`;
+
+// NEW: Side-by-side grid for secondary info (Name, Email)
+const InfoGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
+// NEW: Minimalist text input
 const Input = styled(motion.input)`
-  padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
+  width: 100%;
+  padding: 0.85rem 1rem;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
-  background: ${({ theme }) => theme.body};
+  background: ${({ theme }) => theme.card};
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -83,18 +104,15 @@ const Input = styled(motion.input)`
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
     box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
-    
-    + svg.input-icon {
-      color: ${({ theme }) => theme.buttonBg};
-    }
   }
 `;
 
+// NEW: Minimalist select
 const Select = styled(motion.select)`
-  padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
+  padding: 0.85rem 1rem;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
-  background: ${({ theme }) => theme.body};
+  background: ${({ theme }) => theme.card};
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -104,39 +122,26 @@ const Select = styled(motion.select)`
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
     box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
-    
-    + svg.input-icon,
-    + svg.input-icon + svg.select-arrow {
-      color: ${({ theme }) => theme.buttonBg};
-    }
   }
 `;
 
-const TextArea = styled(motion.textarea)`
-  padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 8px;
-  background: ${({ theme }) => theme.body};
-  color: ${({ theme }) => theme.text};
-  font-size: 1rem;
-  min-height: 160px;
-  resize: vertical;
-  font-family: inherit;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+// Wrapper for the select dropdown icon
+const SelectWrapper = styled.div`
+  position: relative;
   
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.buttonBg};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
-    
-    + svg.input-icon {
-      color: ${({ theme }) => theme.buttonBg};
-    }
+  svg.select-arrow {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.25rem;
+    color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
+    pointer-events: none; /* Make icon unclickable */
   }
 `;
 
 const SubmitButton = styled(motion.button)`
-  padding: 0.85rem 1.5rem;
+  padding: 1rem 2rem;
   background-color: ${({ theme }) => theme.buttonBg};
   color: ${({ theme }) => theme.buttonText};
   border-radius: 8px;
@@ -144,28 +149,45 @@ const SubmitButton = styled(motion.button)`
   font-weight: 600;
   font-size: 1.1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  display: flex; /* Centering */
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1rem auto 0 auto; /* Center the button */
+  width: 100%;
+  max-width: 300px;
   
+  svg {
+    font-size: 1.25rem;
+  }
+
   &:hover {
     background-color: ${({ theme }) => theme.buttonHover};
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px ${({ theme }) => theme.buttonBg}77;
   }
 
   &:disabled {
     background-color: ${({ theme }) => theme.border};
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 `;
 
 // Animation Variants
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } }
+  visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.1, duration: 0.5 } }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
+
+// --- COMPONENT ---
 
 export default function ProjectRequest() {
   const [status, setStatus] = useState("Submit Request");
@@ -208,29 +230,62 @@ export default function ProjectRequest() {
       animate="visible"
       exit="hidden"
     >
-      <Title variants={itemVariants}>Request a Project</Title>
+      <Title variants={itemVariants}>Give our team a task</Title>
       <Subtitle variants={itemVariants}>
-        Let our talented students build your idea. Fill out the form below.
+        Describe your project below. Our team of vetted students will review the
+        request and build a plan.
       </Subtitle>
+      
       <Form 
         variants={itemVariants}
         action={projectFormUrl} 
         method="POST"
         onSubmit={handleSubmit}
       >
+        {/* THIS IS THE MAIN PROMPT */}
         <InputGroup>
-          <label htmlFor="name">Your Name</label>
-          <Input 
-            type="text" 
-            name="name" 
-            id="name" 
+          <label htmlFor="requirements">What do you want to build?</label>
+          <PromptArea 
+            name="requirements" 
+            id="requirements" 
+            placeholder="e.g., 'Build a responsive landing page for my new SAAS product...' or 'Design a modern logo for my coffee shop...'" 
             required 
             variants={itemVariants}
-            whileFocus={{ scale: 1.02 }}
           />
-          <HiOutlineUser className="input-icon" />
         </InputGroup>
-        
+
+        {/* This is the secondary info */}
+        <InfoGrid>
+          <InputGroup>
+            <label htmlFor="projectType">Project Type</label>
+            <SelectWrapper>
+              <Select 
+                name="projectType" 
+                id="projectType"
+                variants={itemVariants}
+              >
+                <option value="website">Website</option>
+                <option value="logo">Logo / Graphic Design</option>
+                <option value="mobile-app">Mobile App</option>
+                <option value="other">Other</option>
+              </Select>
+              <HiOutlineChevronDown className="select-arrow" />
+            </SelectWrapper>
+          </InputGroup>
+
+          <InputGroup>
+            <label htmlFor="name">Your Name</label>
+            <Input 
+              type="text" 
+              name="name" 
+              id="name" 
+              required 
+              placeholder="e.g., Jane Doe"
+              variants={itemVariants}
+            />
+          </InputGroup>
+        </InfoGrid>
+
         <InputGroup>
           <label htmlFor="email">Your Email</label>
           <Input 
@@ -238,42 +293,12 @@ export default function ProjectRequest() {
             name="email" 
             id="email" 
             required 
+            placeholder="So we can send you the plan"
             variants={itemVariants}
-            whileFocus={{ scale: 1.02 }}
           />
-          <HiOutlineMail className="input-icon" />
         </InputGroup>
 
-        <InputGroup>
-          <label htmlFor="projectType">Project Type</label>
-          <Select 
-            name="projectType" 
-            id="projectType"
-            variants={itemVariants}
-            whileFocus={{ scale: 1.02 }}
-          >
-            <option value="website">Website</option>
-            <option value="logo">Logo / Graphic Design</option>
-            <option value="mobile-app">Mobile App</option>
-            <option value="other">Other</option>
-          </Select>
-          <HiOutlineLightBulb className="input-icon" />
-          <HiOutlineChevronDown className="select-arrow" />
-        </InputGroup>
-
-        <InputGroup>
-          <label htmlFor="requirements">Project Requirements</label>
-          <TextArea 
-            name="requirements" 
-            id="requirements" 
-            placeholder="Describe your project, key features, and what you need..." 
-            required 
-            variants={itemVariants}
-            whileFocus={{ scale: 1.02 }}
-          />
-          <HiOutlinePencilAlt className="input-icon" style={{ top: '3.1rem' }} />
-        </InputGroup>
-
+        {/* Submit button now has an icon */}
         <SubmitButton 
           type="submit"
           variants={itemVariants}
@@ -281,10 +306,13 @@ export default function ProjectRequest() {
           whileTap={{ scale: 0.98 }}
           disabled={status === "Submitting..." || status === "Request Sent!"}
         >
-          {status}
+          {status === "Submitting..." ? "Submitting..." : (
+            <>
+              {status} <HiOutlinePaperAirplane style={{ transform: 'rotate(45deg)' }} />
+            </>
+          )}
         </SubmitButton>
       </Form>
     </Container>
   );
 }
-
