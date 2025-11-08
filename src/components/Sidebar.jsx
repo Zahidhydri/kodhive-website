@@ -1,7 +1,7 @@
 // src/components/Sidebar.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx'; // Corrected path
-import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout, HiOutlineUser } from 'react-icons/hi';
+import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout, HiOutlineUser, HiOutlineBookOpen, HiOutlineGlobe } from 'react-icons/hi';
 import ThemeToggle from './ThemeToggle'; // Corrected path
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
@@ -110,7 +110,13 @@ const Nav = styled.nav`
   flex-grow: 1;
 `;
 
-const NavLink = styled(Link)`
+// UPDATED: NavLink to support external links (as a common wrapper)
+const NavLink = styled(motion.a).attrs(props => ({
+    // If 'to' is present, render as Link, otherwise render as 'a'
+    as: props.to ? Link : 'a',
+    target: props.$isExternal ? '_blank' : undefined,
+    rel: props.$isExternal ? 'noopener noreferrer' : undefined,
+}))`
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -129,6 +135,26 @@ const NavLink = styled(Link)`
   &:hover {
     background: ${({ theme }) => theme.body};
   }
+
+  /* Style for coming soon/disabled text */
+  ${props => props.$isComingSoon && `
+    color: ${props.theme.text}99;
+    cursor: default;
+    &:hover {
+        background: transparent;
+    }
+  `}
+`;
+
+// NEW: Status text for "Coming Soon"
+const StatusText = styled.span`
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: ${({ theme }) => theme.buttonBg};
+    background: ${({ theme }) => theme.buttonBg}20;
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
 `;
 
 const Footer = styled.div`
@@ -188,11 +214,18 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
   const navigate = useNavigate();
   const closeSidebar = () => setIsOpen(false);
 
+  // NEW/UPDATED: Consolidated function for navigation to internal pages and scrolling to top
+  const handlePageNavigation = () => {
+    closeSidebar();
+    window.scrollTo(0, 0);
+  };
+  
   const handleLogout = async () => {
     closeSidebar();
     try {
       await logout();
       navigate('/');
+      window.scrollTo(0, 0); // Ensure scroll to top after logout navigation
     } catch (error) {
       console.error('Failed to log out', error);
     }
@@ -202,12 +235,14 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
     closeSidebar();
     openSignInModal();
   };
-
-  // NEW: Combined function for Home link
-  const handleHomeClick = () => {
+  
+  // NEW: Function for Coming Soon link
+  const handleComingSoonClick = (e) => {
+    e.preventDefault(); 
+    // Simply closing the sidebar is sufficient since we don't navigate
     closeSidebar();
-    window.scrollTo(0, 0);
   };
+
 
   return (
     <AnimatePresence>
@@ -248,17 +283,42 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
             )}
 
             <Nav>
-              {/* UPDATED: onClick handler */}
-              <NavLink to="/" onClick={handleHomeClick}>
+              {/* 1. Home */}
+              <NavLink to="/" onClick={handlePageNavigation}>
                 <HiOutlineHome /> Home
               </NavLink>
-              <NavLink to="/internships" onClick={closeSidebar}>
+              
+              {/* 2. Internships */}
+              <NavLink to="/internships" onClick={handlePageNavigation}>
                 <HiOutlineBriefcase /> Internships
               </NavLink>
-              <NavLink to="/request-project" onClick={closeSidebar}>
+              
+              {/* 3. Request a Project */}
+              <NavLink to="/request-project" onClick={handlePageNavigation}>
                 <HiOutlinePencilAlt /> Request a Project
               </NavLink>
-              <NavLink to="/contact" onClick={closeSidebar}>
+              
+              {/* 4. Courses Link (Coming Soon) */}
+              <NavLink 
+                href="#" 
+                $isComingSoon 
+                onClick={handleComingSoonClick}
+              >
+                <HiOutlineBookOpen /> Courses
+                <StatusText>Soon</StatusText>
+              </NavLink>
+              
+              {/* 5. Community Link (External) */}
+              <NavLink 
+                href="https://kodhive-community-discord.com" // Dummy External Link
+                $isExternal
+                onClick={closeSidebar}
+              >
+                <HiOutlineGlobe /> Community
+              </NavLink>
+
+              {/* 6. Contact Us */}
+              <NavLink to="/contact" onClick={handlePageNavigation}>
                 <HiOutlineMail /> Contact Us
               </NavLink>
             </Nav>
@@ -272,7 +332,6 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
                 </SignInButton>
               ) : (
                 <>
-                  {/* REMOVED: UserProfile block was here */}
                   <LogoutButton onClick={handleLogout}>
                     <HiOutlineLogout /> Logout
                   </LogoutButton>

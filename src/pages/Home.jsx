@@ -15,10 +15,10 @@ import {
 import InteractiveHero from '../components/InteractiveHero';
 import LogoShowcase from '../components/LogoShowcase';
 import ServicesSection from '../components/ServicesSection'; 
-import FeaturedProjects from '../components/FeaturedProjects';
+import PopularInternships from '../components/PopularInternships';
 import TechStack from '../components/TechStack';
-import PixelGame from '../components/PixelGame';
-import InnovationCta from '../components/InnovationCta'; // <--- 1. IMPORT NEW COMPONENT
+// Removed: import PixelGame from '../components/PixelGame';
+import InnovationCta from '../components/InnovationCta'; 
 
 // --- Import Swiper ---
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -344,34 +344,40 @@ export default function Home() {
       {/* --- 3. Services Section --- */}
       <ServicesSection />
 
-      {/* --- 4. NEW: Featured Projects Section --- */}
-      <FeaturedProjects />
+      {/* --- 4. NEW: Popular Internships Section (Replaces FeaturedProjects) --- */}
+      <PopularInternships />
       
       {/* --- 5. "Why Choose Kodhive?" Section (ENHANCED) --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Why Choose Kodhive?</SectionTitle>
-          <SectionSubtitle>We provide a learning experience that is flexible, practical, and supported by a community of experts.</SectionSubtitle>
+          {/* UPDATED SUBTITLE: Focus on agility and student-centric approach */}
+          <SectionSubtitle>We are a dynamic platform dedicated to real-world experience, offering high impact and growth opportunities that established companies often miss.</SectionSubtitle>
           <FeaturesGrid
             variants={featuresGridVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
           >
+            {/* UPDATED FEATURE 1: Focus on visibility/impact */}
             <FeatureCard variants={featureCardVariant}>
               <FeatureIcon><HiOutlineAcademicCap /></FeatureIcon>
-              <FeatureTitle>Expert Instructors</FeatureTitle>
-              <FeatureDescription>Learn from industry professionals with years of real-world experience.</FeatureDescription>
+              <FeatureTitle>High Visibility & Impact</FeatureTitle>
+              <FeatureDescription>In our lean, flat structure, your contributions are highly visible and immediately impactful, accelerating your career growth.</FeatureDescription>
             </FeatureCard>
+            
+            {/* UPDATED FEATURE 2: Focus on practical, diverse experience */}
             <FeatureCard variants={featureCardVariant}>
               <FeatureIcon><HiOutlineClock /></FeatureIcon>
-              <FeatureTitle>Flexible Learning</FeatureTitle>
-              <FeatureDescription>Access course materials anytime, anywhere, and learn at your own pace.</FeatureDescription>
+              <FeatureTitle>Diverse, Practical Experience</FeatureTitle>
+              <FeatureDescription>Move beyond rigid roles—our "all hands on deck" environment lets you quickly explore new skills and learn on the fly.</FeatureDescription>
             </FeatureCard>
+            
+            {/* UPDATED FEATURE 3: Focus on community and cutting-edge tech */}
             <FeatureCard variants={featureCardVariant}>
               <FeatureIcon><HiOutlineUsers /></FeatureIcon>
-              <FeatureTitle>Community Support</FeatureTitle>
-              <FeatureDescription>Join a vibrant community of learners and get help when you need it.</FeatureDescription>
+              <FeatureTitle>Agile & Cutting-Edge Tech</FeatureTitle>
+              <FeatureDescription>We are free from bureaucracy, enabling faster adoption of the latest technology and a community built on innovation.</FeatureDescription>
             </FeatureCard>
           </FeaturesGrid>
         </Container>
@@ -459,9 +465,6 @@ export default function Home() {
           </FaqContainer>
         </Container>
       </Section>
-
-      {/* --- 11. ADD THE GAME HERE --- */}
-      <PixelGame />
       
     </div>
   );

@@ -25,13 +25,48 @@ input[type="submit"],
     The '8 2' hotspot is for a 32x32 image.
     It sets the click-point to the tip of the pointer finger.
   */
-  cursor: url('/cursor-pointer.png') 8 2, pointer !important;
+  cursor: url('/cursor-pointer.png') 9 1, pointer !important;
 }
 
 /* This forces the custom pointer even when dragging a slider */
 .swiper-grabbing {
   /* '8 2' is the 32x32 hotspot, 'grabbing' is the fallback */
-  cursor: url('/cursor-pointer.png') 8 2, grabbing !important;
+  cursor: url('/cursor-pointer.png') 9 1, grabbing !important;
+}
+
+/* --- ENHANCED SCROLLBAR STYLES FOR ALL WEBKIT/BLINK BROWSERS --- */
+/* Target the main scroll containers */
+.swiper-wrapper,
+.swiper-container,
+.swiper,
+body,
+div {
+  /* Allow scrollbar customization */
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f8f9fa; /* thumb and track color */
+}
+
+/* Webkit/Blink scrollbar styles (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; /* For horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Darker gray thumb */
+  border-radius: 10px;
+  border: 2px solid transparent; /* Prevents overflow/jumping */
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Even darker on hover */
+  background-clip: content-box;
 }
 /* --- End Custom Cursors --- */
 

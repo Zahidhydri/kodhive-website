@@ -14,8 +14,10 @@ import {
   HiOutlineLightBulb,
   HiOutlinePencilAlt,
   HiOutlineArrowLeft,
-  HiOutlinePhone, // <--- [NEW] Added Phone Icon
-  HiOutlineQuestionMarkCircle // <--- [NEW] Added Question Icon
+  HiOutlinePhone, 
+  HiOutlineQuestionMarkCircle,
+  HiOutlineOfficeBuilding, // <--- [NEW] Added Office/Building Icon
+  HiOutlineExclamationCircle // <--- [NEW] Added Exclamation Icon
 } from 'react-icons/hi';
 import TechStack from '../components/TechStack'; 
 
@@ -144,6 +146,26 @@ const HeroSubtitle = styled.p`
   @media (min-width: 768px) { font-size: 1.1rem; }
 `;
 // --- End Hero Slideshow Styles ---
+
+// --- [NEW] Important Note Style ---
+const ImportantNote = styled.div`
+  background: ${({ theme }) => theme.buttonBg}1A;
+  border: 1px solid ${({ theme }) => theme.buttonBg};
+  color: ${({ theme }) => theme.text};
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  
+  svg {
+    flex-shrink: 0;
+    color: ${({ theme }) => theme.buttonBg};
+    font-size: 1.5rem;
+  }
+`;
 
 // --- [NEW] SectionTitle & Subtitle for Form Section ---
 const FormSectionHeader = styled.div`
@@ -496,17 +518,23 @@ const FullProjectForm = () => {
               <label htmlFor="name-full">Your Name</label>
               <SelectWrapper>
                 <HiOutlineUser className="input-icon" />
-                <Input type="text" name="name" id="name-full" required placeholder="e.g., Jane Doe" />
+                <Input type="text" name="name" id="name-full" required placeholder="e.g., Adrien Rabiot" />
+              </SelectWrapper>
+            </InputGroup>
+            <InputGroup>
+              <label htmlFor="org-full">College / Organisation Name</label>
+              <SelectWrapper>
+                <HiOutlineOfficeBuilding className="input-icon" />
+                <Input type="text" name="organization" id="org-full" placeholder="e.g., Kodhive or XYZ College" />
               </SelectWrapper>
             </InputGroup>
             <InputGroup>
               <label htmlFor="email-full">Your Email</label>
               <SelectWrapper>
                 <HiOutlineMail className="input-icon" />
-                <Input type="email" name="email" id="email-full" required placeholder="e.g., jane@example.com" />
+                <Input type="email" name="email" id="email-full" required placeholder="e.g., Adrien@example.com" />
               </SelectWrapper>
             </InputGroup>
-            {/* --- [NEW] Phone Number Field --- */}
             <InputGroup>
               <label htmlFor="phone-full">Phone Number (Optional)</label>
               <SelectWrapper>
@@ -542,7 +570,9 @@ const FullProjectForm = () => {
                 <HiOutlineCurrencyRupee className="input-icon" />
                 {/* --- [UPDATED] Price Range --- */}
                 <Select name="priceRange" id="priceRange-full">
-                  <option value="₹10,000 - ₹50,000">₹10,000 - ₹50,000</option>
+                  <option value="Below ₹10,000">Below ₹10,000</option>
+                  <option value="₹10,000 - ₹15,000">₹10,000 - ₹15,000</option>
+                  <option value="₹15,000 - ₹50,000">₹15,000 - ₹50,000</option>
                   <option value="₹50,000 - ₹1,00,000">₹50,000 - ₹1,00,000</option>
                   <option value="₹1,00,000 - ₹2,50,000">₹1,00,000 - ₹2,50,000</option>
                   <option value="₹2,50,000+">₹2,50,000+</option>
@@ -597,6 +627,12 @@ const FullProjectForm = () => {
             </InputGroup>
           </InfoGrid>
         </div>
+        
+        {/* --- [NEW] Important Note --- */}
+        <ImportantNote>
+          <HiOutlineExclamationCircle />
+          <span>Important Note: Documentation and/or presentation services will incur extra costs, which will be determined based on the project's complexity and scope.</span>
+        </ImportantNote>
 
         {/* --- SUBMIT --- */}
         <SubmitButton 
@@ -673,13 +709,19 @@ const GuidanceForm = () => {
               </SelectWrapper>
             </InputGroup>
             <InputGroup>
+              <label htmlFor="org-guide">College / Organisation Name</label>
+              <SelectWrapper>
+                <HiOutlineOfficeBuilding className="input-icon" />
+                <Input type="text" name="organization" id="org-guide" placeholder="e.g., Kodhive or XYZ College" />
+              </SelectWrapper>
+            </InputGroup>
+            <InputGroup>
               <label htmlFor="email-guide">Your Email</label>
               <SelectWrapper>
                 <HiOutlineMail className="input-icon" />
                 <Input type="email" name="email" id="email-guide" required placeholder="e.g., alex@example.com" />
               </SelectWrapper>
             </InputGroup>
-            {/* --- [NEW] Phone Number Field --- */}
             <InputGroup>
               <label htmlFor="phone-guide">Phone Number (Optional)</label>
               <SelectWrapper>

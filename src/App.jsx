@@ -24,6 +24,10 @@ const lightTheme = {
   buttonBg: '#007bff',
   buttonText: '#ffffff',
   buttonHover: '#0056b3',
+  // NEW SCROLLBAR VARIABLES
+  '--scrollbar-thumb-color': '#adb5bd', 
+  '--scrollbar-track-color': '#f8f9fa', 
+  '--scrollbar-hover-color': '#6c757d',
 };
 
 const darkTheme = {
@@ -35,6 +39,10 @@ const darkTheme = {
   buttonBg: '#4a69ff', 
   buttonText: '#ffffff',
   buttonHover: '#3555f0', 
+  // NEW SCROLLBAR VARIABLES
+  '--scrollbar-thumb-color': '#40486a', 
+  '--scrollbar-track-color': '#1a2035', 
+  '--scrollbar-hover-color': '#6c757d',
 };
 
 
@@ -51,6 +59,11 @@ const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.text};
     transition: all 0.3s linear;
     overflow-x: hidden; 
+
+    /* Apply CSS variables for scrollbar theming */
+    --scrollbar-thumb-color: ${({ theme }) => theme['--scrollbar-thumb-color']};
+    --scrollbar-track-color: ${({ theme }) => theme['--scrollbar-track-color']};
+    --scrollbar-hover-color: ${({ theme }) => theme['--scrollbar-hover-color']};
   }
   
   #root {
