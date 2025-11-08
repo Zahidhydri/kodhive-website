@@ -1,6 +1,5 @@
 // src/pages/Home.jsx
 import { useState } from 'react';
-// FIX: Import AnimatePresence
 import { motion, AnimatePresence } from 'framer-motion'; 
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -10,20 +9,16 @@ import {
   HiOutlineAcademicCap,
   HiOutlineClock,
   HiOutlineUsers,
-  HiOutlineLightBulb,
-  HiOutlinePaperAirplane,
 } from 'react-icons/hi';
 
 // --- Import Components ---
 import InteractiveHero from '../components/InteractiveHero';
 import LogoShowcase from '../components/LogoShowcase';
 import ServicesSection from '../components/ServicesSection'; 
-// --- NEW IMPORTS ---
 import FeaturedProjects from '../components/FeaturedProjects';
 import TechStack from '../components/TechStack';
-import PixelGame from '../components/PixelGame'; // <--- 1. IMPORT THE NEW GAME
-// // --- END NEW IMPORTS ---
-
+import PixelGame from '../components/PixelGame';
+import InnovationCta from '../components/InnovationCta'; // <--- 1. IMPORT NEW COMPONENT
 
 // --- Import Swiper ---
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -74,10 +69,8 @@ const FeatureCard = styled(motion.div)`
   border-radius: 12px;
   text-align: center;
   border: 1px solid ${({ theme }) => theme.border};
-  /* ENHANCED: Added transition for hover */
   transition: all 0.3s ease;
   &:hover {
-    /* ENHANCED: Hover effect from your original request */
     transform: translateY(-5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   }
@@ -102,81 +95,6 @@ const FeatureTitle = styled.h3`
 const FeatureDescription = styled.p`
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   font-size: 0.95rem;
-`;
-
-// --- Student Innovation Section ---
-const InnovationGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
-`;
-const InnovationCard = styled(motion.div)`
-  background: ${({ theme }) => theme.card};
-  padding: 2.5rem;
-  border-radius: 12px;
-  text-align: center;
-  border: 1px solid ${({ theme }) => theme.border};
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.3s;
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-const InnovationIconWrapper = styled.div`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: ${({ theme }) => theme.buttonBg}22;
-  color: ${({ theme }) => theme.buttonBg};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  font-size: 1.75rem;
-`;
-const InnovationTitle = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.text};
-`;
-const InnovationDescription = styled.p`
-  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
-  margin-bottom: 1.5rem;
-`;
-const PrimaryButton = styled(motion.button)`
-  padding: 0.75rem 1.5rem;
-  background-color: ${({ theme }) => theme.buttonBg};
-  color: ${({ theme }) => theme.buttonText};
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-  &:hover {
-    background-color: ${({ theme }) => theme.buttonHover};
-    transform: translateY(-2px);
-  }
-`;
-const SecondaryButton = styled(PrimaryButton)`
-  background: ${({ theme }) => theme.card};
-  color: ${({ theme }) => theme.text};
-  border: 1px solid ${({ theme }) => theme.border};
-  &:hover {
-    background: ${({ theme }) => theme.body};
-    border-color: ${({ theme }) => theme.text};
-    transform: translateY(-2px);
-  }
 `;
 
 // --- Inspiration Section ---
@@ -345,18 +263,16 @@ const sectionVariant = {
   }
 };
 
-// ENHANCED: Stagger animation for feature cards
 const featuresGridVariant = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2, // Each card animates 0.2s after the previous
+      staggerChildren: 0.2,
     },
   },
 };
 
-// ENHANCED: Creative "spring" animation for cards
 const featureCardVariant = {
   hidden: { opacity: 0, y: 50 },
   visible: {
@@ -365,7 +281,6 @@ const featureCardVariant = {
     transition: { type: 'spring', stiffness: 100, damping: 12 },
   },
 };
-// End of enhanced animation
 
 const faqAnswerAnim = {
   hidden: { opacity: 0, height: 0, y: -10 },
@@ -373,9 +288,6 @@ const faqAnswerAnim = {
 };
 
 // --- DUMMY DATA ---
-const heroSlides = [ /* Data is in InteractiveHero.jsx */ ];
-const partners = [ /* Data is in InteractiveHero.jsx */ ];
-
 const testimonials = [
   { name: 'Aarav Sharma', quote: 'Kodhive delivered our project on time and exceeded all our expectations. Highly recommend!', img: 'https://placehold.co/100x100/4a69ff/FFFFFF?text=A' },
   { name: 'Priya Singh', quote: 'Working on a real project through Kodhive was an amazing experience. I learned so much.', img: 'https://placehold.co/100x100/f9c74f/1a2035?text=P' },
@@ -424,7 +336,7 @@ export default function Home() {
   return (
     <div>
       {/* --- 1. InteractiveHero --- */}
-      <InteractiveHero slides={heroSlides} partners={partners} />
+      <InteractiveHero />
       
       {/* --- 2. LogoShowcase --- */}
       <LogoShowcase />
@@ -440,7 +352,6 @@ export default function Home() {
         <Container>
           <SectionTitle>Why Choose Kodhive?</SectionTitle>
           <SectionSubtitle>We provide a learning experience that is flexible, practical, and supported by a community of experts.</SectionSubtitle>
-          {/* ENHANCED: Added variants for stagger animation */}
           <FeaturesGrid
             variants={featuresGridVariant}
             initial="hidden"
@@ -470,26 +381,8 @@ export default function Home() {
       <TechStack />
 
       {/* --- 7. Student Innovation Section --- */}
-      <Section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
-        <Container>
-          <SectionTitle>Turn Your Ideas into Reality</SectionTitle>
-          <SectionSubtitle>Have an idea you want to build or need our team's expertise? We've got a path for your innovation.</SectionSubtitle>
-          <InnovationGrid>
-            <InnovationCard variants={featureCardVariant}>
-              <InnovationIconWrapper><HiOutlineLightBulb /></InnovationIconWrapper>
-              <InnovationTitle>Idea Submission & Guidance</InnovationTitle>
-              <InnovationDescription>Have a project idea but need expert mentorship to execute it? Submit your concept and we'll guide you through the process.</InnovationDescription>
-              <PrimaryButton as={Link} to="/contact">Get Expert Guidance</PrimaryButton>
-            </InnovationCard>
-            <InnovationCard variants={featureCardVariant}>
-              <InnovationIconWrapper><HiOutlinePaperAirplane /></InnovationIconWrapper>
-              <InnovationTitle>Custom Project Request</InnovationTitle>
-              <InnovationDescription>Submit your requirements, and we can assign it to our talented students for development, giving them real-world experience.</InnovationDescription>
-              <SecondaryButton as={Link} to="/request-project">Request Project Build</SecondaryButton>
-            </InnovationCard>
-          </InnovationGrid>
-        </Container>
-      </Section>
+      {/* // <--- 2. REPLACE OLD SECTION WITH NEW COMPONENT --- /> */}
+      <InnovationCta $alt={false} />
 
       {/* --- 8. Inspiration Section --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
@@ -554,7 +447,6 @@ export default function Home() {
                   <span>{faq.q}</span>
                   {openFaqIndex === index ? <HiMinus /> : <HiPlus />}
                 </FaqQuestion>
-                {/* FIX: AnimatePresence was not defined, but now it is. */}
                 <AnimatePresence>
                   {openFaqIndex === index && (
                     <FaqAnswer variants={faqAnswerAnim} initial="hidden" animate="visible" exit="hidden">
