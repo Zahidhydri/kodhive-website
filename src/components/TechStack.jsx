@@ -3,17 +3,17 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 import { 
-  FaReact, FaNodeJs, FaPython, FaJava, FaFigma
+  FaReact, FaNodeJs, FaPython, FaJava, FaFigma, FaGitAlt, FaGithub
 } from 'react-icons/fa';
 import { HiOutlineSparkles, HiOutlineFilm } from 'react-icons/hi';
 import { 
   // Languages & Core
-  SiJavascript, SiTypescript, SiCplusplus, SiPostgresql,
+  SiJavascript, SiTypescript, SiCplusplus, SiPostgresql, SiMysql, SiSqlite,
   // Frameworks
-  SiVite, SiNextdotjs, SiFlask, SiTailwindcss,
+  SiVite, SiNextdotjs, SiFlask, SiTailwindcss, SiDjango, SiBootstrap, SiExpress, SiFastapi,
   // Tools, Design & Cloud
   SiMongodb, SiFirebase, SiGooglecloud, SiVercel, SiRender, 
-  SiCanva
+  SiCanva, SiNetlify
 } from 'react-icons/si';
 
 // --- Base Styles ---
@@ -143,7 +143,7 @@ const TechCard = styled.div`
 
 // --- Tech Data (Categorized) ---
 
-// 1. Programming Tech
+// 1. Programming Tech (UPDATED)
 const row1_dev = [
   { name: 'JavaScript', icon: SiJavascript, color: '#F7DF1E' },
   { name: 'TypeScript', icon: SiTypescript, color: '#3178C6' },
@@ -151,20 +151,26 @@ const row1_dev = [
   { name: 'Java', icon: FaJava, color: '#f89820' },
   { name: 'C++', icon: SiCplusplus, color: '#00599C' },
   { name: 'PostgreSQL', icon: SiPostgresql, color: '#336791' },
+  { name: 'MySQL', icon: SiMysql, color: '#4479A1' },
+  { name: 'SQLite', icon: SiSqlite, color: '#003B57' },
   { name: 'MongoDB', icon: SiMongodb, color: '#4DB33D' },
 ];
 
-// 2. Frameworks
+// 2. Frameworks (UPDATED)
 const row2_frameworks = [
   { name: 'React', icon: FaReact, color: '#61DAFB' },
   { name: 'Node.js', icon: FaNodeJs, color: '#68A063' },
   { name: 'Next.js', icon: SiNextdotjs, color: '#000000' },
   { name: 'Flask', icon: SiFlask, color: '#000000' },
+  { name: 'Django', icon: SiDjango, color: '#092E20' },
   { name: 'Vite', icon: SiVite, color: '#646CFF' },
   { name: 'Tailwind CSS', icon: SiTailwindcss, color: '#06B6D4' },
+  { name: 'Bootstrap', icon: SiBootstrap, color: '#7952B3' },
+  { name: 'Express.js', icon: SiExpress, color: '#000000' },
+  { name: 'FastAPI', icon: SiFastapi, color: '#009688' },
 ];
 
-// 3. Design, Cloud & Tools
+// 3. Design, Cloud & Tools (UPDATED)
 const row3_tools = [
   { name: 'Figma', icon: FaFigma, color: '#F24E1E' },
   { name: 'Canva', icon: SiCanva, color: '#00C4CC' },
@@ -174,6 +180,9 @@ const row3_tools = [
   { name: 'Google Cloud', icon: SiGooglecloud, color: '#4285F4' },
   { name: 'Vercel', icon: SiVercel, color: '#000000' },
   { name: 'Render', icon: SiRender, color: '#46E3B7' },
+  { name: 'Netlify', icon: SiNetlify, color: '#00C7B7' },
+  { name: 'Git', icon: FaGitAlt, color: '#F05032' },
+  { name: 'GitHub', icon: FaGithub, color: '#181717' },
 ];
 
 // Helper to render the list twice for the loop
