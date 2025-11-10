@@ -19,7 +19,7 @@ import {
   HiOutlineSearch
 } from 'react-icons/hi';
 
-// --- NEW Hero Slideshow Data ---
+// --- Hero Slideshow Data ---
 const internshipHeroSlides = [
   {
     title: "Your Career Starts Here",
@@ -43,7 +43,7 @@ const internshipHeroSlides = [
   }
 ];
 
-// --- UPDATED Internship Data (Now 12 + Category) ---
+// --- Internship Data (12 Internships) ---
 const internships = [
   { 
     id: 1,
@@ -340,7 +340,7 @@ const FilterButton = styled.button`
   }
 `;
 
-// --- RESTORED Layout Components ---
+// --- 2-Column Layout Components ---
 const ContentWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -429,7 +429,7 @@ const FeaturedInternship = styled(motion.div)`
     top: 6rem; // Sticky position
   }
 `;
-// --- End Restored Layout ---
+// --- End 2-Column Layout ---
 
 
 // --- Modal Components ---
@@ -684,6 +684,13 @@ function FeaturedInternshipContent({ internship, onApplyClick }) {
 
 // --- Page Component ---
 
+// --- [NEW] Define Page Transition Variants ---
+const pageVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  exit: { opacity: 0, y: -15, transition: { duration: 0.2, ease: 'easeIn' } }
+};
+
 export default function Internships() {
   const [selectedInternship, setSelectedInternship] = useState(null); // Start with null
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -730,10 +737,7 @@ export default function Internships() {
     setIsDetailModalOpen(false);
   };
 
-  const pageVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.5 } }
-  };
+  // [REMOVED] old pageVariants definition
 
   const formModalVariants = {
     hidden: { opacity: 0, x: "-50%", y: "-45%", scale: 0.95 },
@@ -748,12 +752,15 @@ export default function Internships() {
   };
 
   return (
-    <>
+    // [MODIFIED] Wrapped in motion.div for page transition
+    <motion.div
+      variants={pageVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <Container
-        variants={pageVariants}
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
+        // [REMOVED] old animation props
       >
         
         {/* --- MOVED BACK BUTTON --- */}
@@ -914,6 +921,6 @@ export default function Internships() {
           </DetailModalContainer>
         )}
       </AnimatePresence>
-    </>
+    </motion.div>
   );
 }

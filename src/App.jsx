@@ -1,8 +1,8 @@
 // src/App.jsx
-import { useState, useEffect, useRef } from 'react'; // <-- IMPORT useRef
-import { Routes, Route } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom'; // <-- IMPORT useLocation
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion'; // <-- Make sure AnimatePresence is imported
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Sidebar from './components/Sidebar';
@@ -13,7 +13,7 @@ import Contact from './pages/Contact';
 import ProjectRequest from './pages/ProjectRequest';
 import { useAuth } from './contexts/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
-import { ScrollContext } from './contexts/ScrollContext'; // <-- IMPORT NEW CONTEXT
+import { ScrollContext } from './contexts/ScrollContext';
 
 // 1. Define our themes
 const lightTheme = {
@@ -80,8 +80,10 @@ function App() {
   const [theme, setTheme] = useState('light');
   const isDarkTheme = theme === 'dark';
 
-  // --- [FIX] Create the ref for the main scroller ---
   const mainScrollRef = useRef(null);
+
+  // --- [NEW] Get location for AnimatePresence ---
+  const location = useLocation();
 
   const toggleTheme = () => {
     const updatedTheme = isDarkTheme ? 'light' : 'dark';
@@ -118,19 +120,16 @@ function App() {
 
 
   return (
-    // --- [FIX] Wrap everything in the new ScrollContext.Provider ---
     <ScrollContext.Provider value={mainScrollRef}>
       <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
         <GlobalStyle />
         
-        {/* ScrollToTop will now pull the ref from context */}
         <ScrollToTop /> 
         
         <AnimatePresence>
           {isSignInModalOpen && <SignInModal closeModal={closeModal} />}
         </AnimatePresence>
         
-        {/* Sidebar will now pull the ref from context */}
         <Sidebar 
           isOpen={isSidebarOpen}
           setIsOpen={setIsSidebarOpen}
@@ -139,7 +138,6 @@ function App() {
           openSignInModal={openModal}
         />
 
-        {/* --- [FIX] Assign the ref to your scrolling div --- */}
         <div ref={mainScrollRef} style={{ 
           display: 'flex', 
           flexDirection: 'column', 
@@ -149,21 +147,22 @@ function App() {
           position: 'relative', 
           zIndex: 1             
         }}>
-          {/* Navbar will now pull the ref from context */}
           <Navbar 
             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
             openSignInModal={openModal} 
           />
           <main style={{ flexGrow: 1 }}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/internships" element={<Internships />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/request-project" element={<ProjectRequest />} />
-            </Routes>
+            {/* --- [MODIFIED] Wrap Routes in AnimatePresence --- */}
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<Home />} />
+                <Route path="/internships" element={<Internships />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/request-project" element={<ProjectRequest />} />
+              </Routes>
+            </AnimatePresence>
           </main>
           
-          {/* Footer will now pull the ref from context */}
           <Footer />
         </div>
       </ThemeProvider>

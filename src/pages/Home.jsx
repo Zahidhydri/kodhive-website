@@ -1,47 +1,33 @@
 // src/pages/Home.jsx
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; 
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  HiPlus,
-  HiMinus,
-  HiOutlineAcademicCap,
-  HiOutlineClock,
-  HiOutlineUsers,
-} from 'react-icons/hi';
+import { HiOutlineLightBulb, HiOutlineColorSwatch, HiOutlineSparkles, HiChevronDown, HiChevronUp, HiOutlineAcademicCap, HiOutlineBriefcase, HiOutlineUserGroup, HiOutlinePencilAlt, HiOutlinePresentationChartLine } from 'react-icons/hi';
 
-// --- Import Components ---
 import InteractiveHero from '../components/InteractiveHero';
 import LogoShowcase from '../components/LogoShowcase';
-import ServicesSection from '../components/ServicesSection'; 
 import PopularInternships from '../components/PopularInternships';
+import InnovationCta from '../components/InnovationCta';
+import ServicesSection from '../components/ServicesSection';
 import TechStack from '../components/TechStack';
-// PixelGame component was removed
-import InnovationCta from '../components/InnovationCta'; 
 
-// --- Import Swiper ---
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/autoplay';
+// --- [NEW] Define Page Transition Variants ---
+const pageVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  exit: { opacity: 0, y: -15, transition: { duration: 0.2, ease: 'easeIn' } }
+};
 
-// --- STYLED COMPONENT DEFINITIONS ---
-
+// --- STYLED COMPONENTS (Unchanged) ---
+const Section = styled(motion.section)`
+  padding: 6rem 1.5rem;
+  background: ${({ $alt, theme }) => $alt ? theme.card : theme.body};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
+`;
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1.5rem;
-`;
-
-// General Section components
-const Section = styled(motion.section)`
-  padding: 6rem 0;
-  background: ${({ theme, $alt }) => ($alt ? theme.card : 'transparent')};
-  border-top: ${({ theme, $alt }) => ($alt ? `1px solid ${theme.border}` : 'none')};
-  border-bottom: ${({ theme, $alt }) => ($alt ? `1px solid ${theme.border}` : 'none')};
-  overflow-x: hidden;
 `;
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
@@ -56,204 +42,73 @@ const SectionSubtitle = styled.p`
   max-width: 600px;
   margin: 0 auto 3rem;
 `;
-
-// --- Features Section ("Why Choose Kodhive?") ---
-const FeaturesGrid = styled(motion.div)`
+const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 `;
-const FeatureCard = styled(motion.div)`
-  background: ${({ theme }) => theme.card};
-  padding: 2rem;
-  border-radius: 12px;
-  text-align: center;
+const Card = styled(motion.div)`
+  background: ${({ theme }) => theme.body};
   border: 1px solid ${({ theme }) => theme.border};
-  transition: all 0.3s ease;
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  }
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 `;
-const FeatureIcon = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: ${({ theme }) => theme.buttonBg}22;
-  color: ${({ theme }) => theme.buttonBg};
+const IconWrapper = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-`;
-const FeatureTitle = styled.h3`
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: ${({ theme }) => theme.text};
-`;
-const FeatureDescription = styled.p`
-  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
-  font-size: 0.95rem;
-`;
-
-// --- Inspiration Section ---
-const InspirationGrid = styled.div`
-  display: flex;
-  overflow-x: auto;
-  gap: 2rem;
-  padding: 1rem 0;
-  scroll-snap-type: x mandatory;
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.border};
-    border-radius: 4px;
-  }
-`;
-const InspirationCard = styled(motion.div)`
-  min-width: 320px;
-  max-width: 320px;
-  scroll-snap-align: start;
-  background: ${({ theme }) => theme.card};
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  border: 1px solid ${({ theme }) => theme.border};
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  }
-`;
-const QuoteContent = styled.div`
-  padding: 1.5rem;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-const QuoteText = styled.p`
-  font-style: italic;
-  font-size: 1.1rem;
-  color: ${({ theme }) => theme.text};
-  margin-bottom: 1.5rem;
-`;
-const QuoteAuthor = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
-const QuoteAuthorImage = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid ${({ theme }) => theme.buttonBg};
+  background: linear-gradient(135deg, ${({ theme }) => theme.buttonBg}, ${({ theme }) => theme.buttonHover});
+  color: ${({ theme }) => theme.buttonText};
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px ${({ theme }) => theme.buttonBg}88;
 `;
-const AuthorDetails = styled.div`
-  .name {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: ${({ theme }) => theme.text};
-  }
-  .role {
-    font-size: 0.85rem;
-    color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
-  }
+const CardTitle = styled.h3`
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
 `;
-
-// --- TESTIMONIALS ---
-const TestimonialCard = styled.div`
+const CardText = styled.p`
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
+  line-height: 1.6;
+`;
+const FaqWrapper = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`;
+const FaqItem = styled.div`
   background: ${({ theme }) => theme.body};
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
-  padding: 2rem;
-  margin: 1rem;
-`;
-const Quote = styled.p`
-  font-size: 1.1rem;
-  font-style: italic;
-  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
-  margin-bottom: 1.5rem;
-  position: relative;
-  &::before {
-    content: '“';
-    font-size: 4rem;
-    color: ${({ theme }) => theme.border};
-    position: absolute;
-    left: -1rem;
-    top: -1.5rem;
-    opacity: 0.8;
-  }
-`;
-const Author = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  span {
-    font-weight: 600;
-  }
-`;
-
-// --- FAQ Section ---
-const FaqContainer = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-const FaqItem = styled.div`
-  background: ${({ theme }) => theme.card};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 8px;
+  margin-bottom: 1rem;
   overflow: hidden;
 `;
-const FaqQuestion = styled.button`
+const FaqHeader = styled.button`
+  background: transparent;
+  border: none;
   width: 100%;
+  padding: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
-  background: ${({ theme }) => theme.card};
-  border: none;
-  color: ${({ theme }) => theme.text};
+  text-align: left;
   font-size: 1.1rem;
   font-weight: 600;
-  text-align: left;
+  color: ${({ theme }) => theme.text};
   cursor: pointer;
-  svg {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-    margin-left: 1rem;
-    color: ${({ theme }) => theme.buttonBg};
-    transition: transform 0.3s ease;
-  }
-  &[aria-expanded='true'] svg {
-    transform: rotate(45deg);
-  }
 `;
-const FaqAnswer = styled(motion.div)`
-  padding: 0 1.5rem 1.5rem 1.5rem;
-  font-size: 1rem;
+const FaqContent = styled(motion.div)`
+  padding: 0 1.5rem 1.5rem;
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   line-height: 1.6;
 `;
 
-
-// --- ANIMATION VARIANTS ---
+// --- ANIMATION VARIANTS (Unchanged) ---
 const sectionVariant = {
   hidden: { opacity: 0, y: 50 },
   visible: { 
@@ -262,79 +117,79 @@ const sectionVariant = {
     transition: { duration: 0.6, ease: "easeOut" } 
   }
 };
-
-const featuresGridVariant = {
+const gridVariant = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
+    transition: { staggerChildren: 0.2 },
   },
 };
-
-const featureCardVariant = {
-  hidden: { opacity: 0, y: 50 },
+const cardVariant = {
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
     transition: { type: 'spring', stiffness: 100, damping: 12 },
   },
 };
-
-const faqAnswerAnim = {
+const faqContentVariants = {
   hidden: { opacity: 0, height: 0, y: -10 },
-  visible: { opacity: 1, height: 'auto', y: 0, transition: { duration: 0.3, ease: "easeOut" } }
+  visible: { opacity: 1, height: 'auto', y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+  exit: { opacity: 0, height: 0, y: -10, transition: { duration: 0.2, ease: 'easeIn' } }
 };
 
-// --- DUMMY DATA ---
+const faqData = [
+  { 
+    q: "What is Kodhive?", 
+    a: "Kodhive is a platform that bridges the gap between students and companies. We provide students with real-world project experience and internship opportunities, while helping companies find fresh talent and get projects built." 
+  },
+  { 
+    q: "Who can join Kodhive?", 
+    a: "Currently, Kodhive is open to all university students, recent graduates, and companies looking to hire interns or get projects developed. We welcome everyone from coders and designers to marketers and project managers." 
+  },
+  { 
+    q: "How do I get an internship?", 
+    a: "Simply sign up, complete your profile to showcase your skills and experience, and start applying to the internships listed on our platform. Companies will review your application and contact you directly if you're a good fit." 
+  },
+  { 
+    q: "I have a project idea. How can Kodhive help?", 
+    a: "You can submit your project through our 'Request a Project' form. You can either request expert guidance to build it with your team, or you can have our curated pool of talented students build it for you under expert supervision." 
+  },
+];
+
 const testimonials = [
-  { name: 'Aarav Sharma', quote: 'Kodhive delivered our project on time and exceeded all our expectations. Highly recommend!', img: 'https://placehold.co/100x100/4a69ff/FFFFFF?text=A' },
-  { name: 'Priya Singh', quote: 'Working on a real project through Kodhive was an amazing experience. I learned so much.', img: 'https://placehold.co/100x100/f9c74f/1a2035?text=P' },
-  { name: 'Rohan Gupta', quote: 'The student team was professional, creative, and incredibly responsive. We got a fantastic website.', img: 'https://placehold.co/100x100/198754/FFFFFF?text=R' }
+  { 
+    name: "Aarav Sharma", 
+    role: "B.Tech Student, IIT Delhi", 
+    quote: "Working on a real-world project through Kodhive was a game-changer. I learned more in 3 months than in a year of classes. It directly helped me land my dream internship." 
+  },
+  { 
+    name: "Priya Singh, HR Manager", 
+    role: "TechStart Solutions", 
+    quote: "The interns we found on Kodhive are exceptional. They're motivated, skilled, and brought fresh perspectives to our team. The platform made the entire hiring process seamless." 
+  },
+  { 
+    name: "Rohan Gupta, Project Lead", 
+    role: "Student Innovator", 
+    quote: "Kodhive provided the mentorship and structure we needed to turn our hackathon idea into a functional prototype. The guidance was invaluable." 
+  },
 ];
-
-const faqs = [
-  { q: 'How do I request a project?', a: "You can request a project by visiting our 'Request a Project' page and filling out the form. We'll get back to you within 24-48 hours to discuss the details." },
-  { q: 'What kind of projects can I request?', a: 'We accept a wide range of projects, including website development, logo design, mobile app prototypes, and more. If you have an idea, we\'d love to hear it.' },
-  { q: 'How are students selected for projects?', a: 'Students are selected based on their skills, experience, and interest in the project. All students are vetted by our senior mentors to ensure quality.' },
-  { q: 'What does it cost to get a project built?', a: "Costs vary. We provide a detailed quote after our initial consultation. Our goal is to provide high-value work while being budget-friendly." }
-];
-
-const inspirationData = [
-    {
-        quote: "Failure is just a resting place. It is an opportunity to begin again more intelligently.",
-        person: "Henry Ford",
-        role: "Founder, Ford Motor Company",
-        image: "https://images.unsplash.com/photo-1516259771120-d31e53b4787d?q=80&w=1887&auto=format&fit=crop&h=60&w=60&fit=facearea", 
-    },
-    {
-        quote: "The biggest risk is not taking any risk. In a world that's changing really quickly, the only strategy that is guaranteed to fail is not taking risks.",
-        person: "Jeff Bezos",
-        role: "Founder, Amazon",
-        image: "https://images.unsplash.com/photo-1549490349-f9f38f121d4d?q=80&w=1974&auto=format&fit=crop&h=60&w=60&fit=facearea",
-    },
-    {
-        quote: "It's fine to celebrate success but it is more important to heed the lessons of failure.",
-        person: "Bill Gates",
-        role: "Co-founder, Microsoft",
-        image: "https://images.unsplash.com/photo-1543269664-7e79328229b4?q=80&w=2070&auto=format&fit=crop&h=60&w=60&fit=facearea", 
-    },
-    {
-        quote: "Innovation distinguishes between a leader and a follower.",
-        person: "Steve Jobs",
-        role: "Co-founder, Apple",
-        image: "https://images.unsplash.com/photo-1594950269002-39046c8230b4?q=80&w=2070&auto=format&fit=crop&h=60&w=60&fit=facearea", 
-    },
-];
-
-// --- REACT COMPONENT ---
 
 export default function Home() {
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
   
+  const toggleFaq = (index) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
+  };
+  
   return (
-    <div>
+    // --- [NEW] Wrap entire page in motion.div ---
+    <motion.div
+      variants={pageVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       {/* --- 1. InteractiveHero --- */}
       <InteractiveHero />
       
@@ -348,35 +203,31 @@ export default function Home() {
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Why Choose Kodhive?</SectionTitle>
-          {/* UPDATED SUBTITLE: Focus on agility and student-centric approach */}
-          <SectionSubtitle>We are a dynamic platform dedicated to real-world experience, offering high impact and growth opportunities that established companies often miss.</SectionSubtitle>
-          <FeaturesGrid
-            variants={featuresGridVariant}
+          <SectionSubtitle>
+            We're more than a platform; we're a community dedicated to launching tech careers and fostering innovation.
+          </SectionSubtitle>
+          <Grid
+            variants={gridVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
           >
-            {/* UPDATED FEATURE 1: Focus on visibility/impact */}
-            <FeatureCard variants={featureCardVariant}>
-              <FeatureIcon><HiOutlineAcademicCap /></FeatureIcon>
-              <FeatureTitle>High Visibility & Impact</FeatureTitle>
-              <FeatureDescription>In our lean, flat structure, your contributions are highly visible and immediately impactful, accelerating your career growth.</FeatureDescription>
-            </FeatureCard>
-            
-            {/* UPDATED FEATURE 2: Focus on practical, diverse experience */}
-            <FeatureCard variants={featureCardVariant}>
-              <FeatureIcon><HiOutlineClock /></FeatureIcon>
-              <FeatureTitle>Diverse, Practical Experience</FeatureTitle>
-              <FeatureDescription>Move beyond rigid roles—our "all hands on deck" environment lets you quickly explore new skills and learn on the fly.</FeatureDescription>
-            </FeatureCard>
-            
-            {/* UPDATED FEATURE 3: Focus on community and cutting-edge tech */}
-            <FeatureCard variants={featureCardVariant}>
-              <FeatureIcon><HiOutlineUsers /></FeatureIcon>
-              <FeatureTitle>Agile & Cutting-Edge Tech</FeatureTitle>
-              <FeatureDescription>We are free from bureaucracy, enabling faster adoption of the latest technology and a community built on innovation.</FeatureDescription>
-            </FeatureCard>
-          </FeaturesGrid>
+            <Card variants={cardVariant}>
+              <IconWrapper><HiOutlineBriefcase /></IconWrapper>
+              <CardTitle>Real-World Experience</CardTitle>
+              <CardText>Don't just learn—do. Apply your skills to actual projects from real companies.</CardText>
+            </Card>
+            <Card variants={cardVariant}>
+              <IconWrapper><HiOutlineAcademicCap /></IconWrapper>
+              <CardTitle>Expert Mentorship</CardTitle>
+              <CardText>Get guidance from industry veterans who help you navigate challenges and grow.</CardText>
+            </Card>
+            <Card variants={cardVariant}>
+              <IconWrapper><HiOutlineUserGroup /></IconWrapper>
+              <CardTitle>Vibrant Community</CardTitle>
+              <CardText>Connect with peers, mentors, and companies. Learn, share, and build together.</CardText>
+            </Card>
+          </Grid>
         </Container>
       </Section>
       
@@ -392,52 +243,58 @@ export default function Home() {
       {/* --- 8. Inspiration Section --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
-          <SectionTitle>Get Inspired</SectionTitle>
-          <SectionSubtitle>Powerful words from the personalities who have defined the tech world and beyond.</SectionSubtitle>
-          <InspirationGrid>
-            {inspirationData.map((item, index) => (
-              <InspirationCard key={index} variants={featureCardVariant}>
-                <QuoteContent>
-                    <QuoteText>“{item.quote}”</QuoteText>
-                    <QuoteAuthor>
-                        <QuoteAuthorImage src={item.image} alt={item.person} />
-                        <AuthorDetails>
-                            <p className="name">{item.person}</p>
-                            <p className="role">{item.role}</p>
-                        </AuthorDetails>
-                    </QuoteAuthor>
-                </QuoteContent>
-              </InspirationCard>
-            ))}
-          </InspirationGrid>
+            <SectionTitle>How We Foster Innovation</SectionTitle>
+            <SectionSubtitle>
+              Our ecosystem is built to support every stage of the development lifecycle, from idea to launch.
+            </SectionSubtitle>
+            <Grid
+              variants={gridVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <Card variants={cardVariant}>
+                <IconWrapper><HiOutlinePencilAlt /></IconWrapper>
+                <CardTitle>Project Incubation</CardTitle>
+                <CardText>We help students refine their ideas and provide the resources to get started.</CardText>
+              </Card>
+              <Card variants={cardVariant}>
+                <IconWrapper><HiOutlinePresentationChartLine /></IconWrapper>
+                <CardTitle>Skill Development</CardTitle>
+                <CardText>Access workshops and courses to learn the latest technologies and methodologies.</CardText>
+              </Card>
+              <Card variants={cardVariant}>
+                <IconWrapper><HiOutlineLightBulb /></IconWrapper>
+                <CardTitle>Showcase & Launch</CardTitle>
+                <CardText>We provide a platform for you to showcase your finished projects to a wide audience.</CardText>
+              </Card>
+            </Grid>
         </Container>
       </Section>
 
       {/* --- 9. TESTIMONIALS --- */}
       <Section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
-          <SectionTitle>What People Are Saying</SectionTitle>
-          <Swiper
-            modules={[Pagination, Autoplay]}
-            spaceBetween={30}
-            slidesPerView={1}
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
-            breakpoints={{ 768: { slidesPerView: 2 } }}
-            style={{paddingBottom: '3rem'}}
+          <SectionTitle>What Our Community Says</SectionTitle>
+          <SectionSubtitle>
+            Hear from students, mentors, and partners who are part of the Kodhive journey.
+          </SectionSubtitle>
+          <Grid
+            variants={gridVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
           >
-            {testimonials.map((t, index) => (
-              <SwiperSlide key={index}>
-                <TestimonialCard>
-                  <Quote>{t.quote}</Quote>
-                  <Author>
-                    <img src={t.img} alt={t.name} />
-                    <span>{t.name}</span>
-                  </Author>
-                </TestimonialCard>
-              </SwiperSlide>
+            {testimonials.map((testimonial, index) => (
+              <Card as="blockquote" variants={cardVariant} key={index} style={{textAlign: 'left', background: '#f8f9fa'}}>
+                <CardText style={{fontStyle: 'italic', fontSize: '1.05rem', color: '#212529'}}>"{testimonial.quote}"</CardText>
+                <cite style={{marginTop: '1rem', display: 'block', notWidth: '100%'}}>
+                  <strong style={{display: 'block', color: '#007bff'}}>{testimonial.name}</strong>
+                  <span style={{fontSize: '0.9rem', color: '#495057'}}>{testimonial.role}</span>
+                </cite>
+              </Card>
             ))}
-          </Swiper>
+          </Grid>
         </Container>
       </Section>
 
@@ -445,26 +302,39 @@ export default function Home() {
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Frequently Asked Questions</SectionTitle>
-          <FaqContainer>
-            {faqs.map((faq, index) => (
+          <SectionSubtitle>
+            Have questions? We've got answers. Find out everything you need to know about Kodhive.
+          </SectionSubtitle>
+          <FaqWrapper>
+            {faqData.map((item, index) => (
               <FaqItem key={index}>
-                <FaqQuestion onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)} aria-expanded={openFaqIndex === index}>
-                  <span>{faq.q}</span>
-                  {openFaqIndex === index ? <HiMinus /> : <HiPlus />}
-                </FaqQuestion>
+                <FaqHeader onClick={() => toggleFaq(index)}>
+                  {item.q}
+                  <motion.div
+                    animate={{ rotate: openFaqIndex === index ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <HiChevronDown />
+                  </motion.div>
+                </FaqHeader>
                 <AnimatePresence>
                   {openFaqIndex === index && (
-                    <FaqAnswer variants={faqAnswerAnim} initial="hidden" animate="visible" exit="hidden">
-                      {faq.a}
-                    </FaqAnswer>
+                    <FaqContent
+                      variants={faqContentVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
+                      {item.a}
+                    </FaqContent>
                   )}
                 </AnimatePresence>
               </FaqItem>
             ))}
-          </FaqContainer>
+          </FaqWrapper>
         </Container>
       </Section>
       
-    </div>
+    </motion.div>
   );
 }
