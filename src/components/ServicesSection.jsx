@@ -1,9 +1,15 @@
 // src/components/ServicesSection.jsx
-import React from 'react';
+import React from 'react'; // Added React import
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
-// Import icons
+// Import Swiper for carousel
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+// Import icons and data
 import {
   HiOutlinePencilAlt,
   HiOutlineBriefcase,
@@ -79,14 +85,26 @@ const SectionSubtitle = styled.p`
   margin: 0 auto 4rem;
 `;
 
-// --- [NEW] Simple Grid Layout ---
-const ServiceGrid = styled(motion.div)`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+const SwiperWrapper = styled.div`
+  width: 100%;
+  
+  /* Style Swiper pagination dots */
+  .swiper-pagination-bullet {
+    background: ${({ theme }) => theme.border};
+    opacity: 0.8;
+  }
+  .swiper-pagination-bullet-active {
+    background: ${({ theme }) => theme.buttonBg} !important;
+    opacity: 1;
+  }
+  .swiper-slide {
+    padding-bottom: 3rem; // Space for pagination
+    height: auto; 
+  }
 `;
 
-// --- [MERGED] Card Component (from ServiceCard.jsx) ---
+// --- [MERGED] Styles from ServiceCard.jsx ---
+
 const ServiceCardStyled = styled(motion.div)`
   background: ${({ theme }) => theme.card};
   border: 1px solid ${({ theme }) => theme.border};
@@ -96,13 +114,17 @@ const ServiceCardStyled = styled(motion.div)`
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  opacity: 1;
   border-top: 4px solid ${({ $color }) => $color};
-  transition: all 0.3s ease;
   
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.1);
-  }
+  /* Styles for Swiper */
+  width: 100%;
+  margin: 0 auto; 
+  box-sizing: border-box;
+  flex-shrink: 0;
+  /* Ensure cards have same height in a slide */
+  height: 100%; 
+  min-height: 250px; 
 `;
 
 const HeaderIcon = styled.div`
@@ -130,9 +152,9 @@ const ServiceDescription = styled.p`
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   line-height: 1.6;
   margin: 0;
+  flex-grow: 1; /* Ensures content pushes to fill height */
 `;
-// --- End Merged Card ---
-
+// --- End Merged Styles ---
 
 // --- ANIMATION ---
 const sectionVariant = {
@@ -144,26 +166,7 @@ const sectionVariant = {
   },
 };
 
-const gridVariant = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const cardVariant = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { type: 'spring', stiffness: 100, damping: 12 },
-  },
-};
-
-// --- MAIN COMPONENT (Simplified) ---
+// --- MAIN COMPONENT ---
 export default function ServicesSection() {
 
   return (
@@ -181,32 +184,48 @@ export default function ServicesSection() {
           experience for students and high-quality results for clients.
         </SectionSubtitle>
 
-        {/* --- [NEW] Simple Responsive Grid --- */}
-        <ServiceGrid
-          variants={gridVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          {servicesData.map((service) => {
-            const Icon = service.icon;
-            return (
-              <ServiceCardStyled 
-                key={service.title} 
-                $color={service.bgColor}
-                variants={cardVariant}
-              >
-                <HeaderIcon $color={service.bgColor}>
-                  <Icon />
-                </HeaderIcon>
-                <HeaderTitle>{service.title}</HeaderTitle>
-                <ServiceDescription>
-                  {service.description}
-                </ServiceDescription>
-              </ServiceCardStyled>
-            );
-          })}
-        </ServiceGrid>
+        {/* --- Carousel for all devices --- */}
+        <SwiperWrapper>
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            spaceBetween={30}
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            // Responsive breakpoints
+            breakpoints={{
+              // Mobile (default)
+              0: {
+                slidesPerView: 1,
+              },
+              // Tablet
+              768: {
+                slidesPerView: 2,
+              },
+              // Desktop
+              1024: {
+                slidesPerView: 3,
+              },
+            }}
+          >
+            {servicesData.map((service) => {
+              const Icon = service.icon; // Get icon component
+              return (
+                <SwiperSlide key={service.title} style={{ height: 'auto' }}>
+                  {/* --- [INLINED] Card logic --- */}
+                  <ServiceCardStyled $color={service.bgColor}>
+                    <HeaderIcon $color={service.bgColor}>
+                      <Icon />
+                    </HeaderIcon>
+                    <HeaderTitle>{service.title}</HeaderTitle>
+                    <ServiceDescription>
+                      {service.description}
+                    </ServiceDescription>
+                  </ServiceCardStyled>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </SwiperWrapper>
         
       </Container>
     </Section>
