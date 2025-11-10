@@ -1,11 +1,12 @@
 // src/components/Sidebar.jsx
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext.jsx'; // Corrected path
+import { useAuth } from '../contexts/AuthContext.jsx'; 
 import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout, HiOutlineUser, HiOutlineBookOpen, HiOutlineGlobe } from 'react-icons/hi';
-import ThemeToggle from './ThemeToggle'; // Corrected path
+import ThemeToggle from './ThemeToggle'; 
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
 
+// ... (All styled components remain the same) ...
 const Backdrop = styled(motion.div)`
   position: fixed;
   inset: 0;
@@ -49,41 +50,38 @@ const Header = styled.div`
   }
 `;
 
-// NEW: Component for user profile display at the top
 const UserProfileDisplay = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.5rem 1rem; /* More padding */
+  padding: 1.5rem 1rem; 
   border-bottom: 1px solid ${({ theme }) => theme.border};
 `;
 
 const ProfileImage = styled.img`
-  width: 50px; /* Increased size */
-  height: 50px; /* Increased size */
+  width: 50px; 
+  height: 50px; 
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid ${({ theme }) => theme.buttonBg}; /* Added border */
+  border: 2px solid ${({ theme }) => theme.buttonBg}; 
 `;
 
-// NEW: Fallback icon for profile
 const ProfileIconFallback = styled.div`
-  width: 50px; /* Increased size */
-  height: 50px; /* Increased size */
+  width: 50px; 
+  height: 50px; 
   border-radius: 50%;
   background: ${({ theme }) => theme.border};
   color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem; /* Increased size */
+  font-size: 1.75rem; 
 `;
 
-// NEW: Wrapper for text
 const ProfileInfo = styled.div`
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* To handle text overflow */
+  overflow: hidden; 
 `;
 
 const WelcomeText = styled.span`
@@ -93,9 +91,9 @@ const WelcomeText = styled.span`
 `;
 
 const ProfileName = styled.span`
-  font-weight: 700; /* Bolder */
+  font-weight: 700; 
   color: ${({ theme }) => theme.text};
-  font-size: 1.1rem; /* Larger */
+  font-size: 1.1rem; 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -110,9 +108,7 @@ const Nav = styled.nav`
   flex-grow: 1;
 `;
 
-// UPDATED: NavLink to support external links (as a common wrapper)
 const NavLink = styled(motion.a).attrs(props => ({
-    // If 'to' is present, render as Link, otherwise render as 'a'
     as: props.to ? Link : 'a',
     target: props.$isExternal ? '_blank' : undefined,
     rel: props.$isExternal ? 'noopener noreferrer' : undefined,
@@ -136,7 +132,6 @@ const NavLink = styled(motion.a).attrs(props => ({
     background: ${({ theme }) => theme.body};
   }
 
-  /* Style for coming soon/disabled text */
   ${props => props.$isComingSoon && `
     color: ${props.theme.text}99;
     cursor: default;
@@ -146,7 +141,6 @@ const NavLink = styled(motion.a).attrs(props => ({
   `}
 `;
 
-// NEW: Status text for "Coming Soon"
 const StatusText = styled.span`
     margin-left: auto;
     font-size: 0.75rem;
@@ -209,15 +203,15 @@ const LogoutButton = styled.button`
   }
 `;
 
+
 export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, openSignInModal }) {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const closeSidebar = () => setIsOpen(false);
 
-  // NEW/UPDATED: Consolidated function for navigation to internal pages and scrolling to top
+  // [REMOVED] window.scrollTo(0, 0)
   const handlePageNavigation = () => {
     closeSidebar();
-    window.scrollTo(0, 0);
   };
   
   const handleLogout = async () => {
@@ -225,7 +219,7 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
     try {
       await logout();
       navigate('/');
-      window.scrollTo(0, 0); // Ensure scroll to top after logout navigation
+      // [REMOVED] window.scrollTo(0, 0)
     } catch (error) {
       console.error('Failed to log out', error);
     }
@@ -236,10 +230,8 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
     openSignInModal();
   };
   
-  // NEW: Function for Coming Soon link
   const handleComingSoonClick = (e) => {
     e.preventDefault(); 
-    // Simply closing the sidebar is sufficient since we don't navigate
     closeSidebar();
   };
 
@@ -265,7 +257,6 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
               <button onClick={closeSidebar}><HiX /></button>
             </Header>
 
-            {/* MOVED: User profile display is now at the top */}
             {currentUser && (
               <UserProfileDisplay>
                 {currentUser.photoURL ? (
@@ -283,22 +274,18 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
             )}
 
             <Nav>
-              {/* 1. Home */}
               <NavLink to="/" onClick={handlePageNavigation}>
                 <HiOutlineHome /> Home
               </NavLink>
               
-              {/* 2. Internships */}
               <NavLink to="/internships" onClick={handlePageNavigation}>
                 <HiOutlineBriefcase /> Internships
               </NavLink>
               
-              {/* 3. Request a Project */}
               <NavLink to="/request-project" onClick={handlePageNavigation}>
                 <HiOutlinePencilAlt /> Request a Project
               </NavLink>
               
-              {/* 4. Courses Link (Coming Soon) */}
               <NavLink 
                 href="#" 
                 $isComingSoon 
@@ -308,16 +295,14 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
                 <StatusText>Soon</StatusText>
               </NavLink>
               
-              {/* 5. Community Link (External) */}
               <NavLink 
-                href="https://kodhive-community-discord.com" // Dummy External Link
+                href="https://kodhive-community-discord.com" 
                 $isExternal
                 onClick={closeSidebar}
               >
                 <HiOutlineGlobe /> Community
               </NavLink>
 
-              {/* 6. Contact Us */}
               <NavLink to="/contact" onClick={handlePageNavigation}>
                 <HiOutlineMail /> Contact Us
               </NavLink>

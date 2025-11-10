@@ -1,5 +1,5 @@
 // src/pages/ProjectRequest.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react'; // Added useRef
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,8 +16,8 @@ import {
   HiOutlineArrowLeft,
   HiOutlinePhone, 
   HiOutlineQuestionMarkCircle,
-  HiOutlineOfficeBuilding, // <--- [NEW] Added Office/Building Icon
-  HiOutlineExclamationCircle // <--- [NEW] Added Exclamation Icon
+  HiOutlineOfficeBuilding, 
+  HiOutlineExclamationCircle 
 } from 'react-icons/hi';
 import TechStack from '../components/TechStack'; 
 
@@ -108,8 +108,8 @@ const Section = styled(motion.section)`
 const HeroSlideshowContainer = styled.div`
   width: 100%;
   height: 40vh;
-  min-height: 280px;
-  max-height: 350px;
+  min-height: 320px; /* Increased min-height for buttons */
+  max-height: 400px; /* Increased max-height */
   border-radius: 16px;
   overflow: hidden;
   background: ${({ theme }) => theme.card};
@@ -126,14 +126,25 @@ const HeroSlide = styled.div`
   position: relative;
   &::before {
     content: ''; position: absolute; inset: 0;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.1) 100%);
+    /* Darker gradient to make text & buttons stand out */
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 100%);
   }
 `;
 
 const HeroContent = styled(motion.div)`
-  position: absolute; bottom: 10%; left: 5%;
-  color: white; padding: 0 1.5rem; max-width: 600px;
-  @media (min-width: 768px) { padding: 0 2.5rem; }
+  position: absolute; 
+  bottom: 10%; 
+  left: 5%;
+  right: 5%; /* Allow content to use width */
+  color: white; 
+  padding: 0 1.5rem; 
+  max-width: 600px;
+  
+  @media (min-width: 768px) { 
+    padding: 0 2.5rem; 
+    left: 5%;
+    right: auto; /* Reset right on desktop */
+  }
 `;
 
 const HeroTitle = styled.h2`
@@ -143,9 +154,59 @@ const HeroTitle = styled.h2`
 
 const HeroSubtitle = styled.p`
   font-size: 1rem; opacity: 0.9; line-height: 1.5;
+  margin-bottom: 1.5rem; /* Added margin for button spacing */
   @media (min-width: 768px) { font-size: 1.1rem; }
 `;
+
+// --- [NEW] Hero Buttons ---
+const HeroButtonContainer = styled(motion.div)`
+  display: flex;
+  flex-direction: column; /* Stack on mobile */
+  gap: 0.75rem;
+
+  @media (min-width: 600px) {
+    flex-direction: row; /* Side-by-side on tablet+ */
+  }
+`;
+
+const HeroButton = styled(motion.button)`
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  /* Primary Button Style */
+  ${props => props.$primary && `
+    background: ${props.theme.buttonBg};
+    border-color: ${props.theme.buttonBg};
+    color: ${props.theme.buttonText};
+
+    &:hover {
+      background: ${props.theme.buttonHover};
+      border-color: ${props.theme.buttonHover};
+    }
+  `}
+
+  /* Secondary Button Style */
+  ${props => !props.$primary && `
+    background: transparent;
+    border-color: #ffffff;
+    color: #ffffff;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  `}
+`;
 // --- End Hero Slideshow Styles ---
+
 
 // --- [NEW] Important Note Style ---
 const ImportantNote = styled.div`
@@ -192,6 +253,7 @@ const FormSectionSubtitle = styled.p`
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
   gap: 1rem;
   margin-top: 2.5rem; // Space between subtitle and tabs
   margin-bottom: 3.5rem; // Space between tabs and form
@@ -805,15 +867,31 @@ export default function ProjectRequest() {
   
   const [activeTab, setActiveTab] = useState(formType === 'guidance' ? 'guidance' : 'full');
 
+  // --- [NEW] Ref for the form section ---
+  const formSectionRef = useRef(null);
+
   useEffect(() => {
     // Set tab based on URL param
-    setActiveTab(formType === 'guidance' ? 'guidance' : 'full');
+    const newTab = formType === 'guidance' ? 'guidance' : 'full';
+    setActiveTab(newTab);
   }, [formType]);
   
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
     // Update URL param without reloading page
     setSearchParams({ form: tabName });
+  };
+
+  // --- [NEW] Scroll handler function ---
+  const scrollToForm = (tabName) => {
+    // Set the active tab
+    handleTabClick(tabName);
+    
+    // Scroll to the form section
+    formSectionRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start' // Aligns to the top of the section
+    });
   };
 
 
@@ -851,6 +929,28 @@ export default function ProjectRequest() {
                     >
                       <HeroTitle>{slide.title}</HeroTitle>
                       <HeroSubtitle>{slide.subtitle}</HeroSubtitle>
+                      
+                      {/* --- [NEW] Buttons Added Here --- */}
+                      <HeroButtonContainer>
+                        <HeroButton
+                          $primary
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => scrollToForm('full')}
+                        >
+                          <HiOutlinePencilAlt />
+                          Custom Project Request
+                        </HeroButton>
+                        <HeroButton
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => scrollToForm('guidance')}
+                        >
+                          <HiOutlineLightBulb />
+                          Idea Submission & Guidance
+                        </HeroButton>
+                      </HeroButtonContainer>
+
                     </HeroContent>
                   </HeroSlide>
                 </SwiperSlide>
@@ -864,7 +964,13 @@ export default function ProjectRequest() {
       <TechStack />
 
       {/* --- FORM SECTION (TABBED) --- */}
-      <Section $alt={true} style={{ paddingTop: '6rem', paddingBottom: '6rem' }}>
+      {/* --- [NEW] Added id and ref --- */}
+      <Section 
+        id="form-section" 
+        ref={formSectionRef} 
+        $alt={true} 
+        style={{ paddingTop: '6rem', paddingBottom: '6rem' }}
+      >
         <Container>
         
           {/* --- [NEW] Clearer Section Header --- */}

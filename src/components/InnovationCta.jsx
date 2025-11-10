@@ -11,7 +11,6 @@ const Section = styled(motion.section)`
   position: relative;
   overflow: hidden;
 
-  /* Use the animated gradient div for the background */
   &::before {
     content: '';
     position: absolute;
@@ -39,7 +38,7 @@ const Container = styled.div`
   margin: 0 auto;
   padding: 0 1.5rem;
   position: relative;
-  z-index: 2; // Content sits on top of the gradient
+  z-index: 2; 
 `;
 
 const SectionTitle = styled(motion.h2)`
@@ -60,21 +59,20 @@ const SectionSubtitle = styled(motion.p)`
 const InnovationGrid = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2.5rem; // Increased gap
+  gap: 2.5rem; 
   max-width: 1000px;
   margin: 0 auto;
 `;
 
 const InnovationCard = styled(motion.div)`
-  /* Glass effect */
-  background: ${({ theme }) => theme.nav}; /* Use nav color for transparency */
+  background: ${({ theme }) => theme.nav}; 
   backdrop-filter: blur(10px);
   
   padding: 2.5rem;
-  border-radius: 16px; // More rounded
+  border-radius: 16px; 
   text-align: center;
   border: 1px solid ${({ theme }) => theme.border};
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); // Softer shadow
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); 
   
   display: flex;
   flex-direction: column;
@@ -86,7 +84,6 @@ const InnovationIconWrapper = styled.div`
   height: 60px;
   border-radius: 50%;
   
-  /* Vibrant gradient fill */
   background: linear-gradient(135deg, ${({ theme }) => theme.buttonBg}, ${({ theme }) => theme.buttonHover});
   color: ${({ theme }) => theme.buttonText};
   
@@ -108,11 +105,9 @@ const InnovationTitle = styled.h3`
 const InnovationDescription = styled.p`
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   margin-bottom: 1.5rem;
-  flex-grow: 1; // Ensures cards have same height if text length differs
+  flex-grow: 1; 
 `;
 
-// --- [FIX] Base the component on motion(Link) ---
-// This component is now a motion-animated <Link> component
 const PrimaryButton = styled(motion(Link))`
   padding: 0.85rem 1.75rem;
   background-color: ${({ theme }) => theme.buttonBg};
@@ -134,7 +129,6 @@ const PrimaryButton = styled(motion(Link))`
   }
 `;
 
-// --- [FIX] Base this component on the new PrimaryButton (which is a motion(Link)) ---
 const SecondaryButton = styled(PrimaryButton)`
   background: transparent;
   color: ${({ theme }) => theme.text};
@@ -188,10 +182,9 @@ export default function InnovationCta() {
             <InnovationDescription>
               Have a project idea but need expert mentorship to execute it? Submit your concept and we'll guide you through the process.
             </InnovationDescription>
-            {/* [FIX] No longer uses 'as={Link}' prop */}
+            {/* [REMOVED] onClick handler */ }
             <PrimaryButton 
               to="/request-project?form=guidance" 
-              onClick={() => window.scrollTo(0, 0)}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -207,10 +200,9 @@ export default function InnovationCta() {
             <InnovationDescription>
               Submit your requirements, and we can assign it to our talented students for development, giving them real-world experience.
             </InnovationDescription>
-            {/* [FIX] No longer uses 'as={Link}' prop */}
+            {/* [REMOVED] onClick handler */ }
             <SecondaryButton 
               to="/request-project?form=full" 
-              onClick={() => window.scrollTo(0, 0)}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
             >

@@ -12,9 +12,9 @@ import Internships from './pages/Internships';
 import Contact from './pages/Contact';
 import ProjectRequest from './pages/ProjectRequest';
 import { useAuth } from './contexts/AuthContext';
+import ScrollToTop from './components/ScrollToTop'; // --- [NEW] IMPORT ---
 
 // 1. Define our themes
-// ... (rest of your lightTheme and darkTheme code)
 const lightTheme = {
   body: '#f8f9fa',
   text: '#212529',
@@ -24,7 +24,6 @@ const lightTheme = {
   buttonBg: '#007bff',
   buttonText: '#ffffff',
   buttonHover: '#0056b3',
-  // NEW SCROLLBAR VARIABLES
   '--scrollbar-thumb-color': '#adb5bd', 
   '--scrollbar-track-color': '#f8f9fa', 
   '--scrollbar-hover-color': '#6c757d',
@@ -39,7 +38,6 @@ const darkTheme = {
   buttonBg: '#4a69ff', 
   buttonText: '#ffffff',
   buttonHover: '#3555f0', 
-  // NEW SCROLLBAR VARIABLES
   '--scrollbar-thumb-color': '#40486a', 
   '--scrollbar-track-color': '#1a2035', 
   '--scrollbar-hover-color': '#6c757d',
@@ -47,7 +45,6 @@ const darkTheme = {
 
 
 // 2. Create a GlobalStyle component
-// ... (rest of your GlobalStyle code)
 const GlobalStyle = createGlobalStyle`
   html {
     scroll-behavior: smooth;
@@ -79,7 +76,6 @@ function App() {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
   // 3. Set up theme state
-  // ... (rest of your theme logic)
   const [theme, setTheme] = useState('light');
   const isDarkTheme = theme === 'dark';
 
@@ -120,6 +116,7 @@ function App() {
   return (
     <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
       <GlobalStyle />
+      <ScrollToTop /> {/* --- [NEW] ADDED COMPONENT HERE --- */}
       
       <AnimatePresence>
         {isSignInModalOpen && <SignInModal closeModal={closeModal} />}

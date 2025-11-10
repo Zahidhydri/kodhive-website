@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { HiMenuAlt3 } from 'react-icons/hi';
-import styled from 'styled-components'; // <-- REMOVED keyframes
+import styled from 'styled-components'; 
 import logo from '../assets/kodhive-logo.png';
 
 const Nav = styled.nav`
@@ -38,15 +38,12 @@ const LogoImage = styled.img`
   width: 40px;
 `;
 
-// REMOVED pulse keyframes
-
 const LogoText = styled.span`
   font-size: 1.5rem;
   font-weight: bold;
   background: linear-gradient(to right, #007bff, #6f42c1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* REMOVED animation */
 `;
 
 const RightMenu = styled.div`
@@ -94,8 +91,8 @@ export default function Navbar({ toggleSidebar, openSignInModal }) {
 
   return (
     <Nav $scrolled={scrolled}>
-      {/* UPDATED: Added onClick to scroll to top */}
-      <LogoLink to="/" onClick={() => window.scrollTo(0, 0)}>
+      {/* [REMOVED] onClick handler */}
+      <LogoLink to="/">
         <LogoImage src={logo} alt="Kodhive Logo" />
         <LogoText>Kodhive</LogoText>
       </LogoLink>

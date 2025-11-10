@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { HiOutlineArrowRight, HiOutlineLocationMarker, HiOutlineClock } from 'react-icons/hi';
 
+// ... (Data and other styled components remain the same) ...
 // --- DATA: Selected Popular Internships (Updated to 3) ---
 const popularInternships = [
   { 
@@ -208,7 +209,7 @@ const cardVariant = {
   },
 };
 
-// --- MAIN COMPONENT ---
+
 export default function PopularInternships() {
   return (
     <Section 
@@ -231,12 +232,11 @@ export default function PopularInternships() {
           viewport={{ once: true, amount: 0.3 }}
         >
           {popularInternships.map((internship) => (
-            // ADDED: to prop and onClick to scroll to top
+            // [REMOVED] onClick handler
             <InternshipCard 
               key={internship.id} 
               variants={cardVariant}
               to="/internships" 
-              onClick={() => window.scrollTo(0, 0)}
             >
               <InternshipImage src={internship.image} alt={internship.title} />
               <InternshipContent>
@@ -259,7 +259,8 @@ export default function PopularInternships() {
         </InternshipGrid>
         
         <CtaWrapper>
-          <PrimaryButton as={Link} to="/internships" onClick={() => window.scrollTo(0, 0)}>
+          {/* [REMOVED] onClick handler */ }
+          <PrimaryButton as={Link} to="/internships">
             View All Internships <HiOutlineArrowRight />
           </PrimaryButton>
         </CtaWrapper>

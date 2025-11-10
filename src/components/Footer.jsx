@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../assets/kodhive-logo.png';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
-import { HiOutlineMail, HiOutlineLocationMarker, HiOutlineArrowRight } from 'react-icons/hi';
+import { HiOutlineMail, HiOutlineLocationMarker } from 'react-icons/hi';
 
 const FooterContainer = styled.footer`
-  background: ${({ theme }) => theme.card};
+  /* [ENHANCED] Changed background to body for better contrast */
+  background: ${({ theme }) => theme.body};
   border-top: 1px solid ${({ theme }) => theme.border};
   margin-top: 4rem;
   padding: 4rem 1.5rem 3rem 1.5rem;
@@ -23,13 +24,12 @@ const ContentWrapper = styled.div`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; /* Stacks on mobile */
   gap: 2.5rem;
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, 1fr);
+  
+  @media (min-width: 768px) {
+    /* [ENHANCED] 3-column layout for tablet and desktop */
+    grid-template-columns: 1.5fr 1fr 1fr; 
   }
 `;
 
@@ -51,12 +51,7 @@ const Column = styled.div`
 `;
 
 const LogoSection = styled(Column)`
-  @media (min-width: 640px) {
-    grid-column: span 2; 
-  }
-  @media (min-width: 1024px) {
-    grid-column: span 1; 
-  }
+  /* No special grid rules needed anymore */
 `;
 
 const LogoDisplay = styled(Link)`
@@ -74,7 +69,10 @@ const LogoDisplay = styled(Link)`
   span {
     font-size: 1.5rem;
     font-weight: bold;
-    color: ${({ theme }) => theme.text};
+    /* [ENHANCED] Gradient text to match navbar */
+    background: linear-gradient(to right, ${({ theme }) => theme.buttonBg}, #6f42c1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 `;
 
@@ -91,7 +89,7 @@ const SocialIcon = styled.a`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: ${({ theme }) => theme.body};
+  background: ${({ theme }) => theme.card}; /* Use card bg for contrast */
   border: 1px solid ${({ theme }) => theme.border};
   color: ${({ theme }) => theme.text};
   font-size: 1.25rem;
@@ -117,12 +115,14 @@ const LinksList = styled.ul`
 const FooterLink = styled(Link)`
   text-decoration: none;
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
   position: relative;
   display: inline-block;
 
   &:hover {
     color: ${({ theme }) => theme.buttonBg};
+    /* [ENHANCED] Subtle hover effect */
+    transform: translateX(4px);
   }
 `;
 
@@ -152,54 +152,18 @@ const ContactInfo = styled.div`
   }
 `;
 
-const NewsletterForm = styled.form`
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-
-  input {
-    flex-grow: 1;
-    padding: 0.75rem 1rem;
-    border: 1px solid ${({ theme }) => theme.border};
-    border-radius: 8px;
-    background: ${({ theme }) => theme.body};
-    color: ${({ theme }) => theme.text};
-    font-size: 0.9rem;
-    min-width: 0;
-
-    &:focus {
-      outline: none;
-      border-color: ${({ theme }) => theme.buttonBg};
-      box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
-    }
-  }
-
-  button {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    border: none;
-    border-radius: 8px;
-    background: ${({ theme }) => theme.buttonBg};
-    color: ${({ theme }) => theme.buttonText};
-    font-size: 1.25rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background: ${({ theme }) => theme.buttonHover};
-    }
-  }
-`;
-
 const Copyright = styled.div`
   margin-top: 4rem;
   padding-top: 2rem;
   border-top: 1px solid ${({ theme }) => theme.border};
   text-align: center;
+  /* [ENHANCED] Subtle text color */
+  color: ${({ theme }) => (theme.text === '#212529' ? '#6c757d' : '#adb5bd')};
+  
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
 `;
 
 export default function Footer() {
@@ -208,8 +172,8 @@ export default function Footer() {
       <ContentWrapper>
         <Grid>
           <LogoSection>
-            {/* UPDATED: Added onClick to scroll to top */}
-            <LogoDisplay to="/" onClick={() => window.scrollTo(0, 0)}>
+            {/* [REMOVED] onClick handler */ }
+            <LogoDisplay to="/">
               <img src={logo} alt="Kodhive Logo" />
               <span>Kodhive</span>
             </LogoDisplay>
@@ -230,8 +194,8 @@ export default function Footer() {
           <Column>
             <h3>Quick Links</h3>
             <LinksList>
-              {/* UPDATED: Added onClick to scroll to top */}
-              <li><FooterLink to="/" onClick={() => window.scrollTo(0, 0)}>Home</FooterLink></li>
+              {/* [REMOVED] onClick handlers */ }
+              <li><FooterLink to="/">Home</FooterLink></li>
               <li><FooterLink to="/internships">Internships</FooterLink></li>
               <li><FooterLink to="/request-project">Request a Project</FooterLink></li> 
               <li><FooterLink to="/contact">Contact</FooterLink></li>
@@ -252,16 +216,6 @@ export default function Footer() {
             </ContactInfo>
           </Column>
 
-          <Column>
-            <h3>Stay Updated</h3>
-            <p>Subscribe to our newsletter for the latest opportunities and news.</p>
-            <NewsletterForm action="#" method="POST">
-              <input type="email" placeholder="Your email" required />
-              <button type="submit" aria-label="Subscribe">
-                <HiOutlineArrowRight />
-              </button>
-            </NewsletterForm>
-          </Column>
         </Grid>
 
         <Copyright>
