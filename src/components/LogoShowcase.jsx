@@ -1,14 +1,81 @@
 // src/components/LogoShowcase.jsx
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 import logoText from '/src/assets/kodhive.png'; // The text logo
 import logoHex from '/src/assets/kodhive-logo.png'; // The hexagon logo
 
-// Main section wrapper
-// UPDATED: Removed radial-gradient and simplified padding for a cleaner look
+// --- Keyframe for the animated gradient background ---
+const gradientBG = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
+// --- Keyframe for the animated gradient text ---
+const gradientText = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
+// --- Keyframe for floating hexagons (from InteractiveHero) ---
+const float = keyframes`
+  0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+  50% { transform: translateY(-25px) rotate(10deg); opacity: 0.2; }
+  100% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+`;
+
+// --- Hexagon Background (container) ---
+const HexagonBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+`;
+
+// --- [NEW & ENHANCED] Hexagon component ---
+const Hexagon = styled.div`
+  position: absolute;
+  width: 100px;
+  height: 115px;
+  
+  /* ENHANCED: Animated Gradient Background */
+  background: linear-gradient(
+    -45deg, 
+    ${({ theme }) => theme.buttonBg}, 
+    #6f42c1, /* Purple */
+    #d81b60, /* Pink */
+    #00796b, /* Teal */
+    ${({ theme }) => theme.buttonHover}
+  );
+  background-size: 400% 400%;
+  
+  /* Combine both animations */
+  animation: 
+    ${gradientBG} 15s ease infinite, 
+    ${float} 8s ease-in-out infinite;
+  
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  opacity: 0.1; /* Base opacity */
+
+  /* MORE Hexagons with varied timings */
+  &:nth-child(1) { top: 10%; left: 5%; width: 80px; height: 92px; animation-duration: 15s, 9s; animation-delay: 0s, -3s; }
+  &:nth-child(2) { top: 20%; left: 80%; width: 120px; height: 138px; animation-duration: 15s, 10s; animation-delay: 0s, -5s; }
+  &:nth-child(3) { top: 65%; left: 10%; width: 60px; height: 69px; animation-duration: 15s, 11s; animation-delay: 0s, -1s; }
+  &:nth-child(4) { top: 80%; left: 60%; width: 100px; height: 115px; animation-duration: 15s, 7s; }
+  &:nth-child(5) { top: 40%; left: 45%; width: 50px; height: 57px; animation-duration: 15s, 12s; animation-delay: 0s, -2s; }
+  &:nth-child(6) { top: 5%; left: 90%; width: 70px; height: 80px; animation-duration: 15s, 8s; animation-delay: 0s, -1s; }
+  &:nth-child(7) { top: 85%; left: 95%; width: 90px; height: 104px; animation-duration: 15s, 9s; animation-delay: 0s, -4s; }
+  &:nth-child(8) { top: 50%; left: 70%; width: 40px; height: 46px; animation-duration: 15s, 6s; animation-delay: 0s, -1.5s; }
+  &:nth-child(9) { top: 15%; left: 30%; width: 65px; height: 75px; animation-duration: 15s, 10s; animation-delay: 0s, -0.5s; }
+`;
+
 const ShowcaseSection = styled(motion.section)`
-  padding: 4rem 1.5rem 6rem 1.5rem; /* Standard padding */
+  padding: 6rem 1.5rem;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -18,9 +85,6 @@ const ShowcaseSection = styled(motion.section)`
   background: ${({ theme }) => theme.body}; /* Clean background */
 `;
 
-// REMOVED: HexagonBackground and FloatingLogo components
-
-// Wrapper for the logos
 const LogoWrapper = styled(motion.div)`
   display: flex;
   flex-direction: column; /* Stack on mobile */
@@ -36,38 +100,73 @@ const LogoWrapper = styled(motion.div)`
   }
 `;
 
-// UPDATED: Removed keyframe animation
+// [MODIFIED] Added drop-shadow and hover effect
 const AnimatedHexLogo = styled(motion.img)`
   width: auto;
   max-height: 90px;
   height: auto;
+  z-index: 2;
+  
+  /* [NEW] Add a subtle base 3D shadow */
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  transition: filter 0.3s ease; /* Add transition for the shadow */
+
+  &:hover {
+    /* [NEW] Enhance shadow on hover for a "lift" effect */
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
+  }
 
   @media (min-width: 768px) {
     max-height: 110px;
   }
 `;
 
-// UPDATED: Removed keyframe animation
+// [MODIFIED] Added drop-shadow and hover effect
 const AnimatedTextLogo = styled(motion.img)`
   width: auto;
   max-height: 70px; /* Slightly smaller height to match visual weight */
   height: auto;
+  z-index: 2;
+
+  /* [NEW] Add a subtle base 3D shadow */
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  transition: filter 0.3s ease; /* Add transition for the shadow */
+
+  &:hover {
+    /* [NEW] Enhance shadow on hover for a "lift" effect */
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
+  }
 
   @media (min-width: 768px) {
     max-height: 90px;
   }
 `;
 
-// UPDATED: Removed gradient and animation, restyled as a professional subtitle
+// Tagline with gradient animation
 const StyledTagline = styled(motion.p)`
-  font-size: 1.25rem;
-  font-weight: 500; /* Less aggressive font-weight */
-  margin-top: 2rem;
+  font-size: 1.5rem;
+  font-weight: 600; 
+  margin-top: 2.5rem; 
   z-index: 3;
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'}; /* Use secondary text color */
+  text-align: center;
+  
+  /* NEW: Animated Gradient Text */
+  background: linear-gradient(
+    -45deg, 
+    ${({ theme }) => theme.buttonBg}, 
+    #6f42c1, 
+    #d81b60,
+    #00796b,
+    ${({ theme }) => theme.buttonHover}
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: ${gradientText} 10s ease infinite;
 
   @media (min-width: 768px) {
-    font-size: 1.5rem;
+    font-size: 2rem; /* Make it bigger */
   }
 `;
 
@@ -103,17 +202,38 @@ const LogoShowcase = () => {
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
     >
-      {/* REMOVED: HexagonBackground */}
+      {/* Added animated hexagon background */}
+      <HexagonBackground>
+        <Hexagon /> 
+        <Hexagon /> 
+        <Hexagon /> 
+        <Hexagon /> 
+        <Hexagon /> 
+        <Hexagon /> 
+        <Hexagon />
+        <Hexagon /> 
+        <Hexagon /> 
+      </HexagonBackground>
       
       <LogoWrapper variants={itemVariants}>
-        <AnimatedHexLogo src={logoHex} alt="Kodhive Hexagon Logo" />
-        <AnimatedTextLogo src={logoText} alt="Kodhive Text Logo" />
+        <AnimatedHexLogo 
+          src={logoHex} 
+          alt="Kodhive Hexagon Logo" 
+          whileHover={{ scale: 1.05, y: -5 }} // Animate scale and y-position
+          transition={{ type: 'spring', stiffness: 300 }}
+        />
+        <AnimatedTextLogo 
+          src={logoText} 
+          alt="Kodhive Text Logo" 
+          whileHover={{ scale: 1.05, y: -5 }} // Animate scale and y-position
+          transition={{ type: 'spring', stiffness: 300 }}
+        />
       </LogoWrapper>
 
       <StyledTagline
         variants={itemVariants}
       >
-        Innovate. Build. Grow.
+        Unleash Your Digital Potential.
       </StyledTagline>
     </ShowcaseSection>
   );

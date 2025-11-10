@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { HiOutlineArrowRight, HiOutlinePause, HiOutlinePlay } from 'react-icons/hi';
+import { useScroll } from '../contexts/ScrollContext'; // <-- [FIX] IMPORT THE HOOK
 
+// ... (data and styled components remain the same) ...
 // --- Data with NEW Vibrant Color Palettes ---
 const heroSlides = [
   { 
@@ -334,7 +336,6 @@ const cardVariants = {
   }
 };
 
-
 // --- Component ---
 
 export default function InteractiveHero() { 
@@ -344,6 +345,18 @@ export default function InteractiveHero() {
   
   const activeSlide = heroSlides[activeIndex];
   const activeBadgeColor = activeSlide.badgeColor;
+
+  // --- [FIX] Add scroll context and handler ---
+  const mainScrollRef = useScroll();
+  const handleScrollToTop = () => {
+    if (mainScrollRef && mainScrollRef.current) {
+      mainScrollRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+  // --- End Fix ---
 
   // Auto-sliding logic
   useEffect(() => {
@@ -400,14 +413,12 @@ export default function InteractiveHero() {
               </HeroBadge>
               <Title variants={textItemVariants}>{activeSlide.title}</Title>
               <Subtitle variants={textItemVariants}>{activeSlide.subtitle}</Subtitle>
+              
+              {/* [FIX] Replaced onClick with handleScrollToTop */}
               <Button 
                 to={activeSlide.link} 
                 variants={textItemVariants}
-                onClick={() => {
-                  if (activeSlide.link.startsWith('/')) {
-                    window.scrollTo(0, 0);
-                  }
-                }}
+                onClick={handleScrollToTop}
               >
                 {activeSlide.buttonText} <HiOutlineArrowRight />
               </Button>

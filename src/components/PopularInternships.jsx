@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { HiOutlineArrowRight, HiOutlineLocationMarker, HiOutlineClock } from 'react-icons/hi';
+import { useScroll } from '../contexts/ScrollContext'; // <-- [FIX] IMPORT THE HOOK
 
-// ... (Data and other styled components remain the same) ...
+// ... (Data and styled components remain the same) ...
 // --- DATA: Selected Popular Internships (Updated to 3) ---
 const popularInternships = [
   { 
@@ -211,6 +212,19 @@ const cardVariant = {
 
 
 export default function PopularInternships() {
+  
+  // --- [FIX] Add scroll context and handler ---
+  const mainScrollRef = useScroll();
+  const handleScrollToTop = () => {
+    if (mainScrollRef && mainScrollRef.current) {
+      mainScrollRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+  // --- End Fix ---
+
   return (
     <Section 
       initial="hidden" 
@@ -232,11 +246,12 @@ export default function PopularInternships() {
           viewport={{ once: true, amount: 0.3 }}
         >
           {popularInternships.map((internship) => (
-            // [REMOVED] onClick handler
+            // [FIX] Add onClick handler
             <InternshipCard 
               key={internship.id} 
               variants={cardVariant}
               to="/internships" 
+              onClick={handleScrollToTop}
             >
               <InternshipImage src={internship.image} alt={internship.title} />
               <InternshipContent>
@@ -259,8 +274,8 @@ export default function PopularInternships() {
         </InternshipGrid>
         
         <CtaWrapper>
-          {/* [REMOVED] onClick handler */ }
-          <PrimaryButton as={Link} to="/internships">
+          {/* [FIX] Add onClick handler */ }
+          <PrimaryButton as={Link} to="/internships" onClick={handleScrollToTop}>
             View All Internships <HiOutlineArrowRight />
           </PrimaryButton>
         </CtaWrapper>

@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { HiOutlineLightBulb, HiOutlinePaperAirplane } from 'react-icons/hi';
+import { useScroll } from '../contexts/ScrollContext'; // <-- [FIX] IMPORT THE HOOK
 
+// ... (Styled components remain the same) ...
 // --- STYLED COMPONENT DEFINITIONS ---
 
 const Section = styled(motion.section)`
@@ -160,6 +162,19 @@ const cardVariant = {
 };
 
 export default function InnovationCta() {
+  
+  // --- [FIX] Add scroll context and handler ---
+  const mainScrollRef = useScroll();
+  const handleScrollToTop = () => {
+    if (mainScrollRef && mainScrollRef.current) {
+      mainScrollRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+  // --- End Fix ---
+
   return (
     <Section 
       initial="hidden" 
@@ -182,11 +197,12 @@ export default function InnovationCta() {
             <InnovationDescription>
               Have a project idea but need expert mentorship to execute it? Submit your concept and we'll guide you through the process.
             </InnovationDescription>
-            {/* [REMOVED] onClick handler */ }
+            {/* [FIX] Add onClick handler */ }
             <PrimaryButton 
               to="/request-project?form=guidance" 
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleScrollToTop}
             >
               Get Expert Guidance
             </PrimaryButton>
@@ -200,11 +216,12 @@ export default function InnovationCta() {
             <InnovationDescription>
               Submit your requirements, and we can assign it to our talented students for development, giving them real-world experience.
             </InnovationDescription>
-            {/* [REMOVED] onClick handler */ }
+            {/* [FIX] Add onClick handler */ }
             <SecondaryButton 
               to="/request-project?form=full" 
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleScrollToTop}
             >
               Request Project Build
             </SecondaryButton>

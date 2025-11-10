@@ -1,21 +1,20 @@
 // src/components/ScrollToTop.jsx
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useScroll } from '../contexts/ScrollContext'; // <-- IMPORT THE HOOK
+import { useScroll } from '../contexts/ScrollContext'; 
 
 export default function ScrollToTop() {
   const { pathname } = useLocation();
-  const mainScrollRef = useScroll(); // <-- GET THE REF
+  const mainScrollRef = useScroll(); 
 
   useEffect(() => {
-    // --- [FIX] Scroll the ref'd div, not the window ---
     if (mainScrollRef && mainScrollRef.current) {
       mainScrollRef.current.scrollTo({
         top: 0,
-        behavior: 'smooth' // Use smooth scroll
+        behavior: 'auto' // <-- [FIX] Change 'smooth' to 'auto'
       });
     }
-  }, [pathname, mainScrollRef]); // Add mainScrollRef to dependency array
+  }, [pathname, mainScrollRef]); 
 
   return null; 
 }
