@@ -170,7 +170,7 @@ const internships = [
 const categories = ['All', ...new Set(internships.map(i => i.category))]; 
 
 // !!! IMPORTANT: Replace this with your own Google Form embed URL !!!
-const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdwgNGUNqIYNcq-kXg1-UxF-bO3n-nsvA-D-k-12345ABCDE/viewform?embedded=true";
+const googleFormUrl = `https://docs.google.com/forms/d/e/${import.meta.env.VITE_GOOGLE_FORM_INTERNSHIP_ID}/viewform?embedded=true`;
 
 // --- Styled Components ---
 

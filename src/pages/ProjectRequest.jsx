@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { HiOutlineLightBulb, HiOutlinePaperAirplane, HiOutlineCheckCircle, HiArrowSmRight, HiOutlineUser, HiOutlineMail, HiOutlinePencilAlt, HiOutlinePaperClip, HiOutlineMenu } from 'react-icons/hi';
 import TechStack from '../components/TechStack';
 
-// --- STYLED COMPONENTS (Unchanged) ---
+// --- STYLED COMPONENTS ---
 const PageWrapper = styled(motion.div)`
   overflow: hidden; /* Prevent horizontal overflow */
 `;
@@ -175,6 +175,12 @@ const SubmitButton = styled.button`
   &:hover {
     background-color: ${({ theme }) => theme.buttonHover};
   }
+
+  /* --- [ADDED] --- */
+  &:disabled {
+    background-color: ${({ theme }) => theme.border};
+    cursor: not-allowed;
+  }
 `;
 const SuccessMessage = styled(motion.div)`
   text-align: center;
@@ -213,7 +219,7 @@ const NewRequestButton = styled(SubmitButton)`
   }
 `;
 
-// --- [MODIFIED] Update pageVariants and add exit prop ---
+// --- Page Animation Variants ---
 const pageVariants = {
   hidden: { opacity: 0, y: 15 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut', staggerChildren: 0.1 } },
@@ -225,7 +231,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
-// --- ANIMATION VARIANTS (Unchanged) ---
+// --- Other Animation Variants ---
 const slideVariants = {
   hidden: { opacity: 0, x: 50 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] } },
@@ -241,7 +247,7 @@ const formVariants = {
   exit: { opacity: 0, y: -20, transition: { duration: 0.2 } }
 };
 
-// --- (Unchanged Data and Components) ---
+// --- Slideshow Data ---
 const heroSlides = [
   { 
     title: "Have an Idea?", 
@@ -260,7 +266,8 @@ const heroSlides = [
   }
 ];
 
-const GuidanceForm = () => (
+// --- [MODIFIED] Form Components ---
+const GuidanceForm = ({ status }) => (
   <motion.div variants={formVariants} initial="hidden" animate="visible" exit="exit">
     <FormGroup>
       <Label htmlFor="g_name">Full Name</Label>
@@ -283,11 +290,13 @@ const GuidanceForm = () => (
         <option>Other</option>
       </Select>
     </FormGroup>
-    <SubmitButton type="submit">Request Guidance</SubmitButton>
+    <SubmitButton type="submit" disabled={status.includes("Sending...")}>
+      {status === "Submit" ? "Request Guidance" : status}
+    </SubmitButton>
   </motion.div>
 );
 
-const FullProjectForm = () => (
+const FullProjectForm = ({ status }) => (
   <motion.div variants={formVariants} initial="hidden" animate="visible" exit="exit">
     <FormGroup>
       <Label htmlFor="f_name">Full Name / Company Name</Label>
@@ -322,7 +331,9 @@ const FullProjectForm = () => (
         <option>3+ Months</option>
       </Select>
     </FormGroup>
-    <SubmitButton type="submit">Submit Project Request</SubmitButton>
+    <SubmitButton type="submit" disabled={status.includes("Sending...")}>
+      {status === "Submit" ? "Submit Project Request" : status}
+    </SubmitButton>
   </motion.div>
 );
 
@@ -334,6 +345,10 @@ export default function ProjectRequest() {
   const location = useLocation();
   const formSectionRef = useRef(null);
   
+  // --- [NEW] State for form submission ---
+  const [status, setStatus] = useState("Submit");
+  const projectFormUrl = `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_PROJECT_ID}`;
+
   // Slide animation
   useEffect(() => {
     const interval = setInterval(() => {
@@ -360,11 +375,38 @@ export default function ProjectRequest() {
     }
   }, [location]);
 
-  const handleFormSubmit = (e) => {
+  // --- [REPLACED] Form submission logic ---
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // Add real form submission logic here
-    console.log("Form submitted for:", activeTab);
-    setIsSubmitted(true);
+    setStatus("Sending...");
+    const form = e.target;
+    const data = new FormData(form);
+
+    // Add the activeTab to the form data so you know which form was submitted
+    data.append("form_type", activeTab);
+
+    try {
+      const response = await fetch(projectFormUrl, {
+        method: "POST",
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true); // Show the success message
+        form.reset();
+        setStatus("Submit"); // Reset button for next time
+      } else {
+        setStatus("Error. Try Again.");
+        setTimeout(() => setStatus("Submit"), 3000);
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setStatus("Error. Try Again.");
+      setTimeout(() => setStatus("Submit"), 3000);
+    }
   };
   
   return (
@@ -372,7 +414,7 @@ export default function ProjectRequest() {
       variants={pageVariants}
       initial="hidden"
       animate="visible"
-      exit="exit" // <-- [NEW] Add exit prop
+      exit="exit" 
     >
       {/* --- HERO SLIDESHOW SECTION --- */}
       <Section variants={itemVariants} style={{ paddingBottom: 0, paddingTop: '4rem' }}>
@@ -423,7 +465,10 @@ export default function ProjectRequest() {
                 <HiOutlineCheckCircle />
                 <h3>Thank You!</h3>
                 <p>Your request has been submitted. We will review it and get back to you shortly.</p>
-                <NewRequestButton onClick={() => setIsSubmitted(false)}>
+                <NewRequestButton onClick={() => {
+                  setIsSubmitted(false);
+                  setStatus("Submit"); // <-- [ADDED] Reset status
+                }}>
                   Submit Another Request
                 </NewRequestButton>
               </SuccessMessage>
@@ -441,9 +486,9 @@ export default function ProjectRequest() {
                 <FormWrapper as="form" onSubmit={handleFormSubmit}>
                   <AnimatePresence mode="wait">
                     {activeTab === 'guidance' ? (
-                      <GuidanceForm key="guidance" />
+                      <GuidanceForm key="guidance" status={status} />
                     ) : (
-                      <FullProjectForm key="full" />
+                      <FullProjectForm key="full" status={status} />
                     )}
                   </AnimatePresence>
                 </FormWrapper>
