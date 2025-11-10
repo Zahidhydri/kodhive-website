@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import styled from 'styled-components'; 
 import logo from '../assets/kodhive-logo.png';
+import { useScroll } from '../contexts/ScrollContext'; // <-- IMPORT THE HOOK
 
 const Nav = styled.nav`
   position: sticky;
@@ -80,19 +81,35 @@ const MenuButton = styled.button`
 export default function Navbar({ toggleSidebar, openSignInModal }) {
   const { currentUser } = useAuth();
   const [scrolled, setScrolled] = useState(false);
+  const mainScrollRef = useScroll(); // <-- GET THE REF
+
+  // --- [FIX] This handler now scrolls the correct element ---
+  const handleScrollToTop = () => {
+    if (mainScrollRef && mainScrollRef.current) {
+      mainScrollRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   useEffect(() => {
+    // --- [FIX] This effect now listens to the correct div for scrolling ---
+    const scrollContainer = mainScrollRef.current;
+    if (!scrollContainer) return;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      setScrolled(scrollContainer.scrollTop > 10);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    
+    scrollContainer.addEventListener('scroll', handleScroll);
+    return () => scrollContainer.removeEventListener('scroll', handleScroll);
+  }, [mainScrollRef]); // Depend on the ref
 
   return (
     <Nav $scrolled={scrolled}>
-      {/* [REMOVED] onClick handler */}
-      <LogoLink to="/">
+      {/* [FIX] Add onClick handler */}
+      <LogoLink to="/" onClick={handleScrollToTop}>
         <LogoImage src={logo} alt="Kodhive Logo" />
         <LogoText>Kodhive</LogoText>
       </LogoLink>

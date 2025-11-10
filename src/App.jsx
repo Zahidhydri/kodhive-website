@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react'; // <-- IMPORT useRef
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { AnimatePresence } from 'framer-motion';
@@ -12,7 +12,8 @@ import Internships from './pages/Internships';
 import Contact from './pages/Contact';
 import ProjectRequest from './pages/ProjectRequest';
 import { useAuth } from './contexts/AuthContext';
-import ScrollToTop from './components/ScrollToTop'; // --- [FIX] 1. IMPORT THIS ---
+import ScrollToTop from './components/ScrollToTop';
+import { ScrollContext } from './contexts/ScrollContext'; // <-- IMPORT NEW CONTEXT
 
 // 1. Define our themes
 const lightTheme = {
@@ -79,6 +80,9 @@ function App() {
   const [theme, setTheme] = useState('light');
   const isDarkTheme = theme === 'dark';
 
+  // --- [FIX] Create the ref for the main scroller ---
+  const mainScrollRef = useRef(null);
+
   const toggleTheme = () => {
     const updatedTheme = isDarkTheme ? 'light' : 'dark';
     setTheme(updatedTheme);
@@ -114,47 +118,56 @@ function App() {
 
 
   return (
-    <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
-      <GlobalStyle />
-      <ScrollToTop /> {/* --- [FIX] 2. ADD THIS COMPONENT HERE --- */}
-      
-      <AnimatePresence>
-        {isSignInModalOpen && <SignInModal closeModal={closeModal} />}
-      </AnimatePresence>
-      
-      <Sidebar 
-        isOpen={isSidebarOpen}
-        setIsOpen={setIsSidebarOpen}
-        toggleTheme={toggleTheme}
-        darkMode={isDarkTheme}
-        openSignInModal={openModal}
-      />
-
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        height: '100vh',      
-        overflowY: 'auto',    
-        overflowX: 'hidden',  
-        position: 'relative', 
-        zIndex: 1             
-      }}>
-        <Navbar 
-          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          openSignInModal={openModal} 
-        />
-        <main style={{ flexGrow: 1 }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/internships" element={<Internships />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/request-project" element={<ProjectRequest />} />
-          </Routes>
-        </main>
+    // --- [FIX] Wrap everything in the new ScrollContext.Provider ---
+    <ScrollContext.Provider value={mainScrollRef}>
+      <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
+        <GlobalStyle />
         
-        <Footer />
-      </div>
-    </ThemeProvider>
+        {/* ScrollToTop will now pull the ref from context */}
+        <ScrollToTop /> 
+        
+        <AnimatePresence>
+          {isSignInModalOpen && <SignInModal closeModal={closeModal} />}
+        </AnimatePresence>
+        
+        {/* Sidebar will now pull the ref from context */}
+        <Sidebar 
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
+          toggleTheme={toggleTheme}
+          darkMode={isDarkTheme}
+          openSignInModal={openModal}
+        />
+
+        {/* --- [FIX] Assign the ref to your scrolling div --- */}
+        <div ref={mainScrollRef} style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          height: '100vh',      
+          overflowY: 'auto',    
+          overflowX: 'hidden',  
+          position: 'relative', 
+          zIndex: 1             
+        }}>
+          {/* Navbar will now pull the ref from context */}
+          <Navbar 
+            toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            openSignInModal={openModal} 
+          />
+          <main style={{ flexGrow: 1 }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/internships" element={<Internships />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/request-project" element={<ProjectRequest />} />
+            </Routes>
+          </main>
+          
+          {/* Footer will now pull the ref from context */}
+          <Footer />
+        </div>
+      </ThemeProvider>
+    </ScrollContext.Provider>
   );
 }
 

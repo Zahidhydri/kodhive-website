@@ -5,6 +5,7 @@ import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilA
 import ThemeToggle from './ThemeToggle'; 
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
+import { useScroll } from '../contexts/ScrollContext'; // <-- IMPORT THE HOOK
 
 // ... (All styled components remain the same) ...
 const Backdrop = styled(motion.div)`
@@ -207,19 +208,32 @@ const LogoutButton = styled.button`
 export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, openSignInModal }) {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const mainScrollRef = useScroll(); // <-- GET THE REF
+
+  // --- [FIX] This handler now scrolls the correct element ---
+  const handleScrollToTop = () => {
+    if (mainScrollRef && mainScrollRef.current) {
+      mainScrollRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const closeSidebar = () => setIsOpen(false);
 
-  // [REMOVED] window.scrollTo(0, 0)
+  // --- [FIX] Combine scroll-to-top with closing the sidebar ---
   const handlePageNavigation = () => {
+    handleScrollToTop();
     closeSidebar();
   };
   
   const handleLogout = async () => {
+    handleScrollToTop(); // Also scroll to top on logout
     closeSidebar();
     try {
       await logout();
       navigate('/');
-      // [REMOVED] window.scrollTo(0, 0)
     } catch (error) {
       console.error('Failed to log out', error);
     }
@@ -274,6 +288,7 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
             )}
 
             <Nav>
+              {/* [FIX] Use the new navigation handler */}
               <NavLink to="/" onClick={handlePageNavigation}>
                 <HiOutlineHome /> Home
               </NavLink>
@@ -298,7 +313,7 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
               <NavLink 
                 href="https://kodhive-community-discord.com" 
                 $isExternal
-                onClick={closeSidebar}
+                onClick={closeSidebar} // External links don't need scroll
               >
                 <HiOutlineGlobe /> Community
               </NavLink>

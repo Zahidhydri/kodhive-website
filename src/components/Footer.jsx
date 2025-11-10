@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import logo from '../assets/kodhive-logo.png';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { HiOutlineMail, HiOutlineLocationMarker } from 'react-icons/hi';
+import { useScroll } from '../contexts/ScrollContext'; // <-- IMPORT THE HOOK
 
-// --- (Styled components are all correct, no changes needed) ---
 const FooterContainer = styled.footer`
   /* [ENHANCED] Changed background to body for better contrast */
   background: ${({ theme }) => theme.body};
@@ -167,15 +167,17 @@ const Copyright = styled.div`
   }
 `;
 
-
 export default function Footer() {
+  const mainScrollRef = useScroll(); // <-- GET THE REF
 
-  // --- [FIX] Add this handler function ---
+  // --- [FIX] This handler now scrolls the correct element ---
   const handleScrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    if (mainScrollRef && mainScrollRef.current) {
+      mainScrollRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
