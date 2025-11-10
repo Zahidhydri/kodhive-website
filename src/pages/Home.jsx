@@ -42,11 +42,14 @@ const SectionSubtitle = styled.p`
   max-width: 600px;
   margin: 0 auto 3rem;
 `;
-const Grid = styled.div`
+
+// REPLACE IT WITH THIS:
+const Grid = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 `;
+
 const Card = styled(motion.div)`
   background: ${({ theme }) => theme.body};
   border: 1px solid ${({ theme }) => theme.border};
