@@ -5,6 +5,7 @@ import logo from '../assets/kodhive-logo.png';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { HiOutlineMail, HiOutlineLocationMarker } from 'react-icons/hi';
 
+// --- (Styled components are all correct, no changes needed) ---
 const FooterContainer = styled.footer`
   /* [ENHANCED] Changed background to body for better contrast */
   background: ${({ theme }) => theme.body};
@@ -166,14 +167,24 @@ const Copyright = styled.div`
   }
 `;
 
+
 export default function Footer() {
+
+  // --- [FIX] Add this handler function ---
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <FooterContainer>
       <ContentWrapper>
         <Grid>
           <LogoSection>
-            {/* [REMOVED] onClick handler */ }
-            <LogoDisplay to="/">
+            {/* [FIX] Add onClick handler */}
+            <LogoDisplay to="/" onClick={handleScrollToTop}>
               <img src={logo} alt="Kodhive Logo" />
               <span>Kodhive</span>
             </LogoDisplay>
@@ -194,11 +205,11 @@ export default function Footer() {
           <Column>
             <h3>Quick Links</h3>
             <LinksList>
-              {/* [REMOVED] onClick handlers */ }
-              <li><FooterLink to="/">Home</FooterLink></li>
-              <li><FooterLink to="/internships">Internships</FooterLink></li>
-              <li><FooterLink to="/request-project">Request a Project</FooterLink></li> 
-              <li><FooterLink to="/contact">Contact</FooterLink></li>
+              {/* [FIX] Add onClick handlers to all links */}
+              <li><FooterLink to="/" onClick={handleScrollToTop}>Home</FooterLink></li>
+              <li><FooterLink to="/internships" onClick={handleScrollToTop}>Internships</FooterLink></li>
+              <li><FooterLink to="/request-project" onClick={handleScrollToTop}>Request a Project</FooterLink></li> 
+              <li><FooterLink to="/contact" onClick={handleScrollToTop}>Contact</FooterLink></li>
             </LinksList>
           </Column>
 

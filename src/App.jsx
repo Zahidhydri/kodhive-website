@@ -12,7 +12,7 @@ import Internships from './pages/Internships';
 import Contact from './pages/Contact';
 import ProjectRequest from './pages/ProjectRequest';
 import { useAuth } from './contexts/AuthContext';
-import ScrollToTop from './components/ScrollToTop'; // --- [NEW] IMPORT ---
+import ScrollToTop from './components/ScrollToTop'; // --- [FIX] 1. IMPORT THIS ---
 
 // 1. Define our themes
 const lightTheme = {
@@ -116,7 +116,7 @@ function App() {
   return (
     <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
       <GlobalStyle />
-      <ScrollToTop /> {/* --- [NEW] ADDED COMPONENT HERE --- */}
+      <ScrollToTop /> {/* --- [FIX] 2. ADD THIS COMPONENT HERE --- */}
       
       <AnimatePresence>
         {isSignInModalOpen && <SignInModal closeModal={closeModal} />}
