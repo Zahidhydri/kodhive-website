@@ -17,7 +17,7 @@ import LogoShowcase from '../components/LogoShowcase';
 import ServicesSection from '../components/ServicesSection'; 
 import PopularInternships from '../components/PopularInternships';
 import TechStack from '../components/TechStack';
-// Removed: import PixelGame from '../components/PixelGame';
+// PixelGame component was removed
 import InnovationCta from '../components/InnovationCta'; 
 
 // --- Import Swiper ---
@@ -343,11 +343,8 @@ export default function Home() {
 
       {/* --- 3. Services Section --- */}
       <ServicesSection />
-
-      {/* --- 4. NEW: Popular Internships Section (Replaces FeaturedProjects) --- */}
-      <PopularInternships />
       
-      {/* --- 5. "Why Choose Kodhive?" Section (ENHANCED) --- */}
+      {/* --- 4. "Why Choose Kodhive?" Section (MOVED) --- */}
       <Section $alt={true} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariant}>
         <Container>
           <SectionTitle>Why Choose Kodhive?</SectionTitle>
@@ -382,12 +379,14 @@ export default function Home() {
           </FeaturesGrid>
         </Container>
       </Section>
+      
+      {/* --- 5. Popular Internships Section (MOVED) --- */}
+      <PopularInternships />
 
       {/* --- 6. NEW: Tech Stack Section --- */}
       <TechStack />
 
       {/* --- 7. Student Innovation Section --- */}
-      {/* // <--- 2. REPLACE OLD SECTION WITH NEW COMPONENT --- /> */}
       <InnovationCta $alt={false} />
 
       {/* --- 8. Inspiration Section --- */}
