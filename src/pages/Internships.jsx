@@ -9,14 +9,15 @@ import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import 'swiper/css/effect-fade';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // <-- ADDED Link
 import { 
   HiOutlineLocationMarker, 
   HiOutlineClock, 
   HiOutlineX, 
   HiOutlineCode, 
   HiOutlineArrowLeft,
-  HiOutlineSearch
+  HiOutlineSearch,
+  HiOutlineBadgeCheck // <-- ADDED Icon
 } from 'react-icons/hi';
 
 // --- Hero Slideshow Data ---
@@ -45,6 +46,7 @@ const internshipHeroSlides = [
 
 // --- Internship Data (12 Internships) ---
 const internships = [
+  // ... (Your internship data remains unchanged) ...
   { 
     id: 1,
     title: 'Frontend Developer (React)', 
@@ -169,7 +171,7 @@ const internships = [
 
 const categories = ['All', ...new Set(internships.map(i => i.category))]; 
 
-// !!! IMPORTANT: Replace this with your own Google Form embed URL !!!
+// This line is correct and uses the .env file
 const googleFormUrl = `https://docs.google.com/forms/d/e/${import.meta.env.VITE_GOOGLE_FORM_INTERNSHIP_ID}/viewform?embedded=true`;
 
 // --- Styled Components ---
@@ -321,6 +323,7 @@ const FilterTabs = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  align-items: center; /* Vertically align all items */
 `;
 
 const FilterButton = styled.button`
@@ -337,6 +340,44 @@ const FilterButton = styled.button`
   &:hover {
     border-color: ${({ theme }) => theme.buttonBg};
     color: ${({ theme, $isActive }) => !$isActive && theme.buttonBg};
+  }
+`;
+
+// --- NEW: VerifyLink component ---
+const VerifyLink = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  text-decoration: none;
+  margin-left: auto; /* Pushes it to the right on desktop */
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+
+  svg {
+    font-size: 1.25rem;
+  }
+  
+  &:hover {
+    color: ${({ theme }) => theme.buttonBg};
+  }
+
+  /* On mobile, make it full width and look like a button */
+  @media (max-width: 768px) {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    background: ${({ theme }) => theme.card};
+    border: 1px solid ${({ theme }) => theme.border};
+    border-radius: 8px;
+    
+    &:hover {
+        border-color: ${({ theme }) => theme.buttonBg};
+    }
   }
 `;
 
@@ -684,7 +725,6 @@ function FeaturedInternshipContent({ internship, onApplyClick }) {
 
 // --- Page Component ---
 
-// --- [NEW] Define Page Transition Variants ---
 const pageVariants = {
   hidden: { opacity: 0, y: 15 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
@@ -737,8 +777,6 @@ export default function Internships() {
     setIsDetailModalOpen(false);
   };
 
-  // [REMOVED] old pageVariants definition
-
   const formModalVariants = {
     hidden: { opacity: 0, x: "-50%", y: "-45%", scale: 0.95 },
     visible: { opacity: 1, x: "-50%", y: "-50%", scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
@@ -752,18 +790,14 @@ export default function Internships() {
   };
 
   return (
-    // [MODIFIED] Wrapped in motion.div for page transition
     <motion.div
       variants={pageVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
-      <Container
-        // [REMOVED] old animation props
-      >
+      <Container>
         
-        {/* --- MOVED BACK BUTTON --- */}
         <BackButton onClick={() => navigate(-1)}>
           <HiOutlineArrowLeft />
           Go Back
@@ -817,10 +851,15 @@ export default function Internships() {
                 {category}
               </FilterButton>
             ))}
+            {/* --- ADDED THIS LINK --- */}
+            <VerifyLink to="/verify">
+              <HiOutlineBadgeCheck />
+              Verify Certificate
+            </VerifyLink>
           </FilterTabs>
         </SearchFilterContainer>
 
-        {/* --- RESTORED 2-Column Layout --- */}
+        {/* --- 2-Column Layout --- */}
         <ContentWrapper>
           <InternshipList>
             {filteredInternships.length > 0 ? (
