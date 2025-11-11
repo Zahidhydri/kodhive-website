@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import Internships from './pages/Internships';
 import Contact from './pages/Contact';
 import ProjectRequest from './pages/ProjectRequest';
+import VerifyCertificate from './pages/VerifyCertificate.jsx'; // <-- ADD THIS LINE
 import { useAuth } from './contexts/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import { ScrollContext } from './contexts/ScrollContext';
@@ -159,6 +160,7 @@ function App() {
                 <Route path="/internships" element={<Internships />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/request-project" element={<ProjectRequest />} />
+                <Route path="/verify" element={<VerifyCertificate />} /> {/* <-- ADD THIS LINE */}
               </Routes>
             </AnimatePresence>
           </main>
