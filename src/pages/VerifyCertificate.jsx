@@ -1,20 +1,19 @@
-import React, { useState } from 'react'; // <-- FIX 1: Added useState
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   HiOutlineSearch, 
-  HiOutlineUser, 
   HiOutlineBriefcase, 
   HiOutlineCalendar,
   HiOutlineXCircle,
-  HiOutlineCheckCircle
+  HiOutlineCheckCircle,
+  HiOutlineRefresh // For loading spinner
 } from 'react-icons/hi';
 import logo from '../assets/kodhive-logo.png'; // Import the logo
 
-//
-// 1. Get the Google Sheet URL from environment variables
-//
+// Get URL from .env
 const googleSheetURL = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL;
+
 // --- Styled Components ---
 
 const PageContainer = styled(motion.div)`
@@ -39,7 +38,6 @@ const VerifyBox = styled.div`
   transition: all 0.3s ease;
 `;
 
-// --- FIX 2: Added LogoWrapper and LogoText ---
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -60,7 +58,6 @@ const LogoText = styled.span`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `;
-// --- End Fix 2 ---
 
 const Header = styled.h2`
   color: ${({ theme }) => theme.text};
@@ -73,7 +70,7 @@ const Header = styled.h2`
 
 const StyledForm = styled.form`
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
   gap: 1rem;
   margin-bottom: 2rem;
 `;
@@ -90,7 +87,7 @@ const InputGroup = styled.div`
     margin-bottom: 0.5rem;
   }
 
-  svg {
+  svg { /* Icon inside the input */
     position: absolute;
     left: 1rem;
     top: calc(50% + 7px); /* Adjust for label height */
@@ -102,7 +99,7 @@ const InputGroup = styled.div`
 
 const StyledInput = styled.input`
   width: 100%;
-  padding: 0.85rem 1rem 0.85rem 3rem;
+  padding: 0.85rem 1rem 0.85rem 3rem; /* Padding for inner icon */
   font-size: 1rem;
   border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.border};
@@ -119,10 +116,15 @@ const StyledInput = styled.input`
 `;
 
 const VerifyButton = styled(motion.button)`
-  width: 100%;
+  width: 100%; /* Back to full width */
   padding: 0.85rem 1.5rem;
   font-size: 1.1rem;
   font-weight: 600;
+  display: flex; /* Added to center spinner */
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  
   color: ${({ theme }) => theme.buttonText};
   background-color: ${({ theme }) => theme.buttonBg};
   border: none;
@@ -245,6 +247,21 @@ function VerifyCertificate() {
     setIsLoading(true);
     setStatusMessage(null);
 
+    // Check if the URL is set
+    if (!googleSheetURL) {
+       setStatusMessage(
+        <ErrorCard>
+          <HiOutlineXCircle />
+          <div>
+            <h3>Configuration Error</h3>
+            <p>The verification service URL is not set. Please contact support.</p>
+          </div>
+        </ErrorCard>
+      );
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch(googleSheetURL);
       if (!response.ok) throw new Error('Network error');
@@ -253,7 +270,6 @@ function VerifyCertificate() {
       const rows = csvText.split(/\r?\n/);
       const headers = rows[0].split(',').map(h => h.trim());
 
-      // --- NEW: Updated Header Names ---
       const idColumnIndex = headers.indexOf('UniqueID');
       const firstNameIndex = headers.indexOf('FirstName');
       const lastNameIndex = headers.indexOf('LastName');
@@ -266,7 +282,7 @@ function VerifyCertificate() {
             <HiOutlineXCircle />
             <div>
               <h3>Configuration Error</h3>
-              <p>The data sheet is missing required columns. Please contact support.</p>
+              <p>The data sheet is missing required columns. Please check your headers.</p>
             </div>
           </ErrorCard>
         );
@@ -351,7 +367,6 @@ function VerifyCertificate() {
       transition={{ duration: 0.4 }}
     >
       <VerifyBox>
-        {/* --- FIX 2: Replaced LogoImage with LogoWrapper --- */}
         <LogoWrapper>
           <LogoImage src={logo} alt="Kodhive Logo" />
           <LogoText>Kodhive</LogoText>
@@ -375,7 +390,16 @@ function VerifyCertificate() {
             disabled={isLoading}
             whileTap={{ scale: 0.98 }}
           >
-            {isLoading ? 'Verifying...' : 'Verify'}
+            {isLoading ? (
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+              >
+                <HiOutlineRefresh />
+              </motion.div>
+            ) : (
+              'Verify'
+            )}
           </VerifyButton>
         </StyledForm>
 
