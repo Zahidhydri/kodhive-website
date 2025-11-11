@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // <-- FIX 1: Added useState
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   HiOutlineSearch, 
+  HiOutlineUser, 
   HiOutlineBriefcase, 
   HiOutlineCalendar,
   HiOutlineXCircle,
-  HiOutlineCheckCircle,
-  HiOutlineRefresh // <-- Added for loading spinner
+  HiOutlineCheckCircle
 } from 'react-icons/hi';
 import logo from '../assets/kodhive-logo.png'; // Import the logo
 
+//
 // 1. Get the Google Sheet URL from environment variables
 //
 const googleSheetURL = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL;
@@ -38,6 +39,7 @@ const VerifyBox = styled.div`
   transition: all 0.3s ease;
 `;
 
+// --- FIX 2: Added LogoWrapper and LogoText ---
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -58,6 +60,7 @@ const LogoText = styled.span`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `;
+// --- End Fix 2 ---
 
 const Header = styled.h2`
   color: ${({ theme }) => theme.text};
@@ -68,19 +71,15 @@ const Header = styled.h2`
   font-weight: 700;
 `;
 
-// --- ENHANCEMENT 1: Form now displays as a row ---
 const StyledForm = styled.form`
   display: flex;
-  flex-direction: row; /* Aligns input and button side-by-side */
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 1rem;
   margin-bottom: 2rem;
-  align-items: flex-end; /* Aligns bottom of input and button */
 `;
 
-// --- ENHANCEMENT 2: Input group grows to fill space ---
 const InputGroup = styled.div`
   position: relative;
-  flex: 1; /* Allows this to grow */
   
   label {
     font-weight: 600;
@@ -90,12 +89,20 @@ const InputGroup = styled.div`
     display: block;
     margin-bottom: 0.5rem;
   }
+
+  svg {
+    position: absolute;
+    left: 1rem;
+    top: calc(50% + 7px); /* Adjust for label height */
+    transform: translateY(-50%);
+    color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
+    font-size: 1.25rem;
+  }
 `;
 
-// --- ENHANCEMENT 3: Removed left padding for icon ---
 const StyledInput = styled.input`
   width: 100%;
-  padding: 0.85rem 1rem; /* Removed left padding */
+  padding: 0.85rem 1rem 0.85rem 3rem;
   font-size: 1rem;
   border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.border};
@@ -104,9 +111,6 @@ const StyledInput = styled.input`
   box-sizing: border-box;
   transition: all 0.3s ease;
 
-  /* Make height consistent */
-  height: 50px; 
-
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
@@ -114,17 +118,11 @@ const StyledInput = styled.input`
   }
 `;
 
-// --- ENHANCEMENT 4: Button is now a square icon button ---
 const VerifyButton = styled(motion.button)`
-  width: 50px;  /* Square button */
-  height: 50px; /* Matches input height */
-  padding: 0;
-  font-size: 1.5rem; /* Icon size */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0; /* Prevents shrinking */
-  
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: ${({ theme }) => theme.buttonText};
   background-color: ${({ theme }) => theme.buttonBg};
   border: none;
@@ -137,12 +135,11 @@ const VerifyButton = styled(motion.button)`
   }
 `;
 
-// (Rest of the styled components are the same)
 const ResultArea = styled.div`
   text-align: left;
   margin-top: 1.5rem;
 `;
-// ... (omitting identical styles for brevity) ...
+
 const ResultCardBase = styled(motion.div)`
   border-radius: 12px;
   padding: 1.5rem;
@@ -223,7 +220,6 @@ const DetailRow = styled.div`
   }
 `;
 
-
 // --- Page Component ---
 
 function VerifyCertificate() {
@@ -257,6 +253,7 @@ function VerifyCertificate() {
       const rows = csvText.split(/\r?\n/);
       const headers = rows[0].split(',').map(h => h.trim());
 
+      // --- NEW: Updated Header Names ---
       const idColumnIndex = headers.indexOf('UniqueID');
       const firstNameIndex = headers.indexOf('FirstName');
       const lastNameIndex = headers.indexOf('LastName');
@@ -354,13 +351,13 @@ function VerifyCertificate() {
       transition={{ duration: 0.4 }}
     >
       <VerifyBox>
+        {/* --- FIX 2: Replaced LogoImage with LogoWrapper --- */}
         <LogoWrapper>
           <LogoImage src={logo} alt="Kodhive Logo" />
           <LogoText>Kodhive</LogoText>
         </LogoWrapper>
         <Header>Certificate Verification</Header>
         
-        {/* --- ENHANCEMENT 5: Updated form structure --- */}
         <StyledForm onSubmit={handleVerify}>
           <InputGroup>
             <label htmlFor="certId">Enter Certificate ID</label>
@@ -371,24 +368,14 @@ function VerifyCertificate() {
               onChange={(e) => setCertId(e.target.value)}
               placeholder="e.g., KH-2025-001"
             />
-            {/* The icon that was here is now the button */}
+            <HiOutlineSearch />
           </InputGroup>
           <VerifyButton 
             type="submit" 
             disabled={isLoading}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.98 }}
           >
-            {/* Show spinner when loading, else show search icon */}
-            {isLoading ? (
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-              >
-                <HiOutlineRefresh />
-              </motion.div>
-            ) : (
-              <HiOutlineSearch />
-            )}
+            {isLoading ? 'Verifying...' : 'Verify'}
           </VerifyButton>
         </StyledForm>
 
