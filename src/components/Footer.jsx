@@ -218,9 +218,9 @@ export default function Footer() {
           <Column>
             <h3>Get in Touch</h3>
             <ContactInfo>
-              <a href="mailto:info@kodhive.com">
+              <a href="mailto:kodhivetechnology@gmail.com">
                 <HiOutlineMail />
-                <span>info@kodhive.com</span>
+                <span>kodhivetechnology@gmail.com</span>
               </a>
               <div>
                 <HiOutlineLocationMarker />
