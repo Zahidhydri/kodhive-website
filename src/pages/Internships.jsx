@@ -23,7 +23,7 @@ import InternshipListings, { FeaturedInternshipContent } from '../components/Int
 import demoCertImage from '../assets/Demo Certificate.png'; // Make sure this file exists
 
 // --- Use .env variable for form URL ---
-const googleFormUrl = `${import.meta.env.VITE_GOOGLE_FORM_INTERNSHIP_ID}`;
+const googleFormUrl = `https://docs.google.com/forms/d/e/${import.meta.env.VITE_GOOGLE_FORM_INTERNSHIP_ID}/viewform?embedded=true`;
 
 // --- Hero Slideshow Data ---
 const internshipHeroSlides = [
