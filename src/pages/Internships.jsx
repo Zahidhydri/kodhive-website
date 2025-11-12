@@ -17,14 +17,17 @@ import {
 } from 'react-icons/hi';
 
 // --- Import Components ---
-import InternshipListings from '../components/InternshipListings';
-import { FeaturedInternshipContent } from '../components/InternshipListings'; // Import the named export
+import InternshipListings, { FeaturedInternshipContent } from '../components/InternshipListings';
+
+// --- IMPORT THE DEMO CERTIFICATE ---
+import demoCertImage from '../assets/Demo Certificate.png'; // Make sure this file exists
 
 // --- Use .env variable for form URL ---
 const googleFormUrl = `${import.meta.env.VITE_GOOGLE_FORM_INTERNSHIP_ID}`;
 
 // --- Hero Slideshow Data ---
 const internshipHeroSlides = [
+  // ... (your hero slide data is unchanged) ...
   {
     title: "Your Career Starts Here",
     subtitle: "Explore dozens of remote internships from top-tier companies and startups.",
@@ -140,14 +143,69 @@ const BackButton = styled.button`
   }
 `;
 
-// --- NEW: Verify CTA Section ---
+// --- ENHANCED: Verify CTA Section ---
 const VerifyCTASection = styled.section`
-  background: ${({ theme }) => theme.card};
-  border-top: 1px solid ${({ theme }) => theme.border};
-  border-bottom: 1px solid ${({ theme }) => theme.border};
-  padding: 4rem 1.5rem;
-  text-align: center;
+  background: ${({ theme }) => theme.body};
+  padding: 4rem 0; /* Use body color for the full section */
   margin-top: 3rem; /* Space from content above */
+`;
+
+const VerifyWrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+`;
+
+const VerifyGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  background: ${({ theme }) => theme.card};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 16px;
+  overflow: hidden;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr; /* 50/50 split on desktop */
+    align-items: center;
+  }
+`;
+
+const VerifyTextContent = styled.div`
+  padding: 2.5rem;
+  text-align: left; /* Align text left */
+
+  @media (max-width: 1023px) {
+    text-align: center; /* Center on mobile */
+  }
+`;
+
+const VerifyImageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+  background: ${({ theme }) => theme.body}; /* Body color for contrast */
+  
+  @media (max-width: 1023px) {
+    padding: 0;
+  }
+`;
+
+const DemoImage = styled.img`
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.border};
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 1023px) {
+    border-radius: 0;
+    border: none;
+    border-top: 1px solid ${({ theme }) => theme.border};
+    box-shadow: none;
+  }
 `;
 
 const VerifyTitle = styled.h3`
@@ -161,8 +219,12 @@ const VerifySubtitle = styled.p`
   font-size: 1rem;
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   max-width: 500px;
-  margin: 0 auto 1.5rem auto;
+  margin: 0 0 1.5rem 0; /* Removed auto margin */
   line-height: 1.6;
+
+  @media (max-width: 1023px) {
+    margin: 0 auto 1.5rem auto; /* Center on mobile */
+  }
 `;
 
 const VerifyLink = styled(Link)`
@@ -369,19 +431,25 @@ export default function Internships() {
         
       </Container>
       
-      {/* --- NEW/MOVED Verify CTA Section --- */}
+      {/* --- ENHANCED Verify CTA Section --- */}
       <VerifyCTASection>
-        <VerifyTitle>Have a Certificate?</VerifyTitle>
-        <VerifySubtitle>
-          You can verify the authenticity of any Kodhive certificate using our official tool.
-        </VerifySubtitle>
-        <VerifyLink to="/verify">
-          <HiOutlineBadgeCheck />
-          Verify Your Certificate
-        </VerifyLink>
-        <VerifySubtitle style={{ fontSize: '0.9rem', marginTop: '1.5rem', opacity: 0.8 }}>
-          <strong>Want to see a demo?</strong> Add a sample intern to your Google Sheet with the ID "<strong>KH-DEMO-001</strong>" and try it!
-        </VerifySubtitle>
+        <VerifyWrapper>
+          <VerifyGrid>
+            <VerifyTextContent>
+              <VerifyTitle>Have a Certificate?</VerifyTitle>
+              <VerifySubtitle>
+                You can verify the authenticity of any Kodhive certificate using our official tool.
+              </VerifySubtitle>
+              <VerifyLink to="/verify">
+                <HiOutlineBadgeCheck />
+                Verify Your Certificate
+              </VerifyLink>
+            </VerifyTextContent>
+            <VerifyImageWrapper>
+              <DemoImage src={demoCertImage} alt="Demo Certificate" />
+            </VerifyImageWrapper>
+          </VerifyGrid>
+        </VerifyWrapper>
       </VerifyCTASection>
 
       {/* --- Modals (Unchanged) --- */}
