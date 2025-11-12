@@ -16,18 +16,17 @@ import {
   HiOutlineBadgeCheck 
 } from 'react-icons/hi';
 
-// --- Import Components ---
+// --- Import Components & Data ---
 import InternshipListings, { FeaturedInternshipContent } from '../components/InternshipListings';
-
-// --- IMPORT THE DEMO CERTIFICATE ---
-import demoCertImage from '../assets/Demo Certificate.png'; // Make sure this file exists
+import { internships, categories } from '../data/internshipData'; // <-- 1. Import data
+import demoCertImage from '../assets/Demo Certificate.png';
 
 // --- Use .env variable for form URL ---
 const googleFormUrl = `https://docs.google.com/forms/d/e/${import.meta.env.VITE_GOOGLE_FORM_INTERNSHIP_ID}/viewform?embedded=true`;
 
 // --- Hero Slideshow Data ---
 const internshipHeroSlides = [
-  // ... (your hero slide data is unchanged) ...
+  // ... (slides data unchanged) ...
   {
     title: "Your Career Starts Here",
     subtitle: "Explore dozens of remote internships from top-tier companies and startups.",
@@ -50,8 +49,7 @@ const internshipHeroSlides = [
   }
 ];
 
-// --- Styled Components ---
-
+// --- Styled Components (Unchanged) ---
 const Container = styled(motion.div)`
   max-width: 1200px;
   margin: 0 auto;
@@ -62,7 +60,6 @@ const Container = styled(motion.div)`
   }
 `;
 
-// (Hero components are unchanged)
 const InternshipHeroContainer = styled.div`
   width: 100%;
   height: 40vh;
@@ -143,19 +140,16 @@ const BackButton = styled.button`
   }
 `;
 
-// --- ENHANCED: Verify CTA Section ---
 const VerifyCTASection = styled.section`
   background: ${({ theme }) => theme.body};
-  padding: 4rem 0; /* Use body color for the full section */
-  margin-top: 3rem; /* Space from content above */
+  padding: 4rem 0;
+  margin-top: 3rem;
 `;
-
 const VerifyWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
 `;
-
 const VerifyGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -166,32 +160,29 @@ const VerifyGrid = styled.div`
   overflow: hidden;
 
   @media (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr; /* 50/50 split on desktop */
+    grid-template-columns: 1fr 1fr;
     align-items: center;
   }
 `;
-
 const VerifyTextContent = styled.div`
   padding: 2.5rem;
-  text-align: left; /* Align text left */
+  text-align: left;
 
   @media (max-width: 1023px) {
-    text-align: center; /* Center on mobile */
+    text-align: center;
   }
 `;
-
 const VerifyImageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2.5rem;
-  background: ${({ theme }) => theme.body}; /* Body color for contrast */
+  background: ${({ theme }) => theme.body};
   
   @media (max-width: 1023px) {
     padding: 0;
   }
 `;
-
 const DemoImage = styled.img`
   width: 100%;
   max-width: 450px;
@@ -207,26 +198,23 @@ const DemoImage = styled.img`
     box-shadow: none;
   }
 `;
-
 const VerifyTitle = styled.h3`
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: ${({ theme }) => theme.text};
 `;
-
 const VerifySubtitle = styled.p`
   font-size: 1rem;
   color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
   max-width: 500px;
-  margin: 0 0 1.5rem 0; /* Removed auto margin */
+  margin: 0 0 1.5rem 0;
   line-height: 1.6;
 
   @media (max-width: 1023px) {
-    margin: 0 auto 1.5rem auto; /* Center on mobile */
+    margin: 0 auto 1.5rem auto;
   }
 `;
-
 const VerifyLink = styled(Link)`
   display: inline-flex;
   align-items: center;
@@ -252,7 +240,6 @@ const VerifyLink = styled(Link)`
   }
 `;
 
-// --- Modal Components (Unchanged) ---
 const ModalBackdrop = styled(motion.div)`
   position: fixed;
   inset: 0;
@@ -393,7 +380,6 @@ export default function Internships() {
           Go Back
         </BackButton>
 
-        {/* --- HERO SLIDESHOW --- */}
         <InternshipHeroContainer>
           <Swiper
             modules={[Pagination, Autoplay, EffectFade]}
@@ -420,8 +406,10 @@ export default function Internships() {
           </Swiper>
         </InternshipHeroContainer>
         
-        {/* --- This is the new component --- */}
         <InternshipListings
+          // --- 2. Pass data down as props ---
+          internships={internships}
+          categories={categories}
           selectedInternship={selectedInternship}
           setSelectedInternship={setSelectedInternship}
           setIsDetailModalOpen={setIsDetailModalOpen}
@@ -431,7 +419,6 @@ export default function Internships() {
         
       </Container>
       
-      {/* --- ENHANCED Verify CTA Section --- */}
       <VerifyCTASection>
         <VerifyWrapper>
           <VerifyGrid>
