@@ -18,7 +18,7 @@ import {
 
 // --- Import Components & Data ---
 import InternshipListings, { FeaturedInternshipContent } from '../components/InternshipListings';
-import { internships, categories } from '../data/internshipData'; // <-- 1. Import data
+import { internships, categories } from '../data/internshipData'; // <-- Import data
 import demoCertImage from '../assets/Demo Certificate.png';
 
 // --- Use .env variable for form URL ---
@@ -53,10 +53,10 @@ const internshipHeroSlides = [
 const Container = styled(motion.div)`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 1.5rem 4rem 1.5rem; 
+  padding: 1rem 1.5rem 0 1.5rem; /* 1. Removed bottom padding */
 
   @media (min-width: 768px) {
-    padding: 2rem 1.5rem 4rem 1.5rem;
+    padding: 2rem 1.5rem 0 1.5rem; /* 1. Removed bottom padding */
   }
 `;
 
@@ -407,7 +407,7 @@ export default function Internships() {
         </InternshipHeroContainer>
         
         <InternshipListings
-          // --- 2. Pass data down as props ---
+          // --- 3. Pass data down as props ---
           internships={internships}
           categories={categories}
           selectedInternship={selectedInternship}

@@ -6,11 +6,8 @@ import {
   HiOutlineLocationMarker, 
   HiOutlineClock, 
   HiOutlineCode, 
-  HiOutlineSearch,
-  HiOutlineXCircle // <-- 1. Import X icon
+  HiOutlineSearch
 } from 'react-icons/hi';
-
-// --- Data is now passed in as props ---
 
 // --- Styled Components ---
 const SearchFilterContainer = styled.div`
@@ -33,31 +30,12 @@ const SearchBarContainer = styled.div`
   }
 `;
 
-// --- 2. ENHANCED: Clear button ---
-const ClearButton = styled.button`
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  z-index: 2; /* Above input */
-
-  &:hover {
-    color: ${({ theme }) => theme.text};
-  }
-`;
+// --- REMOVED ClearButton and Spinner styled-components ---
 
 const SearchInput = styled.input`
   width: 100%;
-  /* 3. ENHANCED: Padding for both icons */
-  padding: 0.85rem 2.75rem 0.85rem 3rem; 
+  /* --- REVERTED Padding --- */
+  padding: 0.85rem 1rem 0.85rem 3rem; 
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 12px;
   background: ${({ theme }) => theme.card};
@@ -95,7 +73,33 @@ const FilterButton = styled.button`
   }
 `;
 
-// --- 2-Column Layout Components ---
+const EmptyStateContainer = styled.div`
+  grid-column: 1 / -1; 
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: ${({ theme }) => theme.card};
+  border-radius: 16px;
+  border: 1px solid ${({ theme }) => theme.border};
+
+  svg {
+    font-size: 3rem;
+    color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
+    margin-bottom: 1rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    color: ${({ theme }) => theme.text};
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+    margin: 0;
+  }
+`;
+
+// --- 2-Column Layout Components (Unchanged) ---
 const ContentWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -331,7 +335,6 @@ export function FeaturedInternshipContent({ internship, onApplyClick }) {
 
 // --- Main Component (Default Export) ---
 export default function InternshipListings({ 
-  // --- 4. Receive data as props ---
   internships,
   categories,
   selectedInternship, 
@@ -341,34 +344,29 @@ export default function InternshipListings({
   isDetailModalOpen 
 }) {
   
-  // --- 5. ENHANCED: Debounced search state ---
-  const [inputValue, setInputValue] = useState(''); // What the user types
-  const [searchTerm, setSearchTerm] = useState('');   // What we actually search for
+  const [inputValue, setInputValue] = useState(''); 
+  const [searchTerm, setSearchTerm] = useState('');   
   const [selectedCategory, setSelectedCategory] = useState('All');
+  
+  // --- REMOVED isDebouncing state ---
 
-  // --- 6. ENHANCED: Debounce logic ---
   useEffect(() => {
-    // Set a timer to update the search term 300ms after user stops typing
     const timer = setTimeout(() => {
       setSearchTerm(inputValue);
-    }, 300);
-
-    // Clear the timer if the user types again
+    }, 300); // 300ms delay
+    
     return () => clearTimeout(timer);
-  }, [inputValue]); // This effect runs every time the input value changes
+  }, [inputValue]); 
 
-  // Memoized filtering logic
   const filteredInternships = useMemo(() => {
-    // This now uses `searchTerm` (debounced) instead of `inputValue`
     return internships.filter(internship => {
       const matchesCategory = selectedCategory === 'All' || internship.category === selectedCategory;
       const matchesSearch = internship.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             internship.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
       return matchesCategory && matchesSearch;
     });
-  }, [searchTerm, selectedCategory, internships]); // Added internships to dependency
+  }, [searchTerm, selectedCategory, internships]); 
   
-  // Effect to set default selected internship when filter changes
   useEffect(() => {
     if (filteredInternships.length > 0) {
       if (!selectedInternship || !filteredInternships.find(i => i.id === selectedInternship.id)) {
@@ -387,11 +385,8 @@ export default function InternshipListings({
     }
   };
 
-  // --- 7. ENHANCED: Clear search handler ---
-  const clearSearch = () => {
-    setInputValue('');
-    setSearchTerm('');
-  };
+  // --- REMOVED clearSearch function ---
+  // (No longer needed as the "X" button is gone)
 
   return (
     <>
@@ -401,15 +396,10 @@ export default function InternshipListings({
           <SearchInput 
             type="text"
             placeholder="Search by title or skill (e.g., React, Python)"
-            value={inputValue} // Use inputValue for the input
-            onChange={(e) => setInputValue(e.target.value)} // Update inputValue
+            value={inputValue} 
+            onChange={(e) => setInputValue(e.target.value)} 
           />
-          {/* --- 8. ENHANCED: Show clear button only when typing --- */}
-          {inputValue && (
-            <ClearButton onClick={clearSearch}>
-              <HiOutlineXCircle />
-            </ClearButton>
-          )}
+          {/* --- REMOVED AnimatePresence block for ClearButton/Spinner --- */}
         </SearchBarContainer>
         <FilterTabs>
           {categories.map((category) => (
@@ -425,45 +415,50 @@ export default function InternshipListings({
       </SearchFilterContainer>
 
       <ContentWrapper>
-        <InternshipList>
-          {filteredInternships.length > 0 ? (
-            filteredInternships.map((internship) => (
-              <ListCard
-                key={internship.id}
-                $isActive={!isDetailModalOpen && selectedInternship?.id === internship.id}
-                onClick={() => handleInternshipSelect(internship)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <ListCardImage src={internship.image} alt={internship.title} />
-                <ListCardContent>
-                  <h3>{internship.title}</h3>
-                  <p>{internship.location}</p>
-                </ListCardContent>
-              </ListCard>
-            ))
-          ) : (
-            <p>No internships found matching your criteria.</p>
-          )}
-        </InternshipList>
+        {filteredInternships.length > 0 ? (
+          <>
+            <InternshipList>
+              {filteredInternships.map((internship) => (
+                <ListCard
+                  key={internship.id}
+                  $isActive={!isDetailModalOpen && selectedInternship?.id === internship.id}
+                  onClick={() => handleInternshipSelect(internship)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <ListCardImage src={internship.image} alt={internship.title} />
+                  <ListCardContent>
+                    <h3>{internship.title}</h3>
+                    <p>{internship.location}</p>
+                  </ListCardContent>
+                </ListCard>
+              ))}
+            </InternshipList>
 
-        {/* Desktop featured panel */}
-        <FeaturedInternship>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selectedInternship?.id || 'empty'}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <FeaturedInternshipContent 
-                internship={selectedInternship} 
-                onApplyClick={openForm} 
-              />
-            </motion.div>
-          </AnimatePresence>
-        </FeaturedInternship>
+            <FeaturedInternship>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedInternship?.id || 'empty'}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <FeaturedInternshipContent 
+                    internship={selectedInternship} 
+                    onApplyClick={openForm} 
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </FeaturedInternship>
+          </>
+        ) : (
+          <EmptyStateContainer>
+            <HiOutlineSearch />
+            <h3>No Internships Found</h3>
+            <p>Your search for "{searchTerm}" did not match any listings.</p>
+          </EmptyStateContainer>
+        )}
       </ContentWrapper>
     </>
   );
