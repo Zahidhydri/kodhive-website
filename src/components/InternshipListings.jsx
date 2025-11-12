@@ -11,6 +11,7 @@ import {
 
 // --- Internship Data (Moved Here) ---
 const internships = [
+  // ... (Your data is here) ...
   { 
     id: 1,
     title: 'Frontend Developer (React)', 
@@ -387,7 +388,7 @@ const ApplyButton = styled(motion.button)`
   }
 `;
 
-// This component is now EXPORTED so Internships.jsx can use it in the modal
+// --- FIX: Add export here ---
 export function FeaturedInternshipContent({ internship, onApplyClick }) {
   if (!internship) return (
     <FeaturedContentWrapper>
@@ -480,7 +481,7 @@ export default function InternshipListings({
             type="text"
             placeholder="Search by title or skill (e.g., React, Python)"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.g.target.value)}
           />
         </SearchBarContainer>
         <FilterTabs>

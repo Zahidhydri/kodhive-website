@@ -1,5 +1,5 @@
 // src/pages/Internships.jsx
-import { useState } from 'react'; // <-- CLEARED unused imports
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -16,8 +16,9 @@ import {
   HiOutlineBadgeCheck 
 } from 'react-icons/hi';
 
-// --- Import our new components ---
-import InternshipListings, { FeaturedInternshipContent } from '../components/InternshipListings';
+// --- Import Components ---
+import InternshipListings from '../components/InternshipListings';
+import { FeaturedInternshipContent } from '../components/InternshipListings'; // Import the named export
 
 // --- Use .env variable for form URL ---
 const googleFormUrl = `${import.meta.env.VITE_GOOGLE_FORM_INTERNSHIP_ID}`;
@@ -58,7 +59,7 @@ const Container = styled(motion.div)`
   }
 `;
 
-// --- Hero Slideshow Components ---
+// (Hero components are unchanged)
 const InternshipHeroContainer = styled.div`
   width: 100%;
   height: 40vh;
@@ -70,21 +71,10 @@ const InternshipHeroContainer = styled.div`
   background: ${({ theme }) => theme.card};
   position: relative;
 
-  .swiper {
-    width: 100%;
-    height: 100%;
-  }
-
-  .swiper-pagination-bullet {
-    background: white;
-    opacity: 0.7;
-  }
-  .swiper-pagination-bullet-active {
-    opacity: 1;
-    background: ${({ theme }) => theme.buttonBg};
-  }
+  .swiper { width: 100%; height: 100%; }
+  .swiper-pagination-bullet { background: white; opacity: 0.7; }
+  .swiper-pagination-bullet-active { opacity: 1; background: ${({ theme }) => theme.buttonBg}; }
 `;
-
 const HeroSlide = styled.div`
   width: 100%;
   height: 100%;
@@ -99,7 +89,6 @@ const HeroSlide = styled.div`
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.1) 100%);
   }
 `;
-
 const HeroContent = styled(motion.div)`
   position: absolute;
   bottom: 10%;
@@ -112,7 +101,6 @@ const HeroContent = styled(motion.div)`
     padding: 0 2.5rem;
   }
 `;
-
 const HeroTitle = styled.h2`
   font-size: 1.75rem;
   font-weight: 700;
@@ -122,7 +110,6 @@ const HeroTitle = styled.h2`
     font-size: 2.25rem;
   }
 `;
-
 const HeroSubtitle = styled.p`
   font-size: 1rem;
   opacity: 0.9;
@@ -132,8 +119,6 @@ const HeroSubtitle = styled.p`
     font-size: 1.1rem;
   }
 `;
-// --- End Hero Slideshow Components ---
-
 const BackButton = styled.button`
   display: inline-flex;
   align-items: center;
@@ -155,41 +140,57 @@ const BackButton = styled.button`
   }
 `;
 
-// --- VerifyLink component (Moved to bottom) ---
+// --- NEW: Verify CTA Section ---
+const VerifyCTASection = styled.section`
+  background: ${({ theme }) => theme.card};
+  border-top: 1px solid ${({ theme }) => theme.border};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
+  padding: 4rem 1.5rem;
+  text-align: center;
+  margin-top: 3rem; /* Space from content above */
+`;
+
+const VerifyTitle = styled.h3`
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: ${({ theme }) => theme.text};
+`;
+
+const VerifySubtitle = styled.p`
+  font-size: 1rem;
+  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
+  max-width: 500px;
+  margin: 0 auto 1.5rem auto;
+  line-height: 1.6;
+`;
+
 const VerifyLink = styled(Link)`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
+  color: ${({ theme }) => theme.buttonText};
+  background: ${({ theme }) => theme.buttonBg};
   text-decoration: none;
-  padding: 0.75rem 1rem;
-  border: 1px solid ${({ theme }) => theme.border};
+  padding: 0.75rem 1.5rem;
+  border: 1px solid ${({ theme }) => theme.buttonBg};
   border-radius: 8px;
-  background: ${({ theme }) => theme.card};
   transition: all 0.3s ease;
-  margin-top: 2.5rem; /* Spacing from listings */
-  width: 100%;
-
-  svg {
-    font-size: 1.25rem;
-  }
+  
+  svg { font-size: 1.25rem; }
   
   &:hover {
-    color: ${({ theme }) => theme.buttonBg};
-    border-color: ${({ theme }) => theme.buttonBg};
-  }
-
-  @media (min-width: 768px) {
-    width: auto;
-    margin: 2.5rem auto 0 auto; /* Center it */
+    background: ${({ theme }) => theme.buttonHover};
+    border-color: ${({ theme }) => theme.buttonHover};
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px ${({ theme }) => theme.buttonBg}77;
   }
 `;
 
-
-// --- Modal Components ---
+// --- Modal Components (Unchanged) ---
 const ModalBackdrop = styled(motion.div)`
   position: fixed;
   inset: 0;
@@ -197,7 +198,6 @@ const ModalBackdrop = styled(motion.div)`
   backdrop-filter: blur(5px);
   z-index: 100;
 `;
-
 const FormModalContainer = styled(motion.div)`
   position: fixed;
   top: 50%;
@@ -212,14 +212,12 @@ const FormModalContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-
   @media (max-width: 768px) {
     width: 100vw;
     height: 100vh;
     border-radius: 0;
   }
 `;
-
 const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -227,7 +225,6 @@ const ModalHeader = styled.div`
   padding: 1rem 1.5rem;
   border-bottom: 1px solid ${({ theme }) => theme.border};
   flex-shrink: 0;
-
   h2 {
     font-size: 1.1rem;
     font-weight: 600;
@@ -235,13 +232,11 @@ const ModalHeader = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
     @media (min-width: 768px) {
       font-size: 1.25rem;
     }
   }
 `;
-
 const CloseButton = styled.button`
   background: ${({ theme }) => theme.body};
   border: 1px solid ${({ theme }) => theme.border};
@@ -260,19 +255,15 @@ const CloseButton = styled.button`
     background: ${({ theme }) => theme.border};
   }
 `;
-
 const IframeWrapper = styled.div`
   flex-grow: 1;
   overflow: hidden;
 `;
-
 const StyledIframe = styled.iframe`
   width: 100%;
   height: 100%;
   border: none;
 `;
-
-// --- Detail Modal (for Mobile) ---
 const DetailModalContainer = styled(motion.div)`
   position: fixed;
   inset: 0;
@@ -281,12 +272,10 @@ const DetailModalContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-
   @media (min-width: 1024px) {
-    display: none; // Only for mobile
+    display: none;
   }
 `;
-
 const DetailModalHeader = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -377,16 +366,25 @@ export default function Internships() {
           openForm={openForm}
           isDetailModalOpen={isDetailModalOpen}
         />
-
-        {/* --- Verify Certificate Link (Moved to bottom) --- */}
+        
+      </Container>
+      
+      {/* --- NEW/MOVED Verify CTA Section --- */}
+      <VerifyCTASection>
+        <VerifyTitle>Have a Certificate?</VerifyTitle>
+        <VerifySubtitle>
+          You can verify the authenticity of any Kodhive certificate using our official tool.
+        </VerifySubtitle>
         <VerifyLink to="/verify">
           <HiOutlineBadgeCheck />
           Verify Your Certificate
         </VerifyLink>
-        
-      </Container>
+        <VerifySubtitle style={{ fontSize: '0.9rem', marginTop: '1.5rem', opacity: 0.8 }}>
+          <strong>Want to see a demo?</strong> Add a sample intern to your Google Sheet with the ID "<strong>KH-DEMO-001</strong>" and try it!
+        </VerifySubtitle>
+      </VerifyCTASection>
 
-      {/* --- Form Modal --- */}
+      {/* --- Modals (Unchanged) --- */}
       <AnimatePresence>
         {isFormOpen && (
           <>
@@ -419,7 +417,6 @@ export default function Internships() {
         )}
       </AnimatePresence>
 
-      {/* --- Mobile Detail Modal --- */}
       <AnimatePresence>
         {isDetailModalOpen && (
           <DetailModalContainer
@@ -434,12 +431,11 @@ export default function Internships() {
               </CloseButton>
             </DetailModalHeader>
             
-            {/* --- FIX: Use the imported component here --- */}
             <FeaturedInternshipContent 
               internship={selectedInternship} 
               onApplyClick={() => {
                 closeDetailModal();
-                setTimeout(openForm, 300); // Wait for transition
+                setTimeout(openForm, 300);
               }} 
             />
           </DetailModalContainer>
