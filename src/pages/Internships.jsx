@@ -46,7 +46,6 @@ const internshipHeroSlides = [
 
 // --- Internship Data (12 Internships) ---
 const internships = [
-  // ... (Your internship data remains unchanged) ...
   { 
     id: 1,
     title: 'Frontend Developer (React)', 
@@ -172,7 +171,7 @@ const internships = [
 const categories = ['All', ...new Set(internships.map(i => i.category))]; 
 
 // This line is correct and uses the .env file
-const googleFormUrl = `https://docs.google.com/forms/d/e/${import.meta.env.VITE_GOOGLE_FORM_INTERNSHIP_ID}/viewform?embedded=true`;
+const googleFormUrl = `${import.meta.env.VITE_GOOGLE_FORM_INTERNSHIP_ID}`;
 
 // --- Styled Components ---
 
@@ -323,7 +322,6 @@ const FilterTabs = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  align-items: center; /* Vertically align all items */
 `;
 
 const FilterButton = styled.button`
@@ -345,16 +343,21 @@ const FilterButton = styled.button`
 
 // --- NEW: VerifyLink component ---
 const VerifyLink = styled(Link)`
-  display: inline-flex;
+  display: flex; /* Changed to flex */
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center; /* Center content */
+  gap: 0.5rem;
   font-size: 0.9rem;
   font-weight: 600;
   color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
   text-decoration: none;
-  margin-left: auto; /* Pushes it to the right on desktop */
-  padding: 0.5rem 0;
-  transition: color 0.3s ease;
+  padding: 0.75rem 1rem; /* Made padding consistent */
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 8px;
+  background: ${({ theme }) => theme.card};
+  transition: all 0.3s ease;
+  margin-top: 1.5rem; /* Added margin-top to separate it */
+  width: 100%; /* Full width on mobile */
 
   svg {
     font-size: 1.25rem;
@@ -362,24 +365,25 @@ const VerifyLink = styled(Link)`
   
   &:hover {
     color: ${({ theme }) => theme.buttonBg};
+    border-color: ${({ theme }) => theme.buttonBg};
   }
 
-  /* On mobile, make it full width and look like a button */
-  @media (max-width: 768px) {
-    margin-left: 0;
-    width: 100%;
-    justify-content: center;
-    margin-top: 0.75rem;
-    padding: 0.5rem;
-    background: ${({ theme }) => theme.card};
-    border: 1px solid ${({ theme }) => theme.border};
-    border-radius: 8px;
+  @media (min-width: 768px) {
+    width: auto; /* Auto-width on desktop */
+    margin-top: 0; /* No margin-top on desktop */
+    margin-left: auto; /* Pushes it to the right */
+    background: transparent; /* Makes it look like a link again on desktop */
+    border: none;
+    padding: 0.5rem 0; /* Adjust padding for link look */
     
     &:hover {
-        border-color: ${({ theme }) => theme.buttonBg};
+        background: transparent;
+        color: ${({ theme }) => theme.buttonBg};
+        border: none;
     }
   }
 `;
+
 
 // --- 2-Column Layout Components ---
 const ContentWrapper = styled.div`
@@ -851,12 +855,14 @@ export default function Internships() {
                 {category}
               </FilterButton>
             ))}
-            {/* --- ADDED THIS LINK --- */}
-            <VerifyLink to="/verify">
-              <HiOutlineBadgeCheck />
-              Verify Certificate
-            </VerifyLink>
           </FilterTabs>
+
+          {/* --- ADDED THIS LINK --- */}
+          <VerifyLink to="/verify">
+            <HiOutlineBadgeCheck />
+            Verify Your Certificate
+          </VerifyLink>
+
         </SearchFilterContainer>
 
         {/* --- 2-Column Layout --- */}
