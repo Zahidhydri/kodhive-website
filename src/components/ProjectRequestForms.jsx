@@ -17,13 +17,12 @@ import {
   HiOutlineQuestionMarkCircle,
   HiOutlineOfficeBuilding, 
   HiOutlineExclamationCircle,
-  HiOutlineArrowLeft, // Added
-  HiOutlineArrowRight // Added
+  HiOutlineArrowLeft,
+  HiOutlineArrowRight
 } from 'react-icons/hi';
 
-// --- STYLED COMPONENTS (Unchanged) ---
-// (All your existing styled-components are here... )
-// ... (omitting for brevity, but they are all in the code block) ...
+// --- STYLED COMPONENTS ---
+
 const Section = styled(motion.section)`
   padding: 4rem 1.5rem;
   overflow: hidden;
@@ -43,7 +42,7 @@ const Section = styled(motion.section)`
 const Container = styled(motion.div)`
   max-width: 900px;
   margin: 0 auto;
-  padding: 4rem 1.5rem 6rem 1.5rem;
+  /* Removed padding, as it's on the Section */
 `;
 
 const ImportantNote = styled.div`
@@ -88,10 +87,10 @@ const FormSectionSubtitle = styled.p`
 const TabContainer = styled.div`
   display: flex;
   justify-content: center;
-  flex-wrap: wrap; /* Allow wrapping on small screens */
+  flex-wrap: wrap;
   gap: 1rem;
-  margin-top: 2.5rem; // Space between subtitle and tabs
-  margin-bottom: 3.5rem; // Space between tabs and form
+  margin-top: 2.5rem;
+  margin-bottom: 3.5rem;
 `;
 
 const TabButton = styled(motion.button)`
@@ -304,7 +303,6 @@ const StyledLabel = styled.label`
   }
 `;
 
-
 const SubmitButton = styled(motion.button)`
   padding: 1rem 2rem;
   background-color: ${({ theme }) => theme.buttonBg};
@@ -319,7 +317,7 @@ const SubmitButton = styled(motion.button)`
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  margin: 0; /* Removed auto margin */
+  margin: 0;
   width: 100%;
   max-width: 300px;
   
@@ -340,8 +338,6 @@ const SubmitButton = styled(motion.button)`
     box-shadow: none;
   }
 `;
-
-// --- NEW STYLED COMPONENTS FOR MULTI-STEP ---
 
 const StepIndicator = styled.div`
   font-size: 0.9rem;
@@ -401,9 +397,8 @@ const formAnimVariants = {
   exit: { opacity: 0, y: -15, transition: { duration: 0.2 } }
 };
 
-// --- NEW: Reusable Step Components ---
+// --- Reusable Step Components ---
 
-// Step 1: Contact Info (Used by both forms)
 const StepContactInfo = ({ data, updateData }) => (
   <motion.div variants={formAnimVariants} initial="hidden" animate="visible" exit="exit">
     <FormStepTitle>Step 1: The Basics</FormStepTitle>
@@ -470,7 +465,7 @@ const StepContactInfo = ({ data, updateData }) => (
   </motion.div>
 );
 
-// --- Form Components (REFACTORED) ---
+// --- Form Components ---
 
 const FullProjectForm = () => {
   const [step, setStep] = useState(1);
@@ -489,17 +484,15 @@ const FullProjectForm = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (step !== totalSteps) return; // Only submit on the last step
+    if (step !== totalSteps) return;
 
     setStatus("Submitting...");
     
-    // Manually create FormData from our state
     const data = new FormData();
     for (const key in formData) {
       data.append(key, formData[key]);
     }
     
-    // Append checkbox data correctly
     const assets = [];
     if (formData.assetDesign) assets.push("Design/Mockup");
     if (formData.assetBrand) assets.push("Brand Guide/Logo");
@@ -741,7 +734,6 @@ const GuidanceForm = () => {
     for (const key in formData) {
       data.append(key, formData[key]);
     }
-    // Rename for Formspree
     data.append('message', formData.idea || '');
 
     try {

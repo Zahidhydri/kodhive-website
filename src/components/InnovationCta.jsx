@@ -1,11 +1,11 @@
 // src/components/InnovationCta.jsx
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // <-- 1. IMPORT Link
 import styled from 'styled-components';
 import { HiOutlineLightBulb, HiOutlinePaperAirplane } from 'react-icons/hi';
-// --- [FIX] Removed useScroll hook ---
+// (Removed useScroll hook)
 
-// ... (Styled components Section, Container, SectionTitle, SectionSubtitle, InnovationGrid remain the same) ...
+// ... (All styled components remain the same) ...
 const Section = styled(motion.section)`
   padding: 6rem 0;
   position: relative;
@@ -141,7 +141,6 @@ const SecondaryButton = styled(PrimaryButton)`
   }
 `;
 
-
 // --- Animation Variants ---
 const sectionVariant = {
   hidden: { opacity: 0 },
@@ -162,10 +161,6 @@ const cardVariant = {
 
 export default function InnovationCta() {
   
-  // --- [FIX] Removed scroll context and handler ---
-  // The Link component handles navigation. The scroll logic
-  // belongs on the destination page (ProjectRequest.jsx).
-
   return (
     <Section 
       initial="hidden" 
@@ -181,7 +176,6 @@ export default function InnovationCta() {
         <InnovationGrid>
           <InnovationCard 
             variants={cardVariant}
-            // --- ENHANCEMENT: Added professional hover effect ---
             whileHover={{ scale: 1.03, transition: { type: 'spring', stiffness: 300 } }}
           >
             <InnovationIconWrapper><HiOutlineLightBulb /></InnovationIconWrapper>
@@ -189,7 +183,7 @@ export default function InnovationCta() {
             <InnovationDescription>
               Have a project idea but need expert mentorship to execute it? Submit your concept and we'll guide you through the process.
             </InnovationDescription>
-            {/* [FIX] Removed onClick handler */ }
+            {/* 2. This <Link> component will now work */}
             <PrimaryButton 
               to="/request-project?form=guidance" 
               whileHover={{ y: -3 }}
@@ -200,7 +194,6 @@ export default function InnovationCta() {
           </InnovationCard>
           <InnovationCard 
             variants={cardVariant}
-            // --- ENHANCEMENT: Added professional hover effect ---
             whileHover={{ scale: 1.03, transition: { type: 'spring', stiffness: 300 } }}
           >
             <InnovationIconWrapper><HiOutlinePaperAirplane /></InnovationIconWrapper>
@@ -208,7 +201,7 @@ export default function InnovationCta() {
             <InnovationDescription>
               Submit your requirements, and we can assign it to our talented students for development, giving them real-world experience.
             </InnovationDescription>
-            {/* [FIX] Removed onClick handler */ }
+            {/* 3. This <Link> component will now work */}
             <SecondaryButton 
               to="/request-project?form=full" 
               whileHover={{ y: -3 }}

@@ -1,6 +1,6 @@
 // src/pages/ProjectRequest.jsx
-import { useRef } from 'react'; // <-- MODIFIED: Only need useRef
-import { useNavigate } from 'react-router-dom';
+import { useRef, useEffect } from 'react'; // <-- 1. Added useEffect
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { 
@@ -9,7 +9,7 @@ import {
   HiOutlineArrowLeft,
 } from 'react-icons/hi';
 import TechStack from '../components/TechStack'; 
-import ProjectRequestForms from '../components/ProjectRequestForms'; // <-- IMPORT new component
+import ProjectRequestForms from '../components/ProjectRequestForms'; // <-- 2. IMPORT new component
 
 // --- Swiper Imports ---
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -53,7 +53,7 @@ const PageWrapper = styled(motion.div)`
 const Container = styled(motion.div)`
   max-width: 900px;
   margin: 0 auto;
-  padding: 4rem 1.5rem 6rem 1.5rem;
+  padding: 0 1.5rem; /* Removed top/bottom padding */
 `;
 
 const BackButton = styled.button`
@@ -91,8 +91,8 @@ const Section = styled(motion.section)`
 const HeroSlideshowContainer = styled.div`
   width: 100%;
   height: 40vh;
-  min-height: 320px; /* Increased min-height for buttons */
-  max-height: 400px; /* Increased max-height */
+  min-height: 320px; 
+  max-height: 400px; 
   border-radius: 16px;
   overflow: hidden;
   background: ${({ theme }) => theme.card};
@@ -186,8 +186,6 @@ const HeroButton = styled(motion.button)`
 `;
 // --- End Hero Slideshow Styles ---
 
-// --- ALL FORM STYLED COMPONENTS HAVE BEEN MOVED ---
-
 // --- Animation Variants ---
 const pageVariants = {
   hidden: { opacity: 0 },
@@ -199,28 +197,41 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
-// --- Form Components (FullProjectForm, GuidanceForm) ---
-// --- MOVED TO ProjectRequestForms.jsx ---
-
-
 // --- MAIN PAGE COMPONENT ---
 
 export default function ProjectRequest() {
+  const [searchParams] = useSearchParams(); // 3. Get searchParams
   const navigate = useNavigate();
   
-  // Ref for the form section
   const formSectionRef = useRef(null);
   
-  // Scroll handler function
+  // 4. Get the 'form' param
+  const formType = searchParams.get('form');
+
+  // 5. Add useEffect to scroll on load
+  useEffect(() => {
+    if (formType && formSectionRef.current) {
+      const timer = setTimeout(() => {
+        formSectionRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100); // 100ms delay to allow render
+
+      return () => clearTimeout(timer);
+    }
+  }, [formType]); // Run when formType changes
+  
+  
   const scrollToForm = (tabName) => {
-    // We pass the tabName to the component via URL search param
-    // The component itself will handle setting the active tab
+    // Navigate to the same page, but update the search param
+    // This will trigger the useEffect above
     navigate(`/request-project?form=${tabName}`);
     
-    // Scroll to the form section
+    // Also do a manual scroll just in case
     formSectionRef.current?.scrollIntoView({ 
       behavior: 'smooth',
-      block: 'start' // Aligns to the top of the section
+      block: 'start'
     });
   };
 
@@ -234,7 +245,8 @@ export default function ProjectRequest() {
     >
       {/* --- HERO SLIDESHOW SECTION --- */}
       <Section variants={itemVariants} style={{ paddingBottom: 0, paddingTop: '4rem' }}>
-        <Container style={{ paddingBottom: 0, paddingTop: 0, maxWidth: '1000px' }}>
+        {/* 6. Use the smaller Container component */}
+        <Container style={{ maxWidth: '1000px' }}>
           <BackButton onClick={() => navigate(-1)}>
             <HiOutlineArrowLeft />
             Go Back
@@ -293,7 +305,7 @@ export default function ProjectRequest() {
       <TechStack />
 
       {/* --- FORM SECTION (Now a component) --- */}
-      {/* We pass the ref to the new component */}
+      {/* 7. Pass the ref to the new component */}
       <ProjectRequestForms ref={formSectionRef} />
 
     </PageWrapper>
