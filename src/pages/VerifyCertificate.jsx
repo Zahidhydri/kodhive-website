@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom'; // <-- 1. IMPORT useNavigate
 import { 
   HiOutlineSearch, 
   HiOutlineBriefcase, 
   HiOutlineCalendar,
   HiOutlineXCircle,
   HiOutlineCheckCircle,
-  HiOutlineRefresh // For loading spinner
+  HiOutlineRefresh,
+  HiOutlineArrowLeft // <-- 2. IMPORT Arrow Icon
 } from 'react-icons/hi';
 import logo from '../assets/kodhive-logo.png'; // Import the logo
 
@@ -17,13 +19,33 @@ const googleSheetURL = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL;
 // --- Styled Components ---
 
 const PageContainer = styled(motion.div)`
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Align to top */
-  min-height: 80vh;
-  text-align: center;
+  /* 3. Use max-width and margin to center */
+  max-width: 550px; 
+  margin: 0 auto;
   padding: 4rem 1.5rem;
-  background-color: ${({ theme }) => theme.body};
+  min-height: 80vh;
+`;
+
+// 4. ADD BackButton styled component
+const BackButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: ${({ theme }) => theme.card};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.text};
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.body};
+    border-color: ${({ theme }) => theme.buttonBg};
+  }
 `;
 
 const VerifyBox = styled.div`
@@ -33,9 +55,9 @@ const VerifyBox = styled.div`
   border-radius: 16px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   border: 1px solid ${({ theme }) => theme.border};
-  max-width: 550px;
   width: 100%;
   transition: all 0.3s ease;
+  text-align: center; /* 5. Add text-align center here */
 `;
 
 const LogoWrapper = styled.div`
@@ -45,6 +67,8 @@ const LogoWrapper = styled.div`
   gap: 0.5rem;
   margin-bottom: 1rem;
 `;
+
+// ... (All other styled components are identical) ...
 
 const LogoImage = styled.img`
   height: 40px;
@@ -228,6 +252,8 @@ function VerifyCertificate() {
   const [certId, setCertId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState(null);
+  
+  const navigate = useNavigate(); // <-- 6. Initialize navigate
 
   const handleVerify = async (e) => {
     e.preventDefault();
@@ -366,6 +392,12 @@ function VerifyCertificate() {
       exit={{ opacity: 0, y: -15 }}
       transition={{ duration: 0.4 }}
     >
+      {/* --- 7. ADD the button element --- */}
+      <BackButton onClick={() => navigate(-1)}>
+        <HiOutlineArrowLeft />
+        Go Back
+      </BackButton>
+
       <VerifyBox>
         <LogoWrapper>
           <LogoImage src={logo} alt="Kodhive Logo" />
