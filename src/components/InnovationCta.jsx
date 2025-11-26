@@ -1,11 +1,9 @@
 // src/components/InnovationCta.jsx
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom'; // <-- 1. IMPORT Link
+import { Link } from 'react-router-dom'; 
 import styled from 'styled-components';
 import { HiOutlineLightBulb, HiOutlinePaperAirplane } from 'react-icons/hi';
-// (Removed useScroll hook)
 
-// ... (All styled components remain the same) ...
 const Section = styled(motion.section)`
   padding: 6rem 0;
   position: relative;
@@ -108,7 +106,8 @@ const InnovationDescription = styled.p`
   flex-grow: 1; 
 `;
 
-const PrimaryButton = styled(motion(Link))`
+// FIXED: Used motion.create(Link)
+const PrimaryButton = styled(motion.create(Link))`
   padding: 0.85rem 1.75rem;
   background-color: ${({ theme }) => theme.buttonBg};
   color: ${({ theme }) => theme.buttonText};
@@ -183,7 +182,6 @@ export default function InnovationCta() {
             <InnovationDescription>
               Have a project idea but need expert mentorship to execute it? Submit your concept and we'll guide you through the process.
             </InnovationDescription>
-            {/* 2. This <Link> component will now work */}
             <PrimaryButton 
               to="/request-project?form=guidance" 
               whileHover={{ y: -3 }}
@@ -201,7 +199,6 @@ export default function InnovationCta() {
             <InnovationDescription>
               Submit your requirements, and we can assign it to our talented students for development, giving them real-world experience.
             </InnovationDescription>
-            {/* 3. This <Link> component will now work */}
             <SecondaryButton 
               to="/request-project?form=full" 
               whileHover={{ y: -3 }}

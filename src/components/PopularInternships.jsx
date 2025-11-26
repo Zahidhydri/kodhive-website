@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { HiOutlineArrowRight, HiOutlineLocationMarker, HiOutlineClock } from 'react-icons/hi';
-import { useScroll } from '../contexts/ScrollContext'; // <-- [FIX] IMPORT THE HOOK
+import { useScroll } from '../contexts/ScrollContext';
 
-// ... (Data and styled components remain the same) ...
 // --- DATA: Selected Popular Internships (Updated to 3) ---
 const popularInternships = [
   { 
@@ -94,8 +93,8 @@ const InternshipGrid = styled(motion.div)`
   margin-bottom: 3rem;
 `;
 
-// UPDATED: InternshipCard is now a styled Link component
-const InternshipCard = styled(motion(Link))`
+// FIXED: Used motion.create(Link)
+const InternshipCard = styled(motion.create(Link))`
   background: ${({ theme }) => theme.card};
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 12px;
@@ -213,7 +212,6 @@ const cardVariant = {
 
 export default function PopularInternships() {
   
-  // --- [FIX] Add scroll context and handler ---
   const mainScrollRef = useScroll();
   const handleScrollToTop = () => {
     if (mainScrollRef && mainScrollRef.current) {
@@ -223,7 +221,6 @@ export default function PopularInternships() {
       });
     }
   };
-  // --- End Fix ---
 
   return (
     <Section 
@@ -246,7 +243,6 @@ export default function PopularInternships() {
           viewport={{ once: true, amount: 0.3 }}
         >
           {popularInternships.map((internship) => (
-            // [FIX] Add onClick handler
             <InternshipCard 
               key={internship.id} 
               variants={cardVariant}
@@ -274,7 +270,6 @@ export default function PopularInternships() {
         </InternshipGrid>
         
         <CtaWrapper>
-          {/* [FIX] Add onClick handler */ }
           <PrimaryButton as={Link} to="/internships" onClick={handleScrollToTop}>
             View All Internships <HiOutlineArrowRight />
           </PrimaryButton>

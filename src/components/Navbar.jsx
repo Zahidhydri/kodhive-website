@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import styled from 'styled-components'; 
 import logo from '../assets/kodhive-logo.png';
-import { useScroll } from '../contexts/ScrollContext'; // <-- IMPORT THE HOOK
+import { useScroll } from '../contexts/ScrollContext';
 
 const Nav = styled.nav`
   position: sticky;
@@ -41,10 +41,36 @@ const LogoImage = styled.img`
 
 const LogoText = styled.span`
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 700;
   background: linear-gradient(to right, #007bff, #6f42c1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+  }
+`;
+
+const NavLinks = styled.div`
+  display: none;
+  gap: 1.5rem;
+  
+  @media (min-width: 900px) {
+    display: flex;
+    align-items: center;
+  }
+`;
+
+const StyledLink = styled(Link)`
+  color: ${({ theme }) => theme.text};
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s;
+  
+  &:hover {
+    color: ${({ theme }) => theme.buttonBg};
+  }
 `;
 
 const RightMenu = styled.div`
@@ -61,12 +87,16 @@ const SignInButton = styled.button`
   text-decoration: none;
   font-weight: 600;
   border: none;
-  font-size: 0.9rem; // Match font
-  font-family: inherit; // Match font
+  font-size: 0.9rem;
+  font-family: inherit;
   cursor: pointer;
   
   &:hover {
     background-color: ${({ theme }) => theme.buttonHover};
+  }
+  
+  @media (max-width: 600px) {
+    display: none; /* Hide on mobile to save space */
   }
 `;
 
@@ -81,9 +111,8 @@ const MenuButton = styled.button`
 export default function Navbar({ toggleSidebar, openSignInModal }) {
   const { currentUser } = useAuth();
   const [scrolled, setScrolled] = useState(false);
-  const mainScrollRef = useScroll(); // <-- GET THE REF
+  const mainScrollRef = useScroll();
 
-  // --- [FIX] This handler now scrolls the correct element ---
   const handleScrollToTop = () => {
     if (mainScrollRef && mainScrollRef.current) {
       mainScrollRef.current.scrollTo({
@@ -94,7 +123,6 @@ export default function Navbar({ toggleSidebar, openSignInModal }) {
   };
 
   useEffect(() => {
-    // --- [FIX] This effect now listens to the correct div for scrolling ---
     const scrollContainer = mainScrollRef.current;
     if (!scrollContainer) return;
 
@@ -104,15 +132,18 @@ export default function Navbar({ toggleSidebar, openSignInModal }) {
     
     scrollContainer.addEventListener('scroll', handleScroll);
     return () => scrollContainer.removeEventListener('scroll', handleScroll);
-  }, [mainScrollRef]); // Depend on the ref
+  }, [mainScrollRef]);
 
   return (
     <Nav $scrolled={scrolled}>
-      {/* [FIX] Add onClick handler */}
       <LogoLink to="/" onClick={handleScrollToTop}>
-        <LogoImage src={logo} alt="Kodhive Logo" />
-        <LogoText>Kodhive</LogoText>
+        <LogoImage src={logo} alt="Skill Tensor Logo" />
+        <LogoText>Skill Tensor</LogoText>
       </LogoLink>
+
+      <NavLinks>
+        {/* Removed Internships, Pricing, and Contact Links */}
+      </NavLinks>
 
       <RightMenu>
         {!currentUser && (

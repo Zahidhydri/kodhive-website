@@ -4,10 +4,9 @@ import styled from 'styled-components';
 import logo from '../assets/kodhive-logo.png';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { HiOutlineMail, HiOutlineLocationMarker } from 'react-icons/hi';
-import { useScroll } from '../contexts/ScrollContext'; // <-- IMPORT THE HOOK
+import { useScroll } from '../contexts/ScrollContext';
 
 const FooterContainer = styled.footer`
-  /* [ENHANCED] Changed background to body for better contrast */
   background: ${({ theme }) => theme.body};
   border-top: 1px solid ${({ theme }) => theme.border};
   margin-top: 4rem;
@@ -25,11 +24,10 @@ const ContentWrapper = styled.div`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 1fr; /* Stacks on mobile */
+  grid-template-columns: 1fr;
   gap: 2.5rem;
   
   @media (min-width: 768px) {
-    /* [ENHANCED] 3-column layout for tablet and desktop */
     grid-template-columns: 1.5fr 1fr 1fr; 
   }
 `;
@@ -52,7 +50,6 @@ const Column = styled.div`
 `;
 
 const LogoSection = styled(Column)`
-  /* No special grid rules needed anymore */
 `;
 
 const LogoDisplay = styled(Link)`
@@ -70,7 +67,6 @@ const LogoDisplay = styled(Link)`
   span {
     font-size: 1.5rem;
     font-weight: bold;
-    /* [ENHANCED] Gradient text to match navbar */
     background: linear-gradient(to right, ${({ theme }) => theme.buttonBg}, #6f42c1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -90,7 +86,7 @@ const SocialIcon = styled.a`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: ${({ theme }) => theme.card}; /* Use card bg for contrast */
+  background: ${({ theme }) => theme.card};
   border: 1px solid ${({ theme }) => theme.border};
   color: ${({ theme }) => theme.text};
   font-size: 1.25rem;
@@ -122,7 +118,6 @@ const FooterLink = styled(Link)`
 
   &:hover {
     color: ${({ theme }) => theme.buttonBg};
-    /* [ENHANCED] Subtle hover effect */
     transform: translateX(4px);
   }
 `;
@@ -158,7 +153,6 @@ const Copyright = styled.div`
   padding-top: 2rem;
   border-top: 1px solid ${({ theme }) => theme.border};
   text-align: center;
-  /* [ENHANCED] Subtle text color */
   color: ${({ theme }) => (theme.text === '#212529' ? '#6c757d' : '#adb5bd')};
   
   p {
@@ -168,9 +162,8 @@ const Copyright = styled.div`
 `;
 
 export default function Footer() {
-  const mainScrollRef = useScroll(); // <-- GET THE REF
+  const mainScrollRef = useScroll();
 
-  // --- [FIX] This handler now scrolls the correct element ---
   const handleScrollToTop = () => {
     if (mainScrollRef && mainScrollRef.current) {
       mainScrollRef.current.scrollTo({
@@ -185,20 +178,20 @@ export default function Footer() {
       <ContentWrapper>
         <Grid>
           <LogoSection>
-            {/* [FIX] Add onClick handler */}
             <LogoDisplay to="/" onClick={handleScrollToTop}>
-              <img src={logo} alt="Kodhive Logo" />
-              <span>Kodhive</span>
+              <img src={logo} alt="Skill Tensor Logo" />
+              <span>Skill Tensor</span>
             </LogoDisplay>
             <p>Connecting student talent with innovative real-world projects. Build your portfolio, gain experience, and launch your career.</p>
             <SocialLinks>
-              <SocialIcon href="https://twitter.com/kodhive" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              {/* Updated dummy links */}
+              <SocialIcon href="#" aria-label="Twitter">
                 <FaTwitter />
               </SocialIcon>
-              <SocialIcon href="https://github.com/kodhive" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <SocialIcon href="#" aria-label="GitHub">
                 <FaGithub />
               </SocialIcon>
-              <SocialIcon href="https://linkedin.com/company/kodhive" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <SocialIcon href="#" aria-label="LinkedIn">
                 <FaLinkedin />
               </SocialIcon>
             </SocialLinks>
@@ -207,7 +200,6 @@ export default function Footer() {
           <Column>
             <h3>Quick Links</h3>
             <LinksList>
-              {/* [FIX] Add onClick handlers to all links */}
               <li><FooterLink to="/" onClick={handleScrollToTop}>Home</FooterLink></li>
               <li><FooterLink to="/internships" onClick={handleScrollToTop}>Internships</FooterLink></li>
               <li><FooterLink to="/request-project" onClick={handleScrollToTop}>Request a Project</FooterLink></li> 
@@ -218,9 +210,9 @@ export default function Footer() {
           <Column>
             <h3>Get in Touch</h3>
             <ContactInfo>
-              <a href="mailto:kodhivetechnology@gmail.com">
+              <a href="mailto:hello@skilltensor.com">
                 <HiOutlineMail />
-                <span>kodhivetechnology@gmail.com</span>
+                <span>hello@skilltensor.com</span>
               </a>
               <div>
                 <HiOutlineLocationMarker />
@@ -232,7 +224,7 @@ export default function Footer() {
         </Grid>
 
         <Copyright>
-          <p>&copy; {new Date().getFullYear()} Kodhive. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Skill Tensor. All rights reserved.</p>
         </Copyright>
       </ContentWrapper>
     </FooterContainer>

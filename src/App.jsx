@@ -7,12 +7,13 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Sidebar from './components/Sidebar';
 import SignInModal from './components/SignInModal';
-import Preloader from './components/Preloader'; // <-- IMPORT PRELOADER
+import Preloader from './components/Preloader';
 import Home from './pages/Home';
 import Internships from './pages/Internships';
 import Contact from './pages/Contact';
 import ProjectRequest from './pages/ProjectRequest';
-import VerifyCertificate from './pages/VerifyCertificate.jsx'; 
+import VerifyCertificate from './pages/VerifyCertificate.jsx';
+// Removed Pricing import
 import { useAuth } from './contexts/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import { ScrollContext } from './contexts/ScrollContext';
@@ -21,6 +22,7 @@ import { ScrollContext } from './contexts/ScrollContext';
 const lightTheme = {
   body: '#f8f9fa',
   text: '#212529',
+  textSecondary: '#6c757d', 
   nav: 'rgba(255, 255, 255, 0.8)',
   card: '#ffffff',
   border: '#dee2e6',
@@ -35,6 +37,7 @@ const lightTheme = {
 const darkTheme = {
   body: '#1a2035', 
   text: '#e9ecef', 
+  textSecondary: '#a0aec0',
   nav: 'rgba(26, 32, 53, 0.8)', 
   card: '#2a314e', 
   border: '#40486a', 
@@ -74,12 +77,11 @@ const GlobalStyle = createGlobalStyle`
 
 
 function App() {
-  const [loadingApp, setLoadingApp] = useState(true); // <-- App loading state
+  const [loadingApp, setLoadingApp] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { currentUser, loading: authLoading } = useAuth();
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
-  // 3. Set up theme state
   const [theme, setTheme] = useState('light');
   const isDarkTheme = theme === 'dark';
 
@@ -97,23 +99,19 @@ function App() {
     setTheme(savedTheme || 'light');
   }, []);
 
-  // Simulate content loading, or wait for Auth
   useEffect(() => {
-    // You can remove this timer if you purely rely on Preloader component's internal timer
-    // But keeping a safeguard is good.
     if (!authLoading) {
        // Allow preloader to finish its animation
     }
   }, [authLoading]);
 
-  // Auth Modal Logic
   useEffect(() => {
-    if (!authLoading && !loadingApp) { // Wait for app to finish loading
+    if (!authLoading && !loadingApp) { 
       const modalClosed = sessionStorage.getItem('kodhive-signin-modal-closed');
       if (!currentUser && !modalClosed) {
         const timer = setTimeout(() => {
           setIsSignInModalOpen(true);
-        }, 3000); // Increased delay slightly to not pop up immediately after preloader
+        }, 3000);
         return () => clearTimeout(timer);
       }
     }
@@ -139,7 +137,6 @@ function App() {
           )}
         </AnimatePresence>
 
-        {/* Main App Content - Only show after loading (or underneath if you prefer fade out) */}
         {!loadingApp && (
           <>
             <ScrollToTop /> 
@@ -174,8 +171,9 @@ function App() {
                   <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<Home />} />
                     <Route path="/internships" element={<Internships />} />
-                    <Route path="/contact" element={<Contact />} />
+                    {/* Removed Pricing Route */}
                     <Route path="/request-project" element={<ProjectRequest />} />
+                    <Route path="/contact" element={<Contact />} />
                     <Route path="/verify" element={<VerifyCertificate />} />
                   </Routes>
                 </AnimatePresence>

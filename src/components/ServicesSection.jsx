@@ -1,232 +1,203 @@
-// src/components/ServicesSection.jsx
-import React from 'react'; // Added React import
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-
-// Import Swiper for carousel
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
-
-// Import icons and data
-import {
-  HiOutlinePencilAlt,
-  HiOutlineBriefcase,
-  HiOutlineUsers,
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  HiOutlineAcademicCap, 
+  HiOutlineCode, 
+  HiOutlineVideoCamera, 
+  HiOutlineBriefcase, 
   HiOutlineColorSwatch,
-  HiOutlineDeviceMobile, // Re-using this icon for Photo/Video
+  HiOutlineChip
 } from 'react-icons/hi';
 
-// --- DATA ---
-const servicesData = [
-  {
-    icon: HiOutlinePencilAlt,
-    title: 'Project Development',
-    description:
-      'We build high-quality, small-scale projects for clients and college students. From web apps to custom software, our student teams deliver results.',
-    bgColor: '#4a69ff',
-  },
-  {
-    icon: HiOutlineBriefcase,
-    title: 'Internship Opportunities',
-    description:
-      'We provide valuable remote internship opportunities specifically for freshers and engineering college students, helping you gain real-world experience.',
-    bgColor: '#00796b',
-  },
-  {
-    icon: HiOutlineDeviceMobile, // Re-using existing icon
-    title: 'Photo Video Editing',
-    description:
-      'Need professional media? Our team offers photo and video editing services to make your content stand out, from simple touch-ups to full edits.',
-    bgColor: '#f57c00', // Orange
-  },
-  {
-    icon: HiOutlineColorSwatch,
-    title: 'Brand Designing',
-    description:
-      'Build a strong brand identity. We design everything from professional logos and business posters to eye-catching social media graphics.',
-    bgColor: '#d81b60',
-  },
-  {
-    icon: HiOutlineUsers,
-    title: 'Community & Mentorship',
-    description:
-      'Join a vibrant community of learners, builders, and industry experts. Get access to workshops, network with peers, and receive guidance to accelerate your tech career.',
-    bgColor: '#6f42c1', // Purple
-  },
-];
+const services = {
+  students: [
+    {
+      title: "Mini & Major Projects",
+      icon: HiOutlineCode,
+      desc: "Complete source code, documentation, and viva support for final year projects (Java, Python, MERN).",
+      color: "#4a69ff"
+    },
+    {
+      title: "Internship Programs",
+      icon: HiOutlineBriefcase,
+      desc: "Gain experience with 1-6 month remote internships. Get certified and build a real portfolio.",
+      color: "#00796b"
+    },
+    {
+      title: "Skill Training",
+      icon: HiOutlineAcademicCap,
+      desc: "One-on-one mentorship in React, Data Science, and Video Editing to get you job-ready.",
+      color: "#f57c00"
+    }
+  ],
+  business: [
+    {
+      title: "Web & App Development",
+      icon: HiOutlineChip,
+      desc: "Custom websites, e-commerce stores, and mobile apps built for small businesses and startups.",
+      color: "#6f42c1"
+    },
+    {
+      title: "Pro Video Editing",
+      icon: HiOutlineVideoCamera,
+      desc: "High-end editing for YouTube channels, reels, corporate promos, and wedding highlights.",
+      color: "#d81b60"
+    },
+    {
+      title: "Branding & Graphics",
+      icon: HiOutlineColorSwatch,
+      desc: "Logo design, social media kits, and brochures to give your brand a premium look.",
+      color: "#007bff"
+    }
+  ]
+};
 
-// --- STYLED COMPONENTS ---
-
-const Section = styled(motion.section)`
-  padding: 6rem 0;
+const Section = styled.section`
+  padding: 6rem 1.5rem;
   background: ${({ theme }) => theme.body};
 `;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1.5rem;
 `;
 
-const SectionTitle = styled.h2`
+const Header = styled.div`
+  text-align: center;
+  margin-bottom: 3rem;
+`;
+
+const Title = styled.h2`
   font-size: 2.5rem;
-  font-weight: 700;
-  text-align: center;
+  font-weight: 800;
   margin-bottom: 1rem;
-`;
-
-const SectionSubtitle = styled.p`
-  text-align: center;
-  font-size: 1.1rem;
-  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
-  max-width: 600px;
-  margin: 0 auto 4rem;
-`;
-
-const SwiperWrapper = styled.div`
-  width: 100%;
-  
-  /* Style Swiper pagination dots */
-  .swiper-pagination-bullet {
-    background: ${({ theme }) => theme.border};
-    opacity: 0.8;
-  }
-  .swiper-pagination-bullet-active {
-    background: ${({ theme }) => theme.buttonBg} !important;
-    opacity: 1;
-  }
-  .swiper-slide {
-    padding-bottom: 3rem; // Space for pagination
-    height: auto; 
-  }
-`;
-
-// --- [MERGED] Styles from ServiceCard.jsx ---
-
-const ServiceCardStyled = styled(motion.div)`
-  background: ${({ theme }) => theme.card};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 16px;
-  padding: 2.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.07);
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  opacity: 1;
-  border-top: 4px solid ${({ $color }) => $color};
-  
-  /* Styles for Swiper */
-  width: 100%;
-  margin: 0 auto; 
-  box-sizing: border-box;
-  flex-shrink: 0;
-  /* Ensure cards have same height in a slide */
-  height: 100%; 
-  min-height: 250px; 
-`;
-
-const HeaderIcon = styled.div`
-  font-size: 1.5rem;
-  color: ${({ $color }) => $color};
-  background: ${({ $color }) => $color}22;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-`;
-
-const HeaderTitle = styled.h3`
-  font-size: 1.35rem;
-  font-weight: 600;
-  margin: 0;
   color: ${({ theme }) => theme.text};
 `;
 
-const ServiceDescription = styled.p`
-  font-size: 1rem;
-  color: ${({ theme }) => (theme.text === '#212529' ? '#495057' : '#adb5bd')};
-  line-height: 1.6;
-  margin: 0;
-  flex-grow: 1; /* Ensures content pushes to fill height */
+const Subtitle = styled.p`
+  font-size: 1.1rem;
+  color: ${({ theme }) => theme.textSecondary};
+  max-width: 600px;
+  margin: 0 auto;
 `;
-// --- End Merged Styles ---
 
-// --- ANIMATION ---
-const sectionVariant = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: 'easeOut' },
-  },
-};
+const ToggleContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+`;
 
-// --- MAIN COMPONENT ---
+const ToggleButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid ${({ theme, $active }) => $active ? theme.buttonBg : theme.border};
+  background: ${({ theme, $active }) => $active ? theme.buttonBg : 'transparent'};
+  color: ${({ theme, $active }) => $active ? theme.buttonText : theme.text};
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;
+
+const Grid = styled(motion.div)`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+`;
+
+const Card = styled(motion.div)`
+  background: ${({ theme }) => theme.card};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  border-top: 4px solid ${({ $color }) => $color};
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+`;
+
+const IconBox = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: ${({ $color }) => $color}22;
+  color: ${({ $color }) => $color};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+`;
+
+const CardTitle = styled.h3`
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text};
+`;
+
+const CardDesc = styled.p`
+  font-size: 0.95rem;
+  color: ${({ theme }) => theme.textSecondary};
+  line-height: 1.6;
+`;
+
 export default function ServicesSection() {
+  const [activeTab, setActiveTab] = useState('students');
 
   return (
-    <Section
-      id="services"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
-      variants={sectionVariant}
-    >
+    <Section>
       <Container>
-        <SectionTitle>Our Core Offerings</SectionTitle>
-        <SectionSubtitle>
-          At Kodhive, we bridge the gap for freshers and students by offering
-          remote internships, building projects, and providing creative design services.
-        </SectionSubtitle>
+        <Header>
+          <Title>What We Do</Title>
+          <Subtitle>Tailored solutions for ambitious students and growing businesses.</Subtitle>
+        </Header>
 
-        {/* --- Carousel for all devices --- */}
-        <SwiperWrapper>
-          <Swiper
-            modules={[Pagination, Autoplay]}
-            spaceBetween={30}
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
-            // Responsive breakpoints
-            breakpoints={{
-              // Mobile (default)
-              0: {
-                slidesPerView: 1,
-              },
-              // Tablet
-              768: {
-                slidesPerView: 2,
-              },
-              // Desktop
-              1024: {
-                slidesPerView: 3,
-              },
-            }}
+        <ToggleContainer>
+          <ToggleButton 
+            $active={activeTab === 'students'} 
+            onClick={() => setActiveTab('students')}
           >
-            {servicesData.map((service) => {
-              const Icon = service.icon; // Get icon component
-              return (
-                <SwiperSlide key={service.title} style={{ height: 'auto' }}>
-                  {/* --- [INLINED] Card logic --- */}
-                  <ServiceCardStyled $color={service.bgColor}>
-                    <HeaderIcon $color={service.bgColor}>
-                      <Icon />
-                    </HeaderIcon>
-                    <HeaderTitle>{service.title}</HeaderTitle>
-                    <ServiceDescription>
-                      {service.description}
-                    </ServiceDescription>
-                  </ServiceCardStyled>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </SwiperWrapper>
-        
+            For Students
+          </ToggleButton>
+          <ToggleButton 
+            $active={activeTab === 'business'} 
+            onClick={() => setActiveTab('business')}
+          >
+            For Business
+          </ToggleButton>
+        </ToggleContainer>
+
+        <AnimatePresence mode="wait">
+          <Grid
+            key={activeTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {services[activeTab].map((service, index) => (
+              <Card key={index} $color={service.color}>
+                <IconBox $color={service.color}>
+                  <service.icon />
+                </IconBox>
+                <CardTitle>{service.title}</CardTitle>
+                <CardDesc>{service.desc}</CardDesc>
+              </Card>
+            ))}
+          </Grid>
+        </AnimatePresence>
       </Container>
     </Section>
   );

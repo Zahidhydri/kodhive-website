@@ -65,7 +65,7 @@ export default function Preloader({ onComplete }) {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <LogoImg src={logo} alt="Kodhive" />
+        <LogoImg src={logo} alt="Skill Tensor" />
       </LogoWrapper>
 
       <LoadingBar>
@@ -82,7 +82,7 @@ export default function Preloader({ onComplete }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        Kodhive
+        Skill Tensor
       </BrandText>
     </PreloaderContainer>
   );

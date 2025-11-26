@@ -1,13 +1,12 @@
 // src/components/Sidebar.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx'; 
-import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout, HiOutlineUser, HiOutlineBookOpen, HiOutlineGlobe } from 'react-icons/hi';
+import { HiX, HiOutlineHome, HiOutlineBriefcase, HiOutlineMail, HiOutlinePencilAlt, HiOutlineLogout, HiOutlineUser, HiOutlineBookOpen, HiOutlineGlobe, HiOutlineCurrencyRupee } from 'react-icons/hi';
 import ThemeToggle from './ThemeToggle'; 
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
-import { useScroll } from '../contexts/ScrollContext'; // <-- IMPORT THE HOOK
+import { useScroll } from '../contexts/ScrollContext';
 
-// ... (All styled components remain the same) ...
 const Backdrop = styled(motion.div)`
   position: fixed;
   inset: 0;
@@ -107,6 +106,7 @@ const Nav = styled.nav`
   padding: 1rem;
   gap: 0.5rem;
   flex-grow: 1;
+  overflow-y: auto; 
 `;
 
 const NavLink = styled(motion.a).attrs(props => ({
@@ -178,6 +178,10 @@ const SignInButton = styled.button`
   &:hover {
     background: ${({ theme }) => theme.buttonHover};
   }
+  
+  @media (max-width: 600px) {
+    display: none; /* Hide on mobile to save space */
+  }
 `;
 
 const LogoutButton = styled.button`
@@ -208,9 +212,8 @@ const LogoutButton = styled.button`
 export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, openSignInModal }) {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
-  const mainScrollRef = useScroll(); // <-- GET THE REF
+  const mainScrollRef = useScroll();
 
-  // --- [FIX] This handler now scrolls the correct element ---
   const handleScrollToTop = () => {
     if (mainScrollRef && mainScrollRef.current) {
       mainScrollRef.current.scrollTo({
@@ -222,14 +225,13 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
 
   const closeSidebar = () => setIsOpen(false);
 
-  // --- [FIX] Combine scroll-to-top with closing the sidebar ---
   const handlePageNavigation = () => {
     handleScrollToTop();
     closeSidebar();
   };
   
   const handleLogout = async () => {
-    handleScrollToTop(); // Also scroll to top on logout
+    handleScrollToTop();
     closeSidebar();
     try {
       await logout();
@@ -288,7 +290,6 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
             )}
 
             <Nav>
-              {/* [FIX] Use the new navigation handler */}
               <NavLink to="/" onClick={handlePageNavigation}>
                 <HiOutlineHome /> Home
               </NavLink>
@@ -296,6 +297,8 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
               <NavLink to="/internships" onClick={handlePageNavigation}>
                 <HiOutlineBriefcase /> Internships
               </NavLink>
+
+              {/* Removed Pricing Link */}
               
               <NavLink to="/request-project" onClick={handlePageNavigation}>
                 <HiOutlinePencilAlt /> Request a Project
@@ -311,9 +314,9 @@ export default function Sidebar({ isOpen, setIsOpen, toggleTheme, darkMode, open
               </NavLink>
               
               <NavLink 
-                href="https://kodhive-community-discord.com" 
+                href="#" 
                 $isExternal
-                onClick={closeSidebar} // External links don't need scroll
+                onClick={closeSidebar} 
               >
                 <HiOutlineGlobe /> Community
               </NavLink>
