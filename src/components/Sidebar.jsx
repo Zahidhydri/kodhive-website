@@ -178,10 +178,6 @@ const SignInButton = styled.button`
   &:hover {
     background: ${({ theme }) => theme.buttonHover};
   }
-  
-  @media (max-width: 600px) {
-    display: none; /* Hide on mobile to save space */
-  }
 `;
 
 const LogoutButton = styled.button`

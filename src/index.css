@@ -3,7 +3,7 @@
 /* --- Custom Cursors --- */
 html {
   /* REPAIRED: Hotspot for the arrow is the top-left corner */
-  cursor: url('/cursor-default.png') 8 3, auto !important;
+  cursor: url('/cursor-default.png') 8 2, auto !important;
 }
 
 /* This sets the hand cursor for clickable items */
@@ -17,13 +17,13 @@ select,
 input[type="submit"],
 [data-clickable="true"] {
   /* REPAIRED: The fingertip is 9px from left and 1px from top */
-  cursor: url('/cursor-pointer.png') 11 3, pointer !important;
+  cursor: url('/cursor-pointer.png') 11 2, pointer !important;
 }
 
 /* This forces the custom pointer even when dragging a slider */
 .swiper-grabbing {
   /* REPAIRED: Use the same 9 1 hotspot */
-  cursor: url('/cursor-pointer.png') 11 3, grabbing !important;
+  cursor: url('/cursor-pointer.png') 11 2, grabbing !important;
 }
 /* --- End Custom Cursors --- */
 
