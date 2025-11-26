@@ -15,7 +15,7 @@ import {
   HiOutlineBriefcase,
   HiOutlineUsers,
   HiOutlineColorSwatch,
-  HiOutlineDeviceMobile,
+  HiOutlineDeviceMobile, // Re-using this icon for Photo/Video
 } from 'react-icons/hi';
 
 // --- DATA ---
@@ -24,28 +24,28 @@ const servicesData = [
     icon: HiOutlinePencilAlt,
     title: 'Project Development',
     description:
-      'Have an idea for a web app, mobile app, or a new brand? Our teams of vetted students, guided by senior mentors, will build and deliver your project from concept to launch.',
+      'We build high-quality, small-scale projects for clients and college students. From web apps to custom software, our student teams deliver results.',
     bgColor: '#4a69ff',
   },
   {
     icon: HiOutlineBriefcase,
     title: 'Internship Opportunities',
     description:
-      'Gain real-world experience. We connect talented students with paid internships and projects, allowing you to build your portfolio and work on live applications.',
+      'We provide valuable remote internship opportunities specifically for freshers and engineering college students, helping you gain real-world experience.',
     bgColor: '#00796b',
   },
   {
-    icon: HiOutlineDeviceMobile,
-    title: 'Mobile App Development',
+    icon: HiOutlineDeviceMobile, // Re-using existing icon
+    title: 'Photo Video Editing',
     description:
-      'Create beautiful, cross-platform mobile applications for both iOS and Android from a single codebase. We focus on responsive design and a smooth native feel.',
+      'Need professional media? Our team offers photo and video editing services to make your content stand out, from simple touch-ups to full edits.',
     bgColor: '#f57c00', // Orange
   },
   {
     icon: HiOutlineColorSwatch,
-    title: 'UI/UX & Brand Design',
+    title: 'Brand Designing',
     description:
-      'A great product starts with a great design. Our students can help you with everything from logos and branding to complete user-flow wireframes and high-fidelity prototypes.',
+      'Build a strong brand identity. We design everything from professional logos and business posters to eye-catching social media graphics.',
     bgColor: '#d81b60',
   },
   {
@@ -180,8 +180,8 @@ export default function ServicesSection() {
       <Container>
         <SectionTitle>Our Core Offerings</SectionTitle>
         <SectionSubtitle>
-          We bridge the gap between education and industry, providing invaluable
-          experience for students and high-quality results for clients.
+          At Kodhive, we bridge the gap for freshers and students by offering
+          remote internships, building projects, and providing creative design services.
         </SectionSubtitle>
 
         {/* --- Carousel for all devices --- */}
