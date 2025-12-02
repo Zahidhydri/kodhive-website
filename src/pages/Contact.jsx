@@ -5,76 +5,137 @@ import {
   HiOutlineUser, 
   HiOutlineMail, 
   HiOutlinePencilAlt,
-  HiOutlineCheckCircle
+  HiOutlineCheckCircle,
+  HiOutlineLocationMarker,
+  HiOutlinePhone
 } from 'react-icons/hi';
-import logo from '../assets/kodhive-logo.png'; // Import the logo
+// import logo from '../assets/kodhive-logo.png'; 
 
 // --- Styled Components ---
 
-const Container = styled(motion.div)`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 4rem 1.5rem;
-`;
-
-const LogoWrapper = styled.div`
+const PageWrapper = styled(motion.div)`
+  min-height: 100vh;
+  background: ${({ theme }) => theme.body};
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-`;
-
-const LogoImage = styled.img`
-  height: 40px;
-  width: 40px;
-`;
-
-const LogoText = styled.span`
-  font-size: 1.5rem;
-  font-weight: bold;
-  background: linear-gradient(to right, ${({ theme }) => theme.buttonBg}, #6f42c1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-`;
-
-const Title = styled(motion.h1)`
-  font-size: 2.75rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1rem;
-`;
-
-const Subtitle = styled(motion.p)`
-  font-size: 1.15rem;
-  text-align: center;
-  color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
-  margin-bottom: 3.5rem;
-`;
-
-const Form = styled(motion.form)`
-  background: ${({ theme }) => theme.card};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 12px;
-  padding: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-`;
-
-// --- NEW: Grid for Name/Email ---
-const InfoGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.75rem;
-
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
+  padding: 4rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  
+  /* Subtle background gradient */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, ${({ theme }) => theme.buttonBg}11 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 0;
   }
 `;
 
-// --- NEW: Enhanced InputGroup ---
+const Container = styled(motion.div)`
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr;
+  background: ${({ theme }) => theme.card};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  z-index: 1;
+
+  @media (min-width: 900px) {
+    grid-template-columns: 0.8fr 1.2fr;
+  }
+`;
+
+const ContactInfoPanel = styled.div`
+  background: linear-gradient(135deg, ${({ theme }) => theme.buttonBg}, #6f42c1);
+  padding: 3rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+`;
+
+const InfoHeader = styled.div`
+  margin-bottom: 3rem;
+`;
+
+const InfoTitle = styled.h2`
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+`;
+
+const InfoText = styled.p`
+  font-size: 1rem;
+  opacity: 0.9;
+  line-height: 1.6;
+`;
+
+const InfoList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const InfoItem = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  font-size: 1rem;
+  
+  svg {
+    font-size: 1.5rem;
+    opacity: 0.8;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+`;
+
+const FormPanel = styled.div`
+  padding: 3rem;
+  background: ${({ theme }) => theme.card};
+`;
+
+const FormHeader = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const FormTitle = styled.h2`
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text};
+  margin-bottom: 0.5rem;
+`;
+
+const Form = styled(motion.form)`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
 const InputGroup = styled.div`
   position: relative;
   display: flex;
@@ -84,127 +145,134 @@ const InputGroup = styled.div`
     font-weight: 600;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
+    color: ${({ theme }) => theme.text};
   }
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
   
   svg {
     position: absolute;
     left: 1rem;
     top: 50%;
-    transform: translateY(7px); /* Aligns with input */
-    font-size: 1.25rem;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
     color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
     transition: color 0.3s ease;
-    z-index: 1; /* Ensure icon is above input */
+    pointer-events: none;
+  }
+
+  /* TextArea icon alignment */
+  &.textarea-wrapper svg {
+    top: 1.2rem; 
+    transform: none;
   }
 `;
 
 const Input = styled(motion.input)`
-  padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 3rem;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
   background: ${({ theme }) => theme.body};
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
+    box-shadow: 0 0 0 4px ${({ theme }) => theme.buttonBg}22;
+    background: ${({ theme }) => theme.card};
     
-    ~ svg { /* Use ~ (sibling) selector */
+    + svg { 
       color: ${({ theme }) => theme.buttonBg};
     }
   }
 `;
 
 const TextArea = styled(motion.textarea)`
-  padding: 0.85rem 1rem 0.85rem 3rem; /* Add padding for icon */
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 3rem;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
   background: ${({ theme }) => theme.body};
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
-  min-height: 160px;
+  min-height: 150px;
   resize: vertical;
   font-family: inherit;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.buttonBg};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
+    box-shadow: 0 0 0 4px ${({ theme }) => theme.buttonBg}22;
+    background: ${({ theme }) => theme.card};
     
-    ~ svg { /* Use ~ (sibling) selector */
+    + svg {
       color: ${({ theme }) => theme.buttonBg};
     }
   }
 `;
 
 const SubmitButton = styled(motion.button)`
-  padding: 0.85rem 1.5rem;
-  background-color: ${({ theme }) => theme.buttonBg};
+  padding: 1rem 2rem;
+  background: ${({ theme }) => theme.buttonBg};
   color: ${({ theme }) => theme.buttonText};
   border-radius: 8px;
   border: none;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+  box-shadow: 0 4px 15px ${({ theme }) => theme.buttonBg}44;
   
   &:hover {
-    background-color: ${({ theme }) => theme.buttonHover};
+    background: ${({ theme }) => theme.buttonHover};
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px ${({ theme }) => theme.buttonBg}66;
   }
   
   &:disabled {
-    background-color: ${({ theme }) => theme.border};
+    opacity: 0.7;
     cursor: not-allowed;
+    transform: none;
   }
 `;
 
-// --- NEW: Success Message ---
-const SuccessCard = styled(motion.div)`
-  background: #28a7451a;
-  border: 1px solid #28a745;
-  border-radius: 12px;
-  padding: 2.5rem;
+const SuccessView = styled(motion.div)`
   text-align: center;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   
   svg {
-    font-size: 3rem;
-    color: #28a745;
-    margin-bottom: 1rem;
+    font-size: 4rem;
+    color: #10B981;
+    margin-bottom: 1.5rem;
   }
   
   h3 {
-    font-size: 1.75rem;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
     color: ${({ theme }) => theme.text};
-    margin: 0 0 0.5rem 0;
   }
   
   p {
     font-size: 1.1rem;
     color: ${({ theme }) => theme.text === '#212529' ? '#495057' : '#adb5bd'};
-    margin: 0;
   }
 `;
 
-// Animation Variants
-const pageVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
-};
-
-// --- Component ---
-
-export default function Contact() {
+const Contact = () => {
   const [status, setStatus] = useState("Send Message");
-  const [isSubmitted, setIsSubmitted] = useState(false); // NEW state
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const contactFormUrl = `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_CONTACT_ID}`;
 
   const handleSubmit = async (e) => {
@@ -217,115 +285,127 @@ export default function Contact() {
       const response = await fetch(contactFormUrl, {
         method: "POST",
         body: data,
-        headers: {
-          'Accept': 'application/json'
-        }
+        headers: { 'Accept': 'application/json' }
       });
 
       if (response.ok) {
         setStatus("Message Sent!");
-        setIsSubmitted(true); // <-- NEW: Trigger success UI
+        setIsSubmitted(true);
         form.reset();
       } else {
         setStatus("Error. Try Again.");
         setTimeout(() => setStatus("Send Message"), 3000);
       }
     } catch (error) {
-      console.error("Form submission error:", error);
+      console.error("Form error:", error);
       setStatus("Error. Try Again.");
       setTimeout(() => setStatus("Send Message"), 3000);
     }
   };
 
   return (
-    <Container
-      variants={pageVariants}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
+    <PageWrapper
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
     >
-      <LogoWrapper>
-        <LogoImage src={logo} alt="Kodhive Logo" />
-        <LogoText>Kodhive</LogoText>
-      </LogoWrapper>
-      <Title variants={itemVariants}>Get in Touch</Title>
-      <Subtitle variants={itemVariants}>
-        Have a question or a project idea? We'd love to hear from you.
-      </Subtitle>
+      <Container
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Left Panel: Contact Info */}
+        <ContactInfoPanel>
+          <InfoHeader>
+            <InfoTitle>Let's Talk</InfoTitle>
+            <InfoText>
+              Have a project in mind or just want to say hi? We'd love to hear from you.
+            </InfoText>
+          </InfoHeader>
+          
+          <InfoList>
+            <InfoItem>
+              <HiOutlineMail />
+              <span>hello@skilltensor.com</span>
+            </InfoItem>
+            <InfoItem>
+              <HiOutlinePhone />
+              <span>+91 98765 43210</span>
+            </InfoItem>
+            <InfoItem>
+              <HiOutlineLocationMarker />
+              <span>Nagpur, Maharashtra, India</span>
+            </InfoItem>
+          </InfoList>
+        </ContactInfoPanel>
 
-      <AnimatePresence mode="wait">
-        {!isSubmitted ? (
-          <Form 
-            key="form"
-            variants={itemVariants}
-            initial="hidden"
-            animate="visible"
-            exit={{ opacity: 0, y: -10 }}
-            onSubmit={handleSubmit}
-          >
-            <InfoGrid>
-              <InputGroup>
-                <label htmlFor="name">Name</label>
-                <Input 
-                  type="text" 
-                  name="name" 
-                  id="name" 
-                  required 
-                  variants={itemVariants}
-                  whileFocus={{ scale: 1.02 }}
-                />
-                <HiOutlineUser />
-              </InputGroup>
-              
-              <InputGroup>
-                <label htmlFor="email">Email</label>
-                <Input 
-                  type="email" 
-                  name="email" 
-                  id="email" 
-                  required 
-                  variants={itemVariants}
-                  whileFocus={{ scale: 1.02 }}
-                />
-                <HiOutlineMail />
-              </InputGroup>
-            </InfoGrid>
+        {/* Right Panel: Form */}
+        <FormPanel>
+          <AnimatePresence mode="wait">
+            {!isSubmitted ? (
+              <motion.div
+                key="form-view"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <FormHeader>
+                  <FormTitle>Send us a Message</FormTitle>
+                </FormHeader>
 
-            <InputGroup>
-              <label htmlFor="message">Message</label>
-              <TextArea 
-                name="message" 
-                id="message" 
-                required 
-                variants={itemVariants}
-                whileFocus={{ scale: 1.02 }}
-              />
-              <HiOutlinePencilAlt style={{ top: '3.1rem' }} />
-            </InputGroup>
+                <Form onSubmit={handleSubmit}>
+                  <div style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+                    <InputGroup>
+                      <label htmlFor="name">Name</label>
+                      <InputWrapper>
+                        <Input type="text" name="name" id="name" required placeholder="John Doe" />
+                        <HiOutlineUser />
+                      </InputWrapper>
+                    </InputGroup>
 
-            <SubmitButton 
-              type="submit"
-              variants={itemVariants}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              disabled={status === "Sending..."}
-            >
-              {status}
-            </SubmitButton>
-          </Form>
-        ) : (
-          <SuccessCard
-            key="success"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-          >
-            <HiOutlineCheckCircle />
-            <h3>Message Sent!</h3>
-            <p>Thanks for reaching out. We'll get back to you soon.</p>
-          </SuccessCard>
-        )}
-      </AnimatePresence>
-    </Container>
+                    <InputGroup>
+                      <label htmlFor="email">Email</label>
+                      <InputWrapper>
+                        <Input type="email" name="email" id="email" required placeholder="john@example.com" />
+                        <HiOutlineMail />
+                      </InputWrapper>
+                    </InputGroup>
+                  </div>
+
+                  <InputGroup>
+                    <label htmlFor="message">Message</label>
+                    <InputWrapper className="textarea-wrapper">
+                      <TextArea name="message" id="message" required placeholder="Tell us about your project..." />
+                      <HiOutlinePencilAlt />
+                    </InputWrapper>
+                  </InputGroup>
+
+                  <SubmitButton 
+                    type="submit"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    disabled={status === "Sending..."}
+                  >
+                    {status}
+                  </SubmitButton>
+                </Form>
+              </motion.div>
+            ) : (
+              <SuccessView
+                key="success-view"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+              >
+                <HiOutlineCheckCircle />
+                <h3>Message Sent!</h3>
+                <p>Thank you for reaching out. We'll get back to you shortly.</p>
+              </SuccessView>
+            )}
+          </AnimatePresence>
+        </FormPanel>
+      </Container>
+    </PageWrapper>
   );
-}
+};
+
+export default Contact;

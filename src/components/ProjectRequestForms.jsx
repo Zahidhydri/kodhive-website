@@ -5,9 +5,7 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   HiOutlinePaperAirplane, 
-  HiOutlineChevronDown,
   HiOutlineCurrencyRupee,
-  HiOutlineDocumentText,
   HiOutlineCheckCircle,
   HiOutlineUser,
   HiOutlineMail,
@@ -18,7 +16,12 @@ import {
   HiOutlineOfficeBuilding, 
   HiOutlineExclamationCircle,
   HiOutlineArrowLeft,
-  HiOutlineArrowRight
+  HiOutlineArrowRight,
+  HiOutlineDesktopComputer,
+  HiOutlineDeviceMobile,
+  HiOutlineColorSwatch,
+  HiOutlineVideoCamera,
+  HiOutlineDotsHorizontal
 } from 'react-icons/hi';
 
 // --- STYLED COMPONENTS ---
@@ -42,7 +45,6 @@ const Section = styled(motion.section)`
 const Container = styled(motion.div)`
   max-width: 900px;
   margin: 0 auto;
-  /* Removed padding, as it's on the Section */
 `;
 
 const ImportantNote = styled.div`
@@ -151,6 +153,12 @@ const InputGroup = styled.div`
     font-size: 1rem;
     color: ${({ theme }) => theme.text};
   }
+  
+  /* Add asterisk for required fields */
+  label.required::after {
+    content: " *";
+    color: #ef4444;
+  }
 `;
 
 const InfoGrid = styled.div`
@@ -166,7 +174,7 @@ const InfoGrid = styled.div`
 const Input = styled(motion.input)`
   width: 100%;
   padding: 0.85rem 1rem;
-  border: 1px solid ${({ theme }) => theme.border};
+  border: 1px solid ${({ theme, $hasError }) => $hasError ? '#ef4444' : theme.border};
   border-radius: 8px;
   background: ${({ theme }) => theme.card}; 
   color: ${({ theme }) => theme.text};
@@ -175,32 +183,14 @@ const Input = styled(motion.input)`
   
   &:focus {
     outline: none;
-    border-color: ${({ theme }) => theme.buttonBg};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
-  }
-`;
-
-const Select = styled(motion.select)`
-  padding: 0.85rem 1rem;
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 8px;
-  background: ${({ theme }) => theme.card}; 
-  color: ${({ theme }) => theme.text};
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  appearance: none;
-  width: 100%;
-  
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.buttonBg};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.buttonBg}33;
+    border-color: ${({ theme, $hasError }) => $hasError ? '#ef4444' : theme.buttonBg};
+    box-shadow: 0 0 0 3px ${({ theme, $hasError }) => $hasError ? '#ef444433' : theme.buttonBg + '33'};
   }
 `;
 
 const TextArea = styled(motion.textarea)`
   background: ${({ theme }) => theme.card}; 
-  border: 1px solid ${({ theme }) => theme.border};
+  border: 1px solid ${({ theme, $hasError }) => $hasError ? '#ef4444' : theme.border};
   border-radius: 12px;
   padding: 1.5rem;
   color: ${({ theme }) => theme.text};
@@ -213,8 +203,8 @@ const TextArea = styled(motion.textarea)`
   
   &:focus {
     outline: none;
-    border-color: ${({ theme }) => theme.buttonBg};
-    box-shadow: 0 0 0 4px ${({ theme }) => theme.buttonBg}33;
+    border-color: ${({ theme, $hasError }) => $hasError ? '#ef4444' : theme.buttonBg};
+    box-shadow: 0 0 0 4px ${({ theme, $hasError }) => $hasError ? '#ef444433' : theme.buttonBg + '33'};
   }
   
   &::placeholder {
@@ -242,15 +232,7 @@ const SelectWrapper = styled.div`
     pointer-events: none;
   }
 
-  svg.select-arrow {
-    position: absolute;
-    right: 1rem;
-    font-size: 1.25rem;
-    color: ${({ theme }) => theme.text === '#212529' ? '#6c757d' : '#868e96'};
-    pointer-events: none;
-  }
-
-  ${Select}, ${Input} {
+  ${Input} {
     padding-left: 3rem;
   }
 `;
@@ -390,6 +372,62 @@ const NavButton = styled(motion.button)`
   `}
 `;
 
+const SelectionGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+`;
+
+const SelectionCard = styled(motion.div)`
+  border: 2px solid ${({ theme, $selected }) => $selected ? theme.buttonBg : theme.border};
+  background: ${({ theme, $selected }) => $selected ? `${theme.buttonBg}11` : theme.card};
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.buttonBg};
+    background: ${({ theme }) => theme.card};
+    transform: translateY(-2px);
+  }
+
+  svg {
+    font-size: 2rem;
+    color: ${({ theme, $selected }) => $selected ? theme.buttonBg : theme.text === '#212529' ? '#6c757d' : '#adb5bd'};
+  }
+
+  span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: ${({ theme, $selected }) => $selected ? theme.buttonBg : theme.text};
+  }
+`;
+
+const PriceGrid = styled(SelectionGrid)`
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+`;
+
+const ErrorMessage = styled(motion.div)`
+  color: #ef4444;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  svg {
+    font-size: 1.1rem;
+  }
+`;
+
 // --- Animation Variants ---
 const formAnimVariants = {
   hidden: { opacity: 0, y: 15 },
@@ -399,12 +437,12 @@ const formAnimVariants = {
 
 // --- Reusable Step Components ---
 
-const StepContactInfo = ({ data, updateData }) => (
+const StepContactInfo = ({ data, updateData, errors }) => (
   <motion.div variants={formAnimVariants} initial="hidden" animate="visible" exit="exit">
     <FormStepTitle>Step 1: The Basics</FormStepTitle>
     <InfoGrid>
       <InputGroup>
-        <label htmlFor="name">Your Name</label>
+        <label htmlFor="name" className="required">Your Name</label>
         <SelectWrapper>
           <HiOutlineUser className="input-icon" />
           <Input 
@@ -415,25 +453,38 @@ const StepContactInfo = ({ data, updateData }) => (
             placeholder="e.g., Adrien Rabiot" 
             value={data.name || ''}
             onChange={(e) => updateData('name', e.target.value)}
+            $hasError={!!errors.name}
           />
         </SelectWrapper>
+        {errors.name && (
+          <ErrorMessage initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <HiOutlineExclamationCircle /> This field is required
+          </ErrorMessage>
+        )}
       </InputGroup>
       <InputGroup>
-        <label htmlFor="organization">College / Organisation Name</label>
+        <label htmlFor="organization" className="required">College / Organisation Name</label>
         <SelectWrapper>
           <HiOutlineOfficeBuilding className="input-icon" />
           <Input 
             type="text" 
             name="organization" 
             id="organization" 
+            required
             placeholder="e.g., Kodhive or XYZ College" 
             value={data.organization || ''}
             onChange={(e) => updateData('organization', e.target.value)}
+            $hasError={!!errors.organization}
           />
         </SelectWrapper>
+        {errors.organization && (
+          <ErrorMessage initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <HiOutlineExclamationCircle /> This field is required
+          </ErrorMessage>
+        )}
       </InputGroup>
       <InputGroup>
-        <label htmlFor="email">Your Email</label>
+        <label htmlFor="email" className="required">Your Email</label>
         <SelectWrapper>
           <HiOutlineMail className="input-icon" />
           <Input 
@@ -444,22 +495,35 @@ const StepContactInfo = ({ data, updateData }) => (
             placeholder="e.g., Adrien@example.com" 
             value={data.email || ''}
             onChange={(e) => updateData('email', e.target.value)}
+            $hasError={!!errors.email}
           />
         </SelectWrapper>
+        {errors.email && (
+          <ErrorMessage initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <HiOutlineExclamationCircle /> This field is required
+          </ErrorMessage>
+        )}
       </InputGroup>
       <InputGroup>
-        <label htmlFor="phone">Phone Number (Optional)</label>
+        <label htmlFor="phone" className="required">Phone Number</label>
         <SelectWrapper>
           <HiOutlinePhone className="input-icon" />
           <Input 
             type="tel" 
             name="phone" 
             id="phone" 
+            required
             placeholder="e.g., +91 98765 43210" 
             value={data.phone || ''}
             onChange={(e) => updateData('phone', e.target.value)}
+            $hasError={!!errors.phone}
           />
         </SelectWrapper>
+        {errors.phone && (
+          <ErrorMessage initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <HiOutlineExclamationCircle /> This field is required
+          </ErrorMessage>
+        )}
       </InputGroup>
     </InfoGrid>
   </motion.div>
@@ -469,15 +533,51 @@ const StepContactInfo = ({ data, updateData }) => (
 
 const FullProjectForm = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    projectType: 'Website',
+    priceRange: 'Below ₹10,000'
+  });
+  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("Submit Full Request");
   const totalSteps = 4;
 
   const updateData = (key, value) => {
     setFormData(prev => ({ ...prev, [key]: value }));
+    // Clear error when user types
+    if (errors[key]) {
+      setErrors(prev => ({ ...prev, [key]: null }));
+    }
   };
 
-  const nextStep = () => setStep(prev => Math.min(prev + 1, totalSteps));
+  const validateStep = () => {
+    const newErrors = {};
+    let isValid = true;
+
+    if (step === 1) {
+      if (!formData.name?.trim()) newErrors.name = true;
+      if (!formData.organization?.trim()) newErrors.organization = true;
+      if (!formData.email?.trim()) newErrors.email = true;
+      if (!formData.phone?.trim()) newErrors.phone = true;
+    }
+    
+    if (step === 3) {
+      if (!formData.requirements?.trim()) newErrors.requirements = true;
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const nextStep = () => {
+    if (validateStep()) {
+      setStep(prev => Math.min(prev + 1, totalSteps));
+    }
+  };
+  
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
 
   const projectFormUrl = `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_PROJECT_ID}`;
@@ -508,7 +608,10 @@ const FullProjectForm = () => {
 
       if (response.ok) {
         setStatus("Request Sent!");
-        setFormData({});
+        setFormData({
+            projectType: 'Website',
+            priceRange: 'Below ₹10,000'
+        });
         setStep(1);
         setTimeout(() => setStatus("Submit Full Request"), 3000);
       } else {
@@ -522,60 +625,69 @@ const FullProjectForm = () => {
     }
   };
 
+  const projectTypes = [
+    { label: 'Website', icon: HiOutlineDesktopComputer },
+    { label: 'Mobile App', icon: HiOutlineDeviceMobile },
+    { label: 'Design', icon: HiOutlineColorSwatch },
+    { label: 'Editing', icon: HiOutlineVideoCamera },
+    { label: 'Other', icon: HiOutlineDotsHorizontal },
+  ];
+
+  const priceRanges = [
+    'Below ₹10,000',
+    '₹10k - ₹15k',
+    '₹15k - ₹50k',
+    '₹50k - ₹1L',
+    '₹1L - ₹2.5L',
+    '₹2.5L+',
+  ];
+
   return (
     <FormContainer>
       <StepIndicator>Step {step} of {totalSteps}</StepIndicator>
       <Form onSubmit={handleSubmit}>
         <AnimatePresence mode="wait">
           {step === 1 && (
-            <StepContactInfo data={formData} updateData={updateData} key="step1" />
+            <StepContactInfo data={formData} updateData={updateData} errors={errors} key="step1" />
           )}
 
           {step === 2 && (
             <motion.div variants={formAnimVariants} initial="hidden" animate="visible" exit="exit" key="step2">
               <FormStepTitle>Step 2: Project Scope</FormStepTitle>
-              <InfoGrid>
-                <InputGroup>
-                  <label htmlFor="projectType-full">Project Type</label>
-                  <SelectWrapper>
-                    <HiOutlinePencilAlt className="input-icon" />
-                    <Select 
-                      name="projectType" 
-                      id="projectType-full"
-                      value={formData.projectType || 'Website'}
-                      onChange={(e) => updateData('projectType', e.target.value)}
+              
+              <InputGroup>
+                <label>Project Type</label>
+                <SelectionGrid>
+                  {projectTypes.map((type) => (
+                    <SelectionCard 
+                      key={type.label}
+                      $selected={formData.projectType === type.label}
+                      onClick={() => updateData('projectType', type.label)}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <option value="Website">Website</option>
-                      <option value="Mobile App">Mobile App</option>
-                      <option value="Logo / Graphic Design">Logo / Graphic Design</option>
-                      <option value="Photo/Video Editing">Photo/Video Editing</option>
-                      <option value="Other">Other</option>
-                    </Select>
-                    <HiOutlineChevronDown className="select-arrow" />
-                  </SelectWrapper>
-                </InputGroup>
-                
-                <InputGroup>
-                  <label htmlFor="priceRange-full">Budget (Est. INR)</label>
-                  <SelectWrapper>
-                    <HiOutlineCurrencyRupee className="input-icon" />
-                    <Select 
-                      name="priceRange" 
-                      id="priceRange-full"
-                      value={formData.priceRange || 'Below ₹10,000'}
-                      onChange={(e) => updateData('priceRange', e.target.value)}
+                      <type.icon />
+                      <span>{type.label}</span>
+                    </SelectionCard>
+                  ))}
+                </SelectionGrid>
+              </InputGroup>
+              
+              <InputGroup style={{marginTop: '2rem'}}>
+                <label>Budget Estimate (INR)</label>
+                <PriceGrid>
+                  {priceRanges.map((price) => (
+                    <SelectionCard 
+                      key={price}
+                      $selected={formData.priceRange === price}
+                      onClick={() => updateData('priceRange', price)}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <option value="Below ₹10,000">Below ₹10,000</option>
-                      <option value="₹10,000 - ₹15,000">₹10,000 - ₹15,000</option>
-                      <option value="₹15,000 - ₹50,000">₹15,000 - ₹50,000</option>
-                      <option value="₹50,000 - ₹1,00,000">₹50,000 - ₹1,00,000</option>
-                      <option value="₹1,00,000 - ₹2,50,000">₹1,00,000 - ₹2,50,000</option>
-                      <option value="₹2,50,000+">₹2,50,000+</option>
-                    </Select>
-                    <HiOutlineChevronDown className="select-arrow" />
-                  </SelectWrapper>
-                </InputGroup>
-              </InfoGrid>
+                      <HiOutlineCurrencyRupee />
+                      <span>{price}</span>
+                    </SelectionCard>
+                  ))}
+                </PriceGrid>
+              </InputGroup>
             </motion.div>
           )}
 
@@ -583,7 +695,7 @@ const FullProjectForm = () => {
             <motion.div variants={formAnimVariants} initial="hidden" animate="visible" exit="exit" key="step3">
               <FormStepTitle>Step 3: Your Idea</FormStepTitle>
               <InputGroup>
-                <label htmlFor="requirements-full">What do you want to build or create?</label>
+                <label htmlFor="requirements-full" className="required">What do you want to build or create?</label>
                 <TextArea 
                   name="requirements" 
                   id="requirements-full" 
@@ -591,7 +703,13 @@ const FullProjectForm = () => {
                   required 
                   value={formData.requirements || ''}
                   onChange={(e) => updateData('requirements', e.target.value)}
+                  $hasError={!!errors.requirements}
                 />
+                 {errors.requirements && (
+                  <ErrorMessage initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    <HiOutlineExclamationCircle /> Please describe your project requirements
+                  </ErrorMessage>
+                )}
               </InputGroup>
             </motion.div>
           )}
@@ -711,15 +829,47 @@ const FullProjectForm = () => {
 
 const GuidanceForm = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    projectType: 'Unsure'
+  });
+  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("Submit Idea");
   const totalSteps = 3;
 
   const updateData = (key, value) => {
     setFormData(prev => ({ ...prev, [key]: value }));
+    if (errors[key]) {
+      setErrors(prev => ({ ...prev, [key]: null }));
+    }
   };
 
-  const nextStep = () => setStep(prev => Math.min(prev + 1, totalSteps));
+  const validateStep = () => {
+    const newErrors = {};
+    let isValid = true;
+
+     if (step === 1) {
+      if (!formData.name?.trim()) newErrors.name = true;
+      if (!formData.organization?.trim()) newErrors.organization = true;
+      if (!formData.email?.trim()) newErrors.email = true;
+      if (!formData.phone?.trim()) newErrors.phone = true;
+     }
+     
+     if (step === 3) {
+       if (!formData.idea?.trim()) newErrors.idea = true;
+     }
+
+     if (Object.keys(newErrors).length > 0) {
+       setErrors(newErrors);
+       isValid = false;
+     }
+     return isValid;
+  };
+
+  const nextStep = () => {
+     if (validateStep()) {
+       setStep(prev => Math.min(prev + 1, totalSteps));
+     }
+  };
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
   
   const contactFormUrl = `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_CONTACT_ID}`;
@@ -745,7 +895,9 @@ const GuidanceForm = () => {
 
       if (response.ok) {
         setStatus("Idea Sent!");
-        setFormData({});
+        setFormData({
+            projectType: 'Unsure'
+        });
         setStep(1);
         setTimeout(() => setStatus("Submit Idea"), 3000);
       } else {
@@ -759,6 +911,14 @@ const GuidanceForm = () => {
     }
   };
 
+  const projectTypes = [
+    { label: 'Unsure', icon: HiOutlineQuestionMarkCircle },
+    { label: 'Website', icon: HiOutlineDesktopComputer },
+    { label: 'App', icon: HiOutlineDeviceMobile },
+    { label: 'Design', icon: HiOutlineColorSwatch },
+    { label: 'Other', icon: HiOutlineDotsHorizontal },
+  ];
+
   return (
     <FormContainer
       key="guidance-form"
@@ -771,49 +931,44 @@ const GuidanceForm = () => {
       <Form onSubmit={handleSubmit}>
         <AnimatePresence mode="wait">
           {step === 1 && (
-            <StepContactInfo data={formData} updateData={updateData} key="g-step1" />
+            <StepContactInfo data={formData} updateData={updateData} errors={errors} key="g-step1" />
           )}
 
           {step === 2 && (
             <motion.div variants={formAnimVariants} initial="hidden" animate="visible" exit="exit" key="g-step2">
               <FormStepTitle>Step 2: Your Idea</FormStepTitle>
-              <InfoGrid>
-                <InputGroup>
-                  <label htmlFor="projectType-guide">Project Type (if known)</label>
-                  <SelectWrapper>
-                    <HiOutlinePencilAlt className="input-icon" />
-                    <Select 
-                      name="projectType" 
-                      id="projectType-guide"
-                      value={formData.projectType || 'Unsure'}
-                      onChange={(e) => updateData('projectType', e.target.value)}
+              
+              <InputGroup>
+                <label>Project Type (if known)</label>
+                <SelectionGrid>
+                  {projectTypes.map((type) => (
+                    <SelectionCard 
+                      key={type.label}
+                      $selected={formData.projectType === type.label}
+                      onClick={() => updateData('projectType', type.label)}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <option value="Unsure">I'm not sure</option>
-                      <option value="Website">Website</option>
-                      <option value="Mobile App">Mobile App</option>
-                      <option value="Logo / Graphic Design">Logo / Graphic Design</option>
-                      <option value="Photo/Video Editing">Photo/Video Editing</option>
-                      <option value="Other">Other</option>
-                    </Select>
-                    <HiOutlineChevronDown className="select-arrow" />
-                  </SelectWrapper>
-                </InputGroup>
+                      <type.icon />
+                      <span>{type.label}</span>
+                    </SelectionCard>
+                  ))}
+                </SelectionGrid>
+              </InputGroup>
                 
-                <InputGroup>
-                  <label htmlFor="main-question">What is your main question?</label>
-                  <SelectWrapper>
-                    <HiOutlineQuestionMarkCircle className="input-icon" />
-                    <Input 
-                      type="text" 
-                      name="main_question" 
-                      id="main-question" 
-                      placeholder="e.g., 'How much would this cost?'" 
-                      value={formData.main_question || ''}
-                      onChange={(e) => updateData('main_question', e.target.value)}
-                    />
-                  </SelectWrapper>
-                </InputGroup>
-              </InfoGrid>
+              <InputGroup style={{marginTop: '2rem'}}>
+                <label htmlFor="main-question">What is your main question?</label>
+                <SelectWrapper>
+                  <HiOutlineQuestionMarkCircle className="input-icon" />
+                  <Input 
+                    type="text" 
+                    name="main_question" 
+                    id="main-question" 
+                    placeholder="e.g., 'How much would this cost?'" 
+                    value={formData.main_question || ''}
+                    onChange={(e) => updateData('main_question', e.target.value)}
+                  />
+                </SelectWrapper>
+              </InputGroup>
             </motion.div>
           )}
 
@@ -821,7 +976,7 @@ const GuidanceForm = () => {
             <motion.div variants={formAnimVariants} initial="hidden" animate="visible" exit="exit" key="g-step3">
               <FormStepTitle>Step 3: Describe Your Idea</FormStepTitle>
               <InputGroup>
-                <label htmlFor="idea-guide">Describe your idea or challenge</label>
+                <label htmlFor="idea-guide" className="required">Describe your idea or challenge</label>
                 <SimpleTextArea 
                   name="idea" 
                   id="idea-guide" 
@@ -829,7 +984,13 @@ const GuidanceForm = () => {
                   required 
                   value={formData.idea || ''}
                   onChange={(e) => updateData('idea', e.target.value)}
+                  $hasError={!!errors.idea}
                 />
+                {errors.idea && (
+                  <ErrorMessage initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    <HiOutlineExclamationCircle /> Please describe your idea
+                  </ErrorMessage>
+                )}
               </InputGroup>
             </motion.div>
           )}
