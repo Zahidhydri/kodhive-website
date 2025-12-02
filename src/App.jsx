@@ -13,7 +13,7 @@ import Internships from './pages/Internships';
 import Contact from './pages/Contact';
 import ProjectRequest from './pages/ProjectRequest';
 import VerifyCertificate from './pages/VerifyCertificate.jsx';
-// Removed Pricing import
+import NotFound from './pages/NotFound'; // <-- IMPORT NotFound
 import { useAuth } from './contexts/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import { ScrollContext } from './contexts/ScrollContext';
@@ -171,10 +171,10 @@ function App() {
                   <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<Home />} />
                     <Route path="/internships" element={<Internships />} />
-                    {/* Removed Pricing Route */}
                     <Route path="/request-project" element={<ProjectRequest />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/verify" element={<VerifyCertificate />} />
+                    <Route path="*" element={<NotFound />} /> 
                   </Routes>
                 </AnimatePresence>
               </main>
