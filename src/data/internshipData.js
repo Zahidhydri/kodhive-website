@@ -105,7 +105,7 @@ export const internships = [
     id: 11,
     title: 'Node.js Backend Intern', 
     description: 'Develop scalable backend services and APIs using Node.js, Express, and MongoDB. You will write unit tests and collaborate on system design.',
-    image: 'https.unsplash.com/photo-1639628735078-ed2f038a193e?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1639628735078-ed2f038a193e?auto=format&fit=crop&q=80&w=800',
     location: 'Remote',
     type: 'Part-time',
     skills: ['Node.js', 'Express', 'MongoDB', 'REST APIs', 'JWT'],
