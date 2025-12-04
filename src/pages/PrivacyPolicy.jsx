@@ -74,6 +74,16 @@ const List = styled.ul`
   }
 `;
 
+const ExternalLink = styled.a`
+  color: ${({ theme }) => theme.buttonBg};
+  text-decoration: none;
+  font-weight: 500;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
@@ -106,7 +116,7 @@ export default function PrivacyPolicy() {
         <Section>
           <SectionTitle>2. Information We Collect</SectionTitle>
           <Text>
-            We may collect, use, store and transfer different kinds of personal data about you which we have grouped together follows:
+            We may collect, use, store and transfer different kinds of personal data about you which we have grouped together as follows:
           </Text>
           <List>
             <li><strong>Identity Data:</strong> includes first name, last name, or similar identifier.</li>
@@ -117,7 +127,17 @@ export default function PrivacyPolicy() {
         </Section>
 
         <Section>
-          <SectionTitle>3. How We Use Your Data</SectionTitle>
+          <SectionTitle>3. Third-Party Services & Data Collection</SectionTitle>
+          <Text>
+            We use <strong>Google Forms</strong> to collect information for internship applications and project requests. When you submit data through these forms, your information is processed by Google in accordance with their policies.
+          </Text>
+          <Text>
+            For more information on how Google handles your data, please review the <ExternalLink href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</ExternalLink>.
+          </Text>
+        </Section>
+
+        <Section>
+          <SectionTitle>4. How We Use Your Data</SectionTitle>
           <Text>
             We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:
           </Text>
@@ -129,14 +149,14 @@ export default function PrivacyPolicy() {
         </Section>
 
         <Section>
-          <SectionTitle>4. Data Security</SectionTitle>
+          <SectionTitle>5. Data Security</SectionTitle>
           <Text>
             We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorized way, altered or disclosed. In addition, we limit access to your personal data to those employees, agents, contractors and other third parties who have a business need to know.
           </Text>
         </Section>
 
         <Section>
-          <SectionTitle>5. Contact Us</SectionTitle>
+          <SectionTitle>6. Contact Us</SectionTitle>
           <Text>
             If you have any questions about this privacy policy or our privacy practices, please contact us at: <strong>hello@skilltensor.com</strong>.
           </Text>
