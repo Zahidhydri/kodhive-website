@@ -154,10 +154,23 @@ const Copyright = styled.div`
   border-top: 1px solid ${({ theme }) => theme.border};
   text-align: center;
   color: ${({ theme }) => (theme.text === '#212529' ? '#6c757d' : '#adb5bd')};
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   
   p {
     margin: 0;
     font-size: 0.9rem;
+  }
+  
+  /* Style for Privacy Policy link in copyright area */
+  a {
+    color: ${({ theme }) => theme.textSecondary};
+    text-decoration: none;
+    font-size: 0.85rem;
+    &:hover {
+        text-decoration: underline;
+    }
   }
 `;
 
@@ -204,6 +217,7 @@ export default function Footer() {
               <li><FooterLink to="/internships" onClick={handleScrollToTop}>Internships</FooterLink></li>
               <li><FooterLink to="/request-project" onClick={handleScrollToTop}>Request a Project</FooterLink></li> 
               <li><FooterLink to="/contact" onClick={handleScrollToTop}>Contact</FooterLink></li>
+              <li><FooterLink to="/privacy-policy" onClick={handleScrollToTop}>Privacy Policy</FooterLink></li> {/* Added link */}
             </LinksList>
           </Column>
 

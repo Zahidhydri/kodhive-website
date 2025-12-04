@@ -13,7 +13,8 @@ import Internships from './pages/Internships';
 import Contact from './pages/Contact';
 import ProjectRequest from './pages/ProjectRequest';
 import VerifyCertificate from './pages/VerifyCertificate.jsx';
-import NotFound from './pages/NotFound'; // <-- IMPORT NotFound
+import NotFound from './pages/NotFound';
+import PrivacyPolicy from './pages/PrivacyPolicy'; // <-- IMPORT PrivacyPolicy
 import { useAuth } from './contexts/AuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import { ScrollContext } from './contexts/ScrollContext';
@@ -174,6 +175,7 @@ function App() {
                     <Route path="/request-project" element={<ProjectRequest />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/verify" element={<VerifyCertificate />} />
+                    <Route path="/privacy-policy" element={<PrivacyPolicy />} /> {/* <-- Add Route */}
                     <Route path="*" element={<NotFound />} /> 
                   </Routes>
                 </AnimatePresence>
